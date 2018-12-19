@@ -82,7 +82,7 @@ class Profile extends Component {
                 onUpdateUserDisplayName(
                   {
                     id: currentUser.id,
-                    name: newDisplayName,
+                    displayName: newDisplayName,
                   },
                   () => this.setState({ showNameModal: false })
                 )
@@ -110,7 +110,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   onLogout: authState.actions.signOutStarted,
-  onUpdateUserDisplayName: userState.actions.updateCurrentUserDisplayNameStarted,
+  onUpdateUserDisplayName: userState.actions.editCurrentUserStarted,
 }
 
 export default connect(

@@ -1,5 +1,5 @@
 export const types = {
-  UPDATE_CURRENT_USER_DISPLAY_NAME_STARTED: 'UPDATE_CURRENT_USER_DISPLAY_NAME_STARTED',
+  EDIT_CURRENT_USER_STARTED: 'EDIT_CURRENT_USER_STARTED',
   SET_CURRENT_USER: 'SET_CURRENT_USER',
   CURRENT_USER_UPDATED: 'CURRENT_USER_UPDATED',
   CURRENT_USER_UPDATE_ERROR: 'CURRENT_USER_UPDATE_ERROR',
@@ -13,10 +13,10 @@ function setCurrentUser(user) {
   }
 }
 
-function updateCurrentUserDisplayNameStarted({ id, name }, onSuccess) {
+function editCurrentUserStarted({ id, ...props }, onSuccess) {
   return {
-    type: types.UPDATE_CURRENT_USER_DISPLAY_NAME_STARTED,
-    payload: { id, name, onSuccess },
+    type: types.EDIT_CURRENT_USER_STARTED,
+    payload: { id, onSuccess, ...props },
   }
 }
 
@@ -42,7 +42,7 @@ function currentUserUpdateSuccess() {
 
 export default {
   setCurrentUser,
-  updateCurrentUserDisplayNameStarted,
+  editCurrentUserStarted,
   currentUserUpdated,
   currentUserUpdateError,
   currentUserUpdateSuccess,

@@ -8,7 +8,7 @@ const INITIAL_STATE = {
 
 export default function userReducer(state = INITIAL_STATE, action = { type: '' }) {
   switch (action.type) {
-    case types.UPDATE_CURRENT_USER_DISPLAY_NAME_STARTED:
+    case types.EDIT_CURRENT_USER_STARTED:
       return {
         ...state,
         loading: true,

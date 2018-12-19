@@ -1,19 +1,20 @@
 import { all, takeEvery, put, select, call } from 'redux-saga/effects'
-import { updateUserDisplayName } from '../../services/firebase/firestore'
+import { editUser } from '../../services/firebase/firestore'
 import actions, { types } from './user.actions'
 import toastState from '../toast'
 
 export const STORE_NAME = 'user'
 
-function* updateCurrentUserDisplayNameSaga({ payload: { id, name, onSuccess } }) {
+function* editCurrentUserSaga({ payload: { id, onSuccess, ...props } }) {
   try {
-    yield call(updateUserDisplayName, { id, name })
+    const currentUser = yield select(state => state[STORE_NAME].currentUser)
+    yield call(editUser, { id, ...currentUser, ...props })
     yield put(actions.currentUserUpdateSuccess())
     yield call(onSuccess)
-    yield put(toastState.actions.addToast('success', "User's display name updated."))
+    yield put(toastState.actions.addToast('success', 'User edited.'))
   } catch (error) {
     yield put(actions.currentUserUpdateError(error.message))
-    yield put(toastState.actions.addToast('error', 'Failed to update display name.'))
+    yield put(toastState.actions.addToast('error', 'Failed to edit user.'))
   }
 }
 
@@ -30,10 +31,7 @@ function* userUpdatedSaga({ payload: { userDoc } }) {
 
 export default function* userSaga() {
   yield all([
-    yield takeEvery(
-      types.UPDATE_CURRENT_USER_DISPLAY_NAME_STARTED,
-      updateCurrentUserDisplayNameSaga
-    ),
+    yield takeEvery(types.EDIT_CURRENT_USER_STARTED, editCurrentUserSaga),
     yield takeEvery(types.CURRENT_USER_UPDATED, userUpdatedSaga),
   ])
 }
