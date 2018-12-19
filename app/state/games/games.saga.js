@@ -1,5 +1,11 @@
 import { all, takeEvery, put, call, select } from 'redux-saga/effects'
-import { createGame, editGame, deleteGame } from '../../services/firebase/firestore'
+import {
+  createGame,
+  editGame,
+  deleteGame,
+  editUser,
+  getGame,
+} from '../../services/firebase/firestore'
 import toastState from '../toast'
 import userState from '../user'
 import actions, { types } from './games.actions'
@@ -7,7 +13,13 @@ import actions, { types } from './games.actions'
 function* createGameSaga({ payload: { game, onSuccess } }) {
   try {
     const { sport, place, time, spots } = game
-    yield call(createGame, { sport, place, time, spots })
+    const currentUser = yield select(state => state[userState.STORE_NAME].currentUser)
+    const { id } = yield call(createGame, { sport, place, time, spots })
+    const createdGame = yield call(getGame, { id })
+    yield call(editUser, {
+      ...currentUser,
+      createdGames: [...currentUser.createdGames, { id, ...createdGame.data() }],
+    })
     yield put(actions.gameRequestSuccess())
     yield call(onSuccess)
     yield put(toastState.actions.addToast('success', 'Game created.'))
@@ -20,7 +32,20 @@ function* createGameSaga({ payload: { game, onSuccess } }) {
 function* editGameSaga({ payload: { game, onSuccess } }) {
   try {
     const { id, sport, place, time, spots } = game
+    const currentUser = yield select(state => state[userState.STORE_NAME].currentUser)
+    const currentUserCreatedGames = currentUser.createdGames
     yield call(editGame, { id, sport, place, time, spots })
+    const editedGameIndex = currentUserCreatedGames.findIndex(createdGame => createdGame.id === id)
+    const newCreatedGames = [
+      ...currentUserCreatedGames.splice(editedGameIndex, 1, {
+        ...currentUserCreatedGames[editedGameIndex],
+        ...game,
+      }),
+    ]
+    yield call(editUser, {
+      ...currentUser,
+      createdGames: newCreatedGames,
+    })
     yield put(actions.gameRequestSuccess())
     yield call(onSuccess)
     yield put(toastState.actions.addToast('success', 'Game updated.'))
@@ -32,7 +57,15 @@ function* editGameSaga({ payload: { game, onSuccess } }) {
 
 function* deleteGameSaga({ payload: { id, onSuccess } }) {
   try {
+    const currentUser = yield select(state => state[userState.STORE_NAME].currentUser)
+    const currentUserCreatedGames = currentUser.createdGames
     yield call(deleteGame, { id })
+    const deletedGameIndex = currentUserCreatedGames.findIndex(game => game.id === id)
+    const newCreatedGames = [...currentUserCreatedGames.splice(deletedGameIndex, 1)]
+    yield call(editUser, {
+      ...currentUser,
+      createdGames: newCreatedGames,
+    })
     yield put(actions.gameRequestSuccess())
     yield call(onSuccess)
     yield put(toastState.actions.addToast('success', 'Game deleted.'))

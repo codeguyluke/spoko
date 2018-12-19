@@ -9,7 +9,7 @@ import colors from '../../../style/colors'
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 8,
+    marginVertical: 2,
     paddingVertical: 32,
     paddingHorizontal: 16,
     flexDirection: 'row',

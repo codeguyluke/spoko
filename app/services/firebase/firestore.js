@@ -21,6 +21,8 @@ export const subscribeToCurrentUser = async callback => {
   return usersRef.doc(currentUserId).onSnapshot(callback)
 }
 
+export const getGame = async ({ id }) => gamesRef.doc(id).get()
+
 export const createGame = async ({ sport, place, time, spots }) => {
   const userId = firebase.auth().currentUser.uid
   return gamesRef.add({ sport, place, time, spots, ownerId: userId, players: [] })
