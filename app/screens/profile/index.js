@@ -47,7 +47,7 @@ class Profile extends Component {
     onLogout: PropTypes.func.isRequired,
     currentUser: UserPropType.isRequired,
     loading: PropTypes.bool.isRequired,
-    onUpdateUserDisplayName: PropTypes.func.isRequired,
+    onEditUser: PropTypes.func.isRequired,
   }
 
   state = {
@@ -55,7 +55,7 @@ class Profile extends Component {
   }
 
   render() {
-    const { currentUser, onLogout, loading, onUpdateUserDisplayName } = this.props
+    const { currentUser, onLogout, loading, onEditUser } = this.props
     const { showNameModal } = this.state
 
     return (
@@ -79,7 +79,7 @@ class Profile extends Component {
               userId={currentUser.id}
               initialValue={currentUser.displayName}
               onSubmit={newDisplayName =>
-                onUpdateUserDisplayName(
+                onEditUser(
                   {
                     id: currentUser.id,
                     displayName: newDisplayName,
@@ -110,7 +110,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   onLogout: authState.actions.signOutStarted,
-  onUpdateUserDisplayName: userState.actions.editCurrentUserStarted,
+  onEditUser: userState.actions.editCurrentUserStarted,
 }
 
 export default connect(
