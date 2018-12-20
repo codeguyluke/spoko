@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ScrollView, View, Text, StyleSheet, FlatList } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import userState from '../../state/user'
+import gamesState from '../../state/games'
 import { GamePropType } from '../../helpers/prop-types'
 import GameRow from './components/game-row'
 import colors from '../../style/colors'
@@ -63,7 +63,7 @@ class UpcomingGamesList extends Component {
 }
 
 const mapStateToProps = state => ({
-  games: userState.selectors.selectUpcomingGames(state),
+  games: state[gamesState.STORE_NAME].userGames,
 })
 
 export default connect(mapStateToProps)(UpcomingGamesList)

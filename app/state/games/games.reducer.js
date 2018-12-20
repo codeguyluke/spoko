@@ -2,6 +2,7 @@ import { types } from './games.actions'
 
 const INITIAL_STATE = {
   games: [],
+  userGames: [],
   loading: false,
   initialized: false,
   error: '',
@@ -27,10 +28,11 @@ export default function gamesReducer(state = INITIAL_STATE, action = { type: '' 
         loading: true,
         error: '',
       }
-    case types.OPEN_GAMES_UPDATED:
+    case types.GAMES_UPDATED:
       return {
         ...state,
-        games: action.payload,
+        games: action.payload.openGames,
+        userGames: action.payload.userGames,
         initialized: true,
         error: '',
       }

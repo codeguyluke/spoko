@@ -1,11 +1,5 @@
 import { all, takeEvery, put, call, select } from 'redux-saga/effects'
-import {
-  createGame,
-  editGame,
-  deleteGame,
-  editUser,
-  getGame,
-} from '../../services/firebase/firestore'
+import { createGame, editGame, deleteGame, editUser } from '../../services/firebase/firestore'
 import toastState from '../toast'
 import userState from '../user'
 import actions, { types } from './games.actions'
@@ -15,10 +9,9 @@ function* createGameSaga({ payload: { game, onSuccess } }) {
     const { sport, place, time, spots } = game
     const currentUser = yield select(state => state[userState.STORE_NAME].currentUser)
     const { id } = yield call(createGame, { sport, place, time, spots })
-    const createdGame = yield call(getGame, { id })
     yield call(editUser, {
       ...currentUser,
-      createdGames: [...currentUser.createdGames, { id, ...createdGame.data() }],
+      createdGames: [...currentUser.createdGames, id],
     })
     yield put(actions.gameRequestSuccess())
     yield call(onSuccess)
@@ -32,20 +25,7 @@ function* createGameSaga({ payload: { game, onSuccess } }) {
 function* editGameSaga({ payload: { game, onSuccess } }) {
   try {
     const { id, sport, place, time, spots } = game
-    const currentUser = yield select(state => state[userState.STORE_NAME].currentUser)
-    const currentUserCreatedGames = currentUser.createdGames
     yield call(editGame, { id, sport, place, time, spots })
-    const editedGameIndex = currentUserCreatedGames.findIndex(createdGame => createdGame.id === id)
-    const newCreatedGames = [
-      ...currentUserCreatedGames.splice(editedGameIndex, 1, {
-        ...currentUserCreatedGames[editedGameIndex],
-        ...game,
-      }),
-    ]
-    yield call(editUser, {
-      ...currentUser,
-      createdGames: newCreatedGames,
-    })
     yield put(actions.gameRequestSuccess())
     yield call(onSuccess)
     yield put(toastState.actions.addToast('success', 'Game updated.'))
@@ -60,11 +40,11 @@ function* deleteGameSaga({ payload: { id, onSuccess } }) {
     const currentUser = yield select(state => state[userState.STORE_NAME].currentUser)
     const currentUserCreatedGames = currentUser.createdGames
     yield call(deleteGame, { id })
-    const deletedGameIndex = currentUserCreatedGames.findIndex(game => game.id === id)
-    const newCreatedGames = [...currentUserCreatedGames.splice(deletedGameIndex, 1)]
+    const deletedGameIndex = currentUserCreatedGames.findIndex(gameId => gameId === id)
+    currentUserCreatedGames.splice(deletedGameIndex, 1)
     yield call(editUser, {
       ...currentUser,
-      createdGames: newCreatedGames,
+      createdGames: [...currentUserCreatedGames],
     })
     yield put(actions.gameRequestSuccess())
     yield call(onSuccess)
@@ -86,7 +66,8 @@ function* gamesUpdatedSaga({ payload: { gamesSnapshot } }) {
         played: doc.data().players.includes(currentUserId),
       }))
       .filter(game => game.spots > 0)
-    yield put(actions.openGamesUpdated(openGames))
+    const userGames = openGames.filter(game => game.owned || game.played)
+    yield put(actions.gamesUpdated(openGames, userGames))
   } catch (error) {
     yield put(actions.gameRequestError(error.message))
     yield put(toastState.actions.addToast('error', "Couldn't fetch open games."))

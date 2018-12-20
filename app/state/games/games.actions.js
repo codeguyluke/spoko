@@ -3,7 +3,7 @@ export const types = {
   EDIT_GAME_STARTED: 'EDIT_GAME_STARTED',
   DELETE_GAME_STARTED: 'DELETE_GAME_STARTED',
   GAMES_SNAPSHOT_UPDATED: 'GAMES_SNAPSHOT_UPDATED',
-  OPEN_GAMES_UPDATED: 'OPEN_GAMES_UPDATED',
+  GAMES_UPDATED: 'GAMES_UPDATED',
   GAME_REQUEST_SUCCESS: 'GAME_REQUEST_SUCCESS',
   GAME_REQUEST_ERROR: 'GAME_REQUEST_ERROR',
 }
@@ -36,10 +36,10 @@ function gamesSnapshotUpdated(gamesSnapshot) {
   }
 }
 
-function openGamesUpdated(games) {
+function gamesUpdated(openGames, userGames) {
   return {
-    type: types.OPEN_GAMES_UPDATED,
-    payload: games,
+    type: types.GAMES_UPDATED,
+    payload: { openGames, userGames },
   }
 }
 
@@ -61,7 +61,7 @@ export default {
   editGameStarted,
   deleteGameStarted,
   gamesSnapshotUpdated,
-  openGamesUpdated,
+  gamesUpdated,
   gameRequestSuccess,
   gameRequestError,
 }
