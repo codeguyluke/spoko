@@ -2,6 +2,7 @@ import React from 'react'
 import { createStackNavigator } from 'react-navigation'
 import DetailsScreen from '../game-details'
 import ListScreen from './list'
+import EditScreen from '../edit-game'
 import { NavigationIcon } from '../../components'
 import colors from '../../style/colors'
 
@@ -37,6 +38,7 @@ export default createStackNavigator(
         ),
       }),
     },
+    Edit: EditScreen,
   },
   {
     initialRouteName: 'List',
