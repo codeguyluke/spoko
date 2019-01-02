@@ -41,7 +41,7 @@ export default class CountryPicker extends Component {
         show={show}
         onClose={onClose}
         onSubmit={() => onSubmit(this.state.country)}
-        title="Select country"
+        title="Select your country"
       >
         <View style={styles.container}>
           <Picker

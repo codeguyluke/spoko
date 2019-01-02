@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: 'center',
     width: '100%',
-    maxWidth: 560,
     backgroundColor: 'rgb(255, 255, 255)',
   },
   disabled: {

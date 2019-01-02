@@ -2,35 +2,25 @@ import React, { Component } from 'react'
 import { View, Text, TextInput, TouchableWithoutFeedback, StyleSheet } from 'react-native'
 import { Icon } from 'react-native-elements'
 import PropTypes from 'prop-types'
-import { StyledButton, Label } from '../../components'
+import { StyledButton } from '../../components'
 import CountryPicker, { countries } from './components/country-picker'
 import colors, { rgbToRgba } from '../../style/colors'
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    position: 'absolute',
-    top: 16,
-    left: 0,
-    right: 0,
-  },
   container: {
     flex: 1,
-    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 16,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: '500',
-    textAlign: 'center',
-    color: colors.navy,
+  phoneRow: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  subtitle: {
-    marginTop: 16,
-    fontSize: 22,
-    fontWeight: '300',
-    textAlign: 'center',
-    color: colors.navy,
+  dropdownRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   errorText: {
     width: '100%',
@@ -41,22 +31,25 @@ const styles = StyleSheet.create({
     color: colors.red,
     alignSelf: 'center',
   },
+  flag: {
+    fontSize: 24,
+  },
+  phoneSuffix: {
+    marginHorizontal: 8,
+    fontSize: 22,
+    fontWeight: '500',
+    color: colors.grey,
+  },
   input: {
-    width: '100%',
-    maxWidth: 560,
+    flex: 1,
     borderBottomWidth: 1,
     borderColor: rgbToRgba(colors.navy, 0.2),
     marginVertical: 8,
-    marginHorizontal: 16,
     paddingVertical: 8,
     fontSize: 28,
     fontWeight: '500',
     color: colors.navy,
     textAlign: 'center',
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
 })
 
@@ -79,21 +72,15 @@ export default class PhoneInput extends Component {
 
     return (
       <React.Fragment>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Welcome!</Text>
-          <Text style={styles.subtitle}>Please log in to the app using your phone number.</Text>
-        </View>
         <View style={styles.container}>
-          <Label>Phone number</Label>
-          <View style={styles.row}>
+          <View style={styles.phoneRow}>
             <TouchableWithoutFeedback onPress={() => this.setState({ showCountryModal: true })}>
-              <View style={styles.row}>
-                <Text style={styles.input}>{countries[country].flag}</Text>
-                <Icon type="ionicon" name="md-arrow-dropdown" color={colors.navy} size={24} />
+              <View style={styles.dropdownRow}>
+                <Text style={styles.flag}>{countries[country].flag}</Text>
+                <Text style={styles.phoneSuffix}>{`+${countries[country].callingCode}`}</Text>
               </View>
             </TouchableWithoutFeedback>
             <TextInput
-              placeholder="+1 1111111111"
               value={phone}
               onChangeText={onPhoneChange}
               keyboardType="phone-pad"
