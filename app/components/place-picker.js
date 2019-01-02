@@ -63,7 +63,7 @@ const googleAutocompleteStyles = StyleSheet.create({
 })
 
 const QUERY = {
-  key: config.GOOGLE_PLACES_API_KEY,
+  key: config.GOOGLE_MAPS_API_KEY,
   language: 'en',
   radius: 10000,
 }
