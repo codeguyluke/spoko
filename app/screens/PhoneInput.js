@@ -1,10 +1,10 @@
 import React from 'react'
 import { Card, Title } from 'react-native-paper'
 
-export default function Authenticated() {
+export default function PhoneInput() {
   return (
     <Card>
-      <Title>AUTHENTICATED</Title>
+      <Title>PHONE INPUT</Title>
     </Card>
   )
 }
