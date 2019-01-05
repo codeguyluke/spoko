@@ -7,7 +7,7 @@ import { Container, Message } from '../components'
 const FIRST_MESSAGE =
   "Welcome to Spoko App! I'm Jo, your Spoko Assistant. Let's get to know each other!"
 const SECOND_MESSAGE = "First of all, can you tell me where you're from?"
-const POSITIVE_BUTTON_LABEL = 'Sure!'
+const FAB_LABEL = 'Sure!'
 const NEGATIVE_BUTTON_LABEL = 'Nah... Ask me later!'
 
 const styles = StyleSheet.create({
@@ -15,22 +15,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  positiveButtonStyle: {
+  fabStyle: {
     marginBottom: 24,
   },
 })
 
-export default function LocationPermission({ onPositive, onNegative }) {
+export default function LocationPermissionUndetermined({ onPositive, onNegative }) {
   return (
     <Container>
       <Message>{FIRST_MESSAGE}</Message>
       <Message>{SECOND_MESSAGE}</Message>
       <View style={styles.buttonsContainer}>
-        <FAB
-          label={POSITIVE_BUTTON_LABEL}
-          onPress={onPositive}
-          style={styles.positiveButtonStyle}
-        />
+        <FAB label={FAB_LABEL} onPress={onPositive} style={styles.fabStyle} />
         <Button onPress={onNegative} mode="outlined" color={Colors.red500}>
           {NEGATIVE_BUTTON_LABEL}
         </Button>
@@ -39,7 +35,7 @@ export default function LocationPermission({ onPositive, onNegative }) {
   )
 }
 
-LocationPermission.propTypes = {
+LocationPermissionUndetermined.propTypes = {
   onPositive: PropTypes.func.isRequired,
   onNegative: PropTypes.func.isRequired,
 }
