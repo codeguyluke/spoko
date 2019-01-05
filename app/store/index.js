@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux'
+import { createStore, combineReducers /* applyMiddleware */ } from 'redux'
 // import createSagaMiddleware from 'redux-saga'
 // import { all, fork } from 'redux-saga/effects'
 // import authState from './auth'

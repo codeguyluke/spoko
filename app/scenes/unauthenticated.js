@@ -4,17 +4,11 @@ import { Loader as InitialScreen } from '../components'
 import LocationPermissionScreen from '../screens/LocationPermission'
 import PhoneInputScreen from '../screens/PhoneInput'
 
-const ROUTES = {
-  initial: InitialScreen,
-  locationPermission: LocationPermissionScreen,
-  phoneInput: PhoneInputScreen,
-}
-
 export default class Unauthenticated extends Component {
   state = {
     currentRoute: 'initial',
   }
-  
+
   async componentDidMount() {
     const permission = await Permissions.check('location')
     if (permission === 'undetermined') {
@@ -23,8 +17,18 @@ export default class Unauthenticated extends Component {
     return this.setState({ currentRoute: 'phoneInput' })
   }
 
+  handleLocationPermissionRequest = async () => {
+    await Permissions.request('location')
+  }
+
   render() {
-    const Screen = ROUTES[this.state.currentRoute]
-    return <Screen />
+    switch (this.state.currentRoute) {
+      case 'locationPermission':
+        return <LocationPermissionScreen onPositive={() => {}} onNegative={() => {}} />
+      case 'phoneInput':
+        return <PhoneInputScreen />
+      default:
+        return <InitialScreen />
+    }
   }
 }

@@ -9,6 +9,7 @@ const CONTAINER_STYLE = {
   ...ifIphoneX({
     paddingTop: 32,
   }),
+  paddingHorizontal: 16,
 }
 
 function Container({ children, backgroundColor, theme }) {
@@ -22,7 +23,8 @@ function Container({ children, backgroundColor, theme }) {
 }
 
 Container.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)])
+    .isRequired,
   theme: PropTypes.shape({
     colors: PropTypes.shape({
       background: PropTypes.string.isRequired,

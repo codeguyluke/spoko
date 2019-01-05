@@ -16,15 +16,13 @@ export default class Main extends Component {
   }
 
   componentDidMount() {
-    this.unsubscribe = firebase
-      .auth()
-      .onAuthStateChanged(user =>
-        this.setState({
-          authenticationStatus: !user
-            ? AUTHENTICATION_STATUSES.unauthenticated
-            : AUTHENTICATION_STATUSES.authenticated,
-        })
-      )
+    this.unsubscribe = firebase.auth().onAuthStateChanged(user =>
+      this.setState({
+        authenticationStatus: !user
+          ? AUTHENTICATION_STATUSES.unauthenticated
+          : AUTHENTICATION_STATUSES.authenticated,
+      })
+    )
   }
 
   componentWillUnmount() {

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { View, Text, TextInput, TouchableWithoutFeedback, StyleSheet } from 'react-native'
-import { Icon } from 'react-native-elements'
 import PropTypes from 'prop-types'
 import { StyledButton } from '../../components'
 import CountryPicker, { countries } from './components/country-picker'
