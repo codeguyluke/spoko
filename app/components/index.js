@@ -1,5 +1,8 @@
+import ActionMessage from './action-message'
+import ActionPanel from './action-panel'
 import Container from './container'
 import Loader from './loader'
-import Message from './message'
+import JoChat from './jo-chat'
+import JoMessage from './jo-message'
 
-export { Container, Loader, Message }
+export { ActionMessage, ActionPanel, Container, Loader, JoChat, JoMessage }

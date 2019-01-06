@@ -1,5 +1,6 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
+import * as Animatable from 'react-native-animatable'
 import { Avatar } from 'react-native-elements'
 import { Surface, Subheading } from 'react-native-paper'
 import PropTypes from 'prop-types'
@@ -21,15 +22,17 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function Message({ children }) {
+export default function JoMessage({ children }) {
   return (
-    <Surface style={styles.container}>
-      <Avatar large rounded source={joAvatar} />
-      <Subheading style={styles.text}>{children}</Subheading>
-    </Surface>
+    <Animatable.View animation="fadeIn" duration={100}>
+      <Surface style={styles.container}>
+        <Avatar rounded source={joAvatar} />
+        <Subheading style={styles.text}>{children}</Subheading>
+      </Surface>
+    </Animatable.View>
   )
 }
 
-Message.propTypes = {
+JoMessage.propTypes = {
   children: PropTypes.string.isRequired,
 }
