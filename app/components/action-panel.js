@@ -1,6 +1,6 @@
 import React from 'react'
-import { KeyboardAvoidingView, StyleSheet } from 'react-native'
-import { Button, Colors, FAB } from 'react-native-paper'
+import { View, Text, KeyboardAvoidingView, StyleSheet } from 'react-native'
+import { TextInput, Button, Colors, FAB } from 'react-native-paper'
 import PropTypes from 'prop-types'
 
 const styles = StyleSheet.create({
@@ -8,21 +8,50 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  negative: {
-    marginTop: 24,
+  fill: {
+    flex: 1,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  distance: {
+    marginVertical: 16,
   },
 })
 
-export default function ActionPanel({ FABLabel, FABAction, negativeLabel, negativeAction }) {
+export default function ActionPanel({
+  phoneNumber,
+  verificationCode,
+  showPhoneInput,
+  onPhoneChange,
+  FABLabel,
+  FABAction,
+  negativeLabel,
+  negativeAction,
+}) {
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
-      {!!FABLabel && <FAB label={FABLabel} onPress={FABAction} />}
+      {showPhoneInput && (
+        <View style={[styles.row, styles.distance]}>
+          <Text>haha</Text>
+          <TextInput
+            label="Mobile"
+            mode="outlined"
+            value={phoneNumber}
+            onChangeText={onPhoneChange}
+            keyboardType="phone-pad"
+            style={styles.fill}
+          />
+        </View>
+      )}
+      {!!FABLabel && <FAB label={FABLabel} onPress={FABAction} style={styles.distance} />}
       {!!negativeLabel && (
         <Button
           onPress={negativeAction}
           mode="outlined"
           color={Colors.red500}
-          style={styles.negative}
+          style={styles.distance}
         >
           {negativeLabel}
         </Button>
@@ -32,6 +61,10 @@ export default function ActionPanel({ FABLabel, FABAction, negativeLabel, negati
 }
 
 ActionPanel.propTypes = {
+  phoneNumber: PropTypes.string,
+  verificationCode: PropTypes.string,
+  showPhoneInput: PropTypes.bool,
+  onPhoneChange: PropTypes.func,
   FABLabel: PropTypes.string,
   FABAction: PropTypes.func,
   negativeLabel: PropTypes.string,
@@ -39,8 +72,12 @@ ActionPanel.propTypes = {
 }
 
 ActionPanel.defaultProps = {
+  phoneNumber: '',
+  verificationCode: '',
+  showPhoneInput: false,
+  onPhoneChange: () => {},
   FABLabel: '',
-  FABAction: null,
+  FABAction: () => {},
   negativeLabel: '',
-  negativeAction: null,
+  negativeAction: () => {},
 }

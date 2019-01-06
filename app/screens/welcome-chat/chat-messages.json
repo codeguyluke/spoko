@@ -1,0 +1,44 @@
+{
+  "greeting": [
+    {
+      "author": "jo",
+      "text": "Welcome to Spoko App! I'm Jo, your Spoko Assistant. Let's get to know each other!"
+    }
+  ],
+  "locationPermissionRequest": [
+    {
+      "author": "jo",
+      "text": "First of all, can you tell me where you're from?"
+    }
+  ],
+  "locationPermissionGranted": [
+    {
+      "author": "me",
+      "text": "Sure!"
+    },
+    {
+      "author": "jo",
+      "text": "Great, that's REALLY cool! Now, let's get to know each other even better!"
+    }
+  ],
+  "locationPermissionPostponed": [
+    {
+      "author": "me",
+      "text": "Nah... Ask me later!"
+    },
+    {
+      "author": "jo",
+      "text": "Oh, that's OK! We have a lot of time for this :)"
+    }
+  ],
+  "phoneInput": [
+    {
+      "author": "jo",
+      "text": "At Spoko, your privacy is one of our main concerns. This is why the only real data we ask you for is your phone number."
+    },
+    {
+      "author": "jo",
+      "text": "It's required for logging into the app and exploring and creating all the fancy games around! :)"
+    }
+  ]
+}

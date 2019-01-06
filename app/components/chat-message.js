@@ -10,13 +10,14 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'flex-end',
+    marginVertical: 8,
   },
   surface: {
     flex: 1,
     padding: 8,
     elevation: 4,
     borderRadius: 8,
-    marginTop: 16,
+    marginHorizontal: 8,
   },
   text: {
     fontWeight: '500',
