@@ -4,7 +4,7 @@ import * as Animatable from 'react-native-animatable'
 import { Avatar } from 'react-native-elements'
 import { Surface, Subheading, Colors } from 'react-native-paper'
 import PropTypes from 'prop-types'
-import joAvatar from '../assets/jo-avatar.jpg'
+import joAvatar from '../assets/images/jo-avatar.jpg'
 
 const styles = StyleSheet.create({
   container: {
