@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import firebase from 'react-native-firebase'
-import AuthenticatedScene from './scenes/authenticated'
-import UnauthenticatedScene from './scenes/unauthenticated'
+import WelcomeChatScreen from './screens/WelcomeChat'
+import AuthenticatedScreen from './screens/Authenticated'
 import { Loader } from './components'
 
 const AUTHENTICATION_STATUSES = {
@@ -33,9 +33,9 @@ export default class Main extends Component {
     const { authenticationStatus } = this.state
     switch (authenticationStatus) {
       case AUTHENTICATION_STATUSES.authenticated:
-        return <AuthenticatedScene />
+        return <Authenticated />
       case AUTHENTICATION_STATUSES.unauthenticated:
-        return <UnauthenticatedScene />
+        return <WelcomeChatScreen />
       default:
         return <Loader />
     }

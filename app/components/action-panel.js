@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
 })
 
 export default function ActionPanel({ FABLabel, FABAction, negativeLabel, negativeAction }) {
-  console.log({ FABLabel, FABAction, negativeLabel, negativeAction })
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       {!!FABLabel && <FAB label={FABLabel} onPress={FABAction} />}
@@ -41,7 +40,7 @@ ActionPanel.propTypes = {
 
 ActionPanel.defaultProps = {
   FABLabel: '',
-  FABAction: () => {},
+  FABAction: null,
   negativeLabel: '',
-  negativeAction: () => {},
+  negativeAction: null,
 }
