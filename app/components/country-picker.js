@@ -1,7 +1,23 @@
 import React, { Component } from 'react'
-import { Portal, Modal, Button, Colors, List } from 'react-native-paper'
+import { TouchableHighlight, StyleSheet } from 'react-native'
+import { Portal, Modal, Text, Colors, List } from 'react-native-paper'
 import PropTypes from 'prop-types'
 import countries from '../assets/countries.json'
+
+const styles = StyleSheet.create({
+  buttonContainer: {
+    borderColor: Colors.grey300,
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    marginRight: 8,
+  },
+  buttonLabel: {
+    fontSize: 16,
+    color: Colors.grey500,
+  },
+})
 
 export default class CountryPicker extends Component {
   static propTypes = {
@@ -24,9 +40,15 @@ export default class CountryPicker extends Component {
 
     return (
       <React.Fragment>
-        <Button onPress={() => this.setState({ showCountryModal: true })} color={Colors.grey500}>
-          {`${countries[selectedCountry].flag} ${countries[selectedCountry].callingCode}`}
-        </Button>
+        <TouchableHighlight
+          onPress={() => this.setState({ showCountryModal: true })}
+          underlayColor={Colors.grey300}
+          style={styles.buttonContainer}
+        >
+          <Text style={styles.buttonLabel}>{`${countries[selectedCountry].flag} ${
+            countries[selectedCountry].callingCode
+          }`}</Text>
+        </TouchableHighlight>
         <Portal>
           <Modal
             visible={showCountryModal}

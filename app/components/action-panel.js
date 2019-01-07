@@ -9,8 +9,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  fill: {
+  input: {
     flex: 1,
+    marginBottom: 6,
   },
   row: {
     flexDirection: 'row',
@@ -42,7 +43,7 @@ export default function ActionPanel({
             value={phoneNumber}
             onChangeText={onPhoneChange}
             keyboardType="phone-pad"
-            style={styles.fill}
+            style={styles.input}
           />
         </View>
       )}
