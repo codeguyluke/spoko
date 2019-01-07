@@ -1,9 +1,17 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import Permissions from 'react-native-permissions'
+import PropTypes from 'prop-types'
+import regionState from '../../store/region'
+import { getCurrentRegion, getCurrentCountry } from '../../services/geolocation'
 import { Loader, Container, JoChat, ActionPanel } from '../../components'
 import chatMessages from './chat-messages.json'
 
-export default class WelcomeChat extends Component {
+class WelcomeChat extends Component {
+  static propTypes = {
+    onSetInitialRegion: PropTypes.func.isRequired,
+  }
+
   constructor(props) {
     super(props)
 
@@ -29,6 +37,7 @@ export default class WelcomeChat extends Component {
       selectedCountry: 'GB',
       phoneNumber: '',
       verificationCode: '',
+      loading: false,
     }
   }
 
@@ -38,16 +47,32 @@ export default class WelcomeChat extends Component {
       this.setStage('locationPermissionRequest')
       return
     }
-    this.setStage({ currentStage: 'phoneInput' })
+    await this.setRegionAndCountry()
+    this.setStage('phoneInput')
+  }
+
+  setRegionAndCountry = async () => {
+    this.setState({ loading: true })
+    try {
+      const currentRegion = await getCurrentRegion()
+      const currentCountry = await getCurrentCountry(currentRegion)
+      this.props.onSetInitialRegion(currentRegion)
+      await this.setState({ selectedCountry: currentCountry, loading: false })
+    } catch (error) {
+      console.error(error)
+      this.setState({ loading: false })
+    }
   }
 
   handleLocationPermissionRequest = async () => {
     await Permissions.request('location')
+    await this.setRegionAndCountry()
     await this.setStage('locationPermissionGranted')
     this.setStage('phoneInput')
   }
 
   handleLocationPermissionPostponed = async () => {
+    this.setState({ selectedCountry: 'US' })
     await this.setStage('locationPermissionPostponed')
     this.setStage('phoneInput')
   }
@@ -67,13 +92,21 @@ export default class WelcomeChat extends Component {
     }))
 
   render() {
-    const { currentStage, messages, phoneNumber, verificationCode, selectedCountry } = this.state
+    const {
+      currentStage,
+      messages,
+      phoneNumber,
+      verificationCode,
+      selectedCountry,
+      loading,
+    } = this.state
 
     if (currentStage === 'greeting') return <Loader />
     return (
       <Container>
         <JoChat messages={messages} />
         <ActionPanel
+          loading={loading}
           phoneNumber={phoneNumber}
           verificationCode={verificationCode}
           selectedCountry={selectedCountry}
@@ -83,3 +116,8 @@ export default class WelcomeChat extends Component {
     )
   }
 }
+
+export default connect(
+  null,
+  { onSetInitialRegion: regionState.actions.setInitialRegion }
+)(WelcomeChat)

@@ -1,7 +1,7 @@
 import { createStore, combineReducers /* applyMiddleware */ } from 'redux'
 // import createSagaMiddleware from 'redux-saga'
 // import { all, fork } from 'redux-saga/effects'
-// import authState from './auth'
+import regionState from './region'
 
 // const sagas = [authState.saga]
 // function* rootSaga() {
@@ -9,10 +9,10 @@ import { createStore, combineReducers /* applyMiddleware */ } from 'redux'
 // }
 
 // const sagaMiddleware = createSagaMiddleware()
-// const rootReducer = combineReducers({
-//   [authState.STORE_NAME]: authState.reducer,
-// })
+const rootReducer = combineReducers({
+  [regionState.STORE_NAME]: regionState.reducer,
+})
 // const store = createStore(rootReducer, applyMiddleware(sagaMiddleware))
 // sagaMiddleware.run(rootSaga)
 
-export default createStore(combineReducers({ example: (state = {}) => state }))
+export default createStore(rootReducer)

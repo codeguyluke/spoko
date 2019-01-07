@@ -2,7 +2,7 @@ import React from 'react'
 import { View, KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { TextInput, Button, FAB } from 'react-native-paper'
 import PropTypes from 'prop-types'
-import { CountryPicker } from '.'
+import { CountryPicker, Loader } from '.'
 
 const styles = StyleSheet.create({
   container: {
@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
 })
 
 export default function ActionPanel({
+  loading,
   phoneNumber,
   verificationCode,
   selectedCountry,
@@ -34,7 +35,9 @@ export default function ActionPanel({
   negativeLabel,
   negativeAction,
 }) {
-  return (
+  return loading ? (
+    <Loader contained />
+  ) : (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       {showPhoneInput && (
         <View style={[styles.row, styles.distance]}>
@@ -60,9 +63,10 @@ export default function ActionPanel({
 }
 
 ActionPanel.propTypes = {
-  phoneNumber: PropTypes.string,
-  verificationCode: PropTypes.string,
-  selectedCountry: PropTypes.string,
+  loading: PropTypes.bool.isRequired,
+  phoneNumber: PropTypes.string.isRequired,
+  verificationCode: PropTypes.string.isRequired,
+  selectedCountry: PropTypes.string.isRequired,
   onCountryChange: PropTypes.func,
   showPhoneInput: PropTypes.bool,
   onPhoneChange: PropTypes.func,
@@ -73,9 +77,6 @@ ActionPanel.propTypes = {
 }
 
 ActionPanel.defaultProps = {
-  phoneNumber: '',
-  verificationCode: '',
-  selectedCountry: '',
   onCountryChange: () => {},
   showPhoneInput: false,
   onPhoneChange: () => {},
