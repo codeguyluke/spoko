@@ -17,6 +17,7 @@ export default class WelcomeChat extends Component {
       phoneInput: {
         showPhoneInput: true,
         onPhoneChange: this.handlePhoneChange,
+        onCountryChange: this.handleCountryChange,
         FABLabel: 'Verify',
         FABAction: () => {},
       },
@@ -25,6 +26,7 @@ export default class WelcomeChat extends Component {
     this.state = {
       currentStage: 'greeting',
       messages: [...chatMessages.greeting],
+      selectedCountry: 'GB',
       phoneNumber: '',
       verificationCode: '',
     }
@@ -50,6 +52,10 @@ export default class WelcomeChat extends Component {
     this.setStage('phoneInput')
   }
 
+  handleCountryChange = country => {
+    this.setState({ selectedCountry: country })
+  }
+
   handlePhoneChange = phone => {
     this.setState({ phoneNumber: phone })
   }
@@ -61,7 +67,7 @@ export default class WelcomeChat extends Component {
     }))
 
   render() {
-    const { currentStage, messages, phoneNumber, verificationCode } = this.state
+    const { currentStage, messages, phoneNumber, verificationCode, selectedCountry } = this.state
 
     if (currentStage === 'greeting') return <Loader />
     return (
@@ -70,6 +76,7 @@ export default class WelcomeChat extends Component {
         <ActionPanel
           phoneNumber={phoneNumber}
           verificationCode={verificationCode}
+          selectedCountry={selectedCountry}
           {...this.actions[currentStage]}
         />
       </Container>

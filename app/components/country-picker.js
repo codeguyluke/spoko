@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { TouchableHighlight, StyleSheet } from 'react-native'
-import { Portal, Modal, Text, Colors, List } from 'react-native-paper'
+import { Portal, Modal, Text, Colors, List, Searchbar } from 'react-native-paper'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import PropTypes from 'prop-types'
+import { Container } from '.'
 import countries from '../assets/countries.json'
 
 const styles = StyleSheet.create({
@@ -12,6 +14,20 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 12,
     marginRight: 8,
+  },
+  searchbar: {
+    marginVertical: 16,
+  },
+  flag: {
+    fontSize: 22,
+    paddingHorizontal: 12,
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+  callingCode: {
+    textAlign: 'center',
+    alignSelf: 'center',
+    color: Colors.grey500,
   },
   buttonLabel: {
     fontSize: 16,
@@ -27,16 +43,17 @@ export default class CountryPicker extends Component {
 
   state = {
     showCountryModal: false,
+    countryTerm: '',
   }
 
-  handleSelectCountry = country => {
+  handleSelectCountry = country => () => {
     this.props.onSelectCountry(country)
     this.setState({ showCountryModal: false })
   }
 
   render() {
     const { selectedCountry } = this.props
-    const { showCountryModal } = this.state
+    const { showCountryModal, countryTerm } = this.state
 
     return (
       <React.Fragment>
@@ -54,11 +71,27 @@ export default class CountryPicker extends Component {
             visible={showCountryModal}
             onDismiss={() => this.setState({ showCountryModal: false })}
           >
-            <List.Section title="Country">
-              {Object.keys(countries).map(key => (
-                <List.Item key={key} title={countries[key].name} />
-              ))}
-            </List.Section>
+            <Container>
+              <Searchbar
+                placeholder="Country"
+                value={countryTerm}
+                onChangeText={term => this.setState({ countryTerm: term })}
+                style={styles.searchbar}
+              />
+              <KeyboardAwareScrollView>
+                {Object.keys(countries).map(key => (
+                  <List.Item
+                    key={key}
+                    title={countries[key].name}
+                    right={() => (
+                      <Text style={styles.callingCode}>{countries[key].callingCode}</Text>
+                    )}
+                    left={() => <Text style={styles.flag}>{countries[key].flag}</Text>}
+                    onPress={this.handleSelectCountry(key)}
+                  />
+                ))}
+              </KeyboardAwareScrollView>
+            </Container>
           </Modal>
         </Portal>
       </React.Fragment>

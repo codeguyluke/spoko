@@ -25,6 +25,8 @@ const styles = StyleSheet.create({
 export default function ActionPanel({
   phoneNumber,
   verificationCode,
+  selectedCountry,
+  onCountryChange,
   showPhoneInput,
   onPhoneChange,
   FABLabel,
@@ -36,7 +38,7 @@ export default function ActionPanel({
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       {showPhoneInput && (
         <View style={[styles.row, styles.distance]}>
-          <CountryPicker onSelectCountry={() => {}} selectedCountry="PL" />
+          <CountryPicker onSelectCountry={onCountryChange} selectedCountry={selectedCountry} />
           <TextInput
             label="Mobile"
             mode="outlined"
@@ -60,6 +62,8 @@ export default function ActionPanel({
 ActionPanel.propTypes = {
   phoneNumber: PropTypes.string,
   verificationCode: PropTypes.string,
+  selectedCountry: PropTypes.string,
+  onCountryChange: PropTypes.func,
   showPhoneInput: PropTypes.bool,
   onPhoneChange: PropTypes.func,
   FABLabel: PropTypes.string,
@@ -71,6 +75,8 @@ ActionPanel.propTypes = {
 ActionPanel.defaultProps = {
   phoneNumber: '',
   verificationCode: '',
+  selectedCountry: '',
+  onCountryChange: () => {},
   showPhoneInput: false,
   onPhoneChange: () => {},
   FABLabel: '',
