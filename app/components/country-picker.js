@@ -51,6 +51,11 @@ export default class CountryPicker extends Component {
     this.setState({ showCountryModal: false })
   }
 
+  filterCountries = () =>
+    Object.keys(countries).filter(key =>
+      countries[key].name.toLowerCase().includes(this.state.countryTerm.toLowerCase())
+    )
+
   render() {
     const { selectedCountry } = this.props
     const { showCountryModal, countryTerm } = this.state
@@ -62,9 +67,9 @@ export default class CountryPicker extends Component {
           underlayColor={Colors.grey300}
           style={styles.buttonContainer}
         >
-          <Text style={styles.buttonLabel}>{`${countries[selectedCountry].flag} ${
-            countries[selectedCountry].callingCode
-          }`}</Text>
+          <Text style={styles.buttonLabel}>
+            {`${countries[selectedCountry].flag} ${countries[selectedCountry].callingCode}`}
+          </Text>
         </TouchableHighlight>
         <Portal>
           <Modal
@@ -79,7 +84,7 @@ export default class CountryPicker extends Component {
                 style={styles.searchbar}
               />
               <KeyboardAwareScrollView>
-                {Object.keys(countries).map(key => (
+                {this.filterCountries().map(key => (
                   <List.Item
                     key={key}
                     title={countries[key].name}
