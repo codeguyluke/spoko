@@ -34,7 +34,11 @@ class WelcomeChat extends Component {
       FABLabel: 'Confirm code',
       FABAction: () => {},
       negativeLabel: 'Change phone number',
-      negativeAction: () => this.setStage('changePhoneNumber'),
+      negativeAction: () =>
+        this.setState(prevState => ({
+          messages: [...prevState.messages, ...chatMessages.changePhoneNumber],
+          currentStage: 'changePhoneNumber',
+        })),
     }
 
     this.actions = {
@@ -58,11 +62,16 @@ class WelcomeChat extends Component {
   async componentDidMount() {
     const permission = await Permissions.check('location')
     if (permission === 'undetermined') {
-      this.setStage('locationPermissionRequest')
-      return
+      return this.setState(prevState => ({
+        messages: [...prevState.messages, ...chatMessages.locationPermissionRequest],
+        currentStage: 'locationPermissionRequest',
+      }))
     }
     await this.setRegionAndCountry()
-    this.setStage('phoneInput')
+    return this.setState(prevState => ({
+      messages: [...prevState.messages, ...chatMessages.phoneInput],
+      currentStage: 'phoneInput',
+    }))
   }
 
   setRegionAndCountry = async () => {
@@ -81,14 +90,19 @@ class WelcomeChat extends Component {
   handleLocationPermissionRequest = async () => {
     await Permissions.request('location')
     await this.setRegionAndCountry()
-    await this.setStage('locationPermissionGranted')
-    this.setStage('phoneInput')
+    return this.setState(prevState => ({
+      selectedCountry: 'US',
+      messages: [...prevState.messages, ...chatMessages.locationPermissionGranted, ...chatMessages.phoneInput],
+      currentStage: 'phoneInput',
+    }))
   }
 
-  handleLocationPermissionPostponed = async () => {
-    this.setState({ selectedCountry: 'US' })
-    await this.setStage('locationPermissionPostponed')
-    this.setStage('phoneInput')
+  handleLocationPermissionPostponed = () => {
+    return this.setState(prevState => ({
+      selectedCountry: 'US',
+      messages: [...prevState.messages, ...chatMessages.locationPermissionPostponed, ...chatMessages.phoneInput],
+      currentStage: 'phoneInput',
+    }))
   }
 
   handleChangePhoneNumber = () => {}
@@ -96,8 +110,11 @@ class WelcomeChat extends Component {
   handleVerifyPhoneNumber = () => {
     const { selectedCountry, phoneNumber } = this.state
     const phone = `${countries[selectedCountry].callingCode}${phoneNumber}`
-    this.setStage('phoneVerification')
-    this.setState({ loading: true })
+    this.setState(prevState => ({
+      messages: [...prevState.messages, ...chatMessages.phoneVerification],
+      currentStage: 'phoneVerification',
+      loading: true,
+    }))
     firebase
       .auth()
       .verifyPhoneNumber(phone)
@@ -106,8 +123,11 @@ class WelcomeChat extends Component {
         switch (phoneAuthSnapshot.state) {
           case firebase.auth.PhoneAuthState.CODE_SENT:
           case firebase.auth.PhoneAuthState.AUTO_VERIFY_TIMEOUT:
-            this.setStage('verificationCode')
-            break
+            return this.setState(prevState => ({
+              messages: [...prevState.messages, ...chatMessages.verificationCode],
+              currentStage: 'verificationCode',
+              loading: false,
+            }))
           case firebase.auth.PhoneAuthState.AUTO_VERIFIED:
             const { verificationId, code } = phoneAuthSnapshot
             const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, code)
@@ -115,17 +135,14 @@ class WelcomeChat extends Component {
             break
           case firebase.auth.PhoneAuthState.ERROR:
           default:
-            this.setStage('phoneVerificationError')
+            return this.setState(prevState => ({
+              messages: [...prevState.messages, ...chatMessages.phoneVerificationError],
+              currentStage: 'phoneVerificationError',
+              loading: false,
+            }))
         }
-        this.setState({ loading: false })
       })
   }
-
-  setStage = async stage =>
-    this.setState(prevState => ({
-      messages: [...prevState.messages, ...chatMessages[stage]],
-      currentStage: stage,
-    }))
 
   render() {
     const {
