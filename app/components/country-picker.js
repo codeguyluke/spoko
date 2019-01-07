@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { TouchableHighlight, StyleSheet } from 'react-native'
-import { Portal, Modal, Text, Colors, List, Searchbar } from 'react-native-paper'
+import { TouchableHighlight, StyleSheet, Modal, FlatList } from 'react-native'
+import { Portal, Text, Colors, List, Searchbar } from 'react-native-paper'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import PropTypes from 'prop-types'
-import { Container } from '.'
+import { Container, ModalHeader } from '.'
 import countries from '../assets/countries.json'
 
 const styles = StyleSheet.create({
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   searchbar: {
-    marginVertical: 16,
+    marginBottom: 16,
   },
   flag: {
     fontSize: 22,
@@ -44,6 +44,10 @@ export default class CountryPicker extends Component {
   state = {
     showCountryModal: false,
     countryTerm: '',
+  }
+
+  handleCloseModal = () => {
+    this.setState({ showCountryModal: false })
   }
 
   handleSelectCountry = country => () => {
@@ -74,9 +78,11 @@ export default class CountryPicker extends Component {
         <Portal>
           <Modal
             visible={showCountryModal}
-            onDismiss={() => this.setState({ showCountryModal: false })}
+            onRequestClose={this.handleCloseModal}
+            animationType="slide"
           >
             <Container>
+              <ModalHeader title="Select country" onClose={this.handleCloseModal} />
               <Searchbar
                 placeholder="Country"
                 value={countryTerm}
@@ -84,17 +90,21 @@ export default class CountryPicker extends Component {
                 style={styles.searchbar}
               />
               <KeyboardAwareScrollView>
-                {this.filterCountries().map(key => (
-                  <List.Item
-                    key={key}
-                    title={countries[key].name}
-                    right={() => (
-                      <Text style={styles.callingCode}>{countries[key].callingCode}</Text>
-                    )}
-                    left={() => <Text style={styles.flag}>{countries[key].flag}</Text>}
-                    onPress={this.handleSelectCountry(key)}
-                  />
-                ))}
+                <FlatList
+                  data={this.filterCountries()}
+                  keyExtractor={item => item}
+                  renderItem={({ item }) => (
+                    <List.Item
+                      key={item}
+                      title={countries[item].name}
+                      right={() => (
+                        <Text style={styles.callingCode}>{countries[item].callingCode}</Text>
+                      )}
+                      left={() => <Text style={styles.flag}>{countries[item].flag}</Text>}
+                      onPress={this.handleSelectCountry(item)}
+                    />
+                  )}
+                />
               </KeyboardAwareScrollView>
             </Container>
           </Modal>
