@@ -1,7 +1,8 @@
 import React from 'react'
-import { View, Text, KeyboardAvoidingView, StyleSheet } from 'react-native'
-import { TextInput, Button, Colors, FAB } from 'react-native-paper'
+import { View, KeyboardAvoidingView, StyleSheet } from 'react-native'
+import { TextInput, Button, FAB } from 'react-native-paper'
 import PropTypes from 'prop-types'
+import { CountryPicker } from '.'
 
 const styles = StyleSheet.create({
   container: {
@@ -34,7 +35,7 @@ export default function ActionPanel({
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       {showPhoneInput && (
         <View style={[styles.row, styles.distance]}>
-          <Text>haha</Text>
+          <CountryPicker onSelectCountry={() => {}} selectedCountry="PL" />
           <TextInput
             label="Mobile"
             mode="outlined"
@@ -47,12 +48,7 @@ export default function ActionPanel({
       )}
       {!!FABLabel && <FAB label={FABLabel} onPress={FABAction} style={styles.distance} />}
       {!!negativeLabel && (
-        <Button
-          onPress={negativeAction}
-          mode="outlined"
-          color={Colors.red500}
-          style={styles.distance}
-        >
+        <Button onPress={negativeAction} mode="outlined" style={styles.distance}>
           {negativeLabel}
         </Button>
       )}

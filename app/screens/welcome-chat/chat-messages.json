@@ -9,6 +9,10 @@
     {
       "author": "jo",
       "text": "First of all, can you tell me where you're from?"
+    },
+    {
+      "author": "jo",
+      "text": "(Your location will be only used to find cool events around you!)"
     }
   ],
   "locationPermissionGranted": [
@@ -28,13 +32,13 @@
     },
     {
       "author": "jo",
-      "text": "Oh, that's OK! We have a lot of time for this :)"
+      "text": "Your wish is my demand!"
     }
   ],
   "phoneInput": [
     {
       "author": "jo",
-      "text": "At Spoko, your privacy is one of our main concerns. This is why the only real data we ask you for is your phone number."
+      "text": "At Spoko, your privacy is one of our main concerns. This is why the only personal data we ask you for is your phone number."
     },
     {
       "author": "jo",
