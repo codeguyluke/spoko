@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 import { Avatar } from 'react-native-elements'
-import { Surface, Subheading, Colors } from 'react-native-paper'
+import { Surface, Subheading, Colors, withTheme } from 'react-native-paper'
 import PropTypes from 'prop-types'
 import joAvatar from '../assets/images/jo-avatar.jpg'
 
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function ChatMessage({ children, author }) {
+function ChatMessage({ children, author, type, theme }) {
   return (
     <Animatable.View style={styles.container} animation="fadeIn" duration={200}>
       {author === 'jo' && <Avatar rounded source={joAvatar} />}
@@ -35,7 +35,9 @@ export default function ChatMessage({ children, author }) {
           author === 'me' && { marginRight: 16, backgroundColor: Colors.lightGreen50 },
         ]}
       >
-        <Subheading style={styles.text}>{children}</Subheading>
+        <Subheading style={[styles.text, type === 'error' && { color: theme.colors.error }]}>
+          {children}
+        </Subheading>
       </Surface>
       {author === 'me' && <Avatar rounded icon={{ name: 'person' }} />}
     </Animatable.View>
@@ -44,5 +46,17 @@ export default function ChatMessage({ children, author }) {
 
 ChatMessage.propTypes = {
   author: PropTypes.oneOf(['me', 'jo']).isRequired,
+  theme: PropTypes.shape({
+    colors: PropTypes.shape({
+      error: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
   children: PropTypes.string.isRequired,
+  type: PropTypes.string,
 }
+
+ChatMessage.defaultProps = {
+  type: 'info',
+}
+
+export default withTheme(ChatMessage)

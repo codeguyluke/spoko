@@ -44,5 +44,34 @@
       "author": "jo",
       "text": "It's required for logging into the app and exploring and creating all the fancy games around! :)"
     }
+  ],
+  "phoneVerification": [
+    {
+      "author": "me",
+      "text": "Please verify my number."
+    }
+  ],
+  "verificationCode": [
+    {
+      "author": "jo",
+      "text": "Great, we sent you the verification code! Please enter it below."
+    }
+  ],
+  "phoneVerificationError": [
+    {
+      "author": "jo",
+      "type": "error",
+      "text": "Uh oh! Looks like something went wrong with the number! Please try again."
+    }
+  ],
+  "changePhoneNumber": [
+    {
+      "author": "me",
+      "text": "I'd like to change the number."
+    },
+    {
+      "author": "jo",
+      "text": "No problem! Please change your phone number and try again."
+    }
   ]
 }

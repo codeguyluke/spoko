@@ -17,7 +17,11 @@ const styles = StyleSheet.create({
 export default class WelcomeChat extends Component {
   static propTypes = {
     messages: PropTypes.arrayOf(
-      PropTypes.shape({ text: PropTypes.string, author: PropTypes.oneOf(['me', 'jo']) })
+      PropTypes.shape({
+        text: PropTypes.string,
+        author: PropTypes.oneOf(['me', 'jo']),
+        type: PropTypes.string,
+      })
     ).isRequired,
   }
 
@@ -37,10 +41,12 @@ export default class WelcomeChat extends Component {
         <FlatList
           ref={this.listRef}
           data={this.props.messages}
-          renderItem={({ item: { text, author } }) => (
-            <ChatMessage author={author}>{text}</ChatMessage>
+          renderItem={({ item: { text, author, type } }) => (
+            <ChatMessage author={author} type={type}>
+              {text}
+            </ChatMessage>
           )}
-          keyExtractor={item => item.text}
+          keyExtractor={(item, index) => `${item.text}${index}`}
         />
       </View>
     )
