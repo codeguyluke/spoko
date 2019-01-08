@@ -31,8 +31,10 @@ class WelcomeChat extends Component {
       FABAction: this.handleVerifyPhoneNumber,
     }
     this.verificationCodeActionPanel = {
-      FABLabel: 'Confirm code',
-      FABAction: () => {},
+      showVerificationCodeInput: true,
+      onVerificationCodeChange: code => this.setState({ verificationCode: code }),
+      FABLabel: 'Sign in',
+      FABAction: this.handleSignIn,
       negativeLabel: 'Change phone number',
       negativeAction: () =>
         this.setState(prevState => ({
@@ -55,6 +57,7 @@ class WelcomeChat extends Component {
       selectedCountry: 'GB',
       phoneNumber: '',
       verificationCode: '',
+      verificationId: '',
       loading: false,
     }
   }
@@ -91,21 +94,42 @@ class WelcomeChat extends Component {
     await Permissions.request('location')
     await this.setRegionAndCountry()
     return this.setState(prevState => ({
-      selectedCountry: 'US',
-      messages: [...prevState.messages, ...chatMessages.locationPermissionGranted, ...chatMessages.phoneInput],
+      messages: [
+        ...prevState.messages,
+        ...chatMessages.locationPermissionGranted,
+        ...chatMessages.phoneInput,
+      ],
       currentStage: 'phoneInput',
     }))
   }
 
-  handleLocationPermissionPostponed = () => {
-    return this.setState(prevState => ({
-      selectedCountry: 'US',
-      messages: [...prevState.messages, ...chatMessages.locationPermissionPostponed, ...chatMessages.phoneInput],
+  handleLocationPermissionPostponed = () =>
+    this.setState(prevState => ({
+      messages: [
+        ...prevState.messages,
+        ...chatMessages.locationPermissionPostponed,
+        ...chatMessages.phoneInput,
+      ],
       currentStage: 'phoneInput',
     }))
-  }
 
-  handleChangePhoneNumber = () => {}
+  handleSignIn = async () => {
+    this.setState({ loading: true })
+    try {
+      const { verificationId, verificationCode } = this.state
+      const credential = firebase.auth.PhoneAuthProvider.credential(
+        verificationId,
+        verificationCode
+      )
+      await firebase.auth().signInWithCredential(credential)
+    } catch (error) {
+      console.error(error)
+      this.setState(prevState => ({
+        loading: false,
+        messages: [...prevState.messages, ...chatMessages.verificationCodeError],
+      }))
+    }
+  }
 
   handleVerifyPhoneNumber = () => {
     const { selectedCountry, phoneNumber } = this.state
@@ -119,20 +143,20 @@ class WelcomeChat extends Component {
       .auth()
       .verifyPhoneNumber(phone)
       .on('state_changed', phoneAuthSnapshot => {
-        console.log('phoneAUthSnapshot', phoneAuthSnapshot)
         switch (phoneAuthSnapshot.state) {
           case firebase.auth.PhoneAuthState.CODE_SENT:
           case firebase.auth.PhoneAuthState.AUTO_VERIFY_TIMEOUT:
             return this.setState(prevState => ({
               messages: [...prevState.messages, ...chatMessages.verificationCode],
               currentStage: 'verificationCode',
+              verificationId: phoneAuthSnapshot.verificationId,
               loading: false,
             }))
-          case firebase.auth.PhoneAuthState.AUTO_VERIFIED:
+          case firebase.auth.PhoneAuthState.AUTO_VERIFIED: {
             const { verificationId, code } = phoneAuthSnapshot
             const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, code)
-            firebase.auth().signInWithCredential(credential)
-            break
+            return firebase.auth().signInWithCredential(credential)
+          }
           case firebase.auth.PhoneAuthState.ERROR:
           default:
             return this.setState(prevState => ({

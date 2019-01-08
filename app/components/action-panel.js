@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  input: {
+  phoneInput: {
     flex: 1,
     marginBottom: 6,
   },
@@ -25,7 +25,9 @@ const styles = StyleSheet.create({
 export default function ActionPanel({
   loading,
   phoneNumber,
+  showVerificationCodeInput,
   verificationCode,
+  onVerificationCodeChange,
   selectedCountry,
   onCountryChange,
   showPhoneInput,
@@ -39,6 +41,16 @@ export default function ActionPanel({
     <Loader contained />
   ) : (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
+      {showVerificationCodeInput && (
+        <TextInput
+          label="Verification code"
+          mode="outlined"
+          value={verificationCode}
+          onChangeText={onVerificationCodeChange}
+          keyboardType="number-pad"
+          style={styles.distance}
+        />
+      )}
       {showPhoneInput && (
         <View style={[styles.row, styles.distance]}>
           <CountryPicker onSelectCountry={onCountryChange} selectedCountry={selectedCountry} />
@@ -48,7 +60,7 @@ export default function ActionPanel({
             value={phoneNumber}
             onChangeText={onPhoneChange}
             keyboardType="phone-pad"
-            style={styles.input}
+            style={styles.phoneInput}
           />
         </View>
       )}
@@ -65,6 +77,8 @@ export default function ActionPanel({
 ActionPanel.propTypes = {
   loading: PropTypes.bool.isRequired,
   phoneNumber: PropTypes.string.isRequired,
+  showVerificationCodeInput: PropTypes.bool,
+  onVerificationCodeChange: PropTypes.func,
   verificationCode: PropTypes.string.isRequired,
   selectedCountry: PropTypes.string.isRequired,
   onCountryChange: PropTypes.func,
@@ -80,6 +94,8 @@ ActionPanel.defaultProps = {
   onCountryChange: () => {},
   showPhoneInput: false,
   onPhoneChange: () => {},
+  showVerificationCodeInput: false,
+  onVerificationCodeChange: () => {},
   FABLabel: '',
   FABAction: () => {},
   negativeLabel: '',

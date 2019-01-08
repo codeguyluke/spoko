@@ -73,5 +73,18 @@
       "author": "jo",
       "text": "No problem! Please change your phone number and try again."
     }
+  ],
+  "autoVerification": [
+    {
+      "author": "jo",
+      "text": "Verification code got automatically confirmed! Ready to sign in?"
+    }
+  ],
+  "verificationCodeError": [
+    {
+      "author": "jo",
+      "text": "Uh oh, looks like the code is not correct. Could you try again?",
+      "type": "error"
+    }
   ]
 }
