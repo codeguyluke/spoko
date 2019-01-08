@@ -1,10 +1,41 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Card, Title } from 'react-native-paper'
+import Permissions from 'react-native-permissions'
+import { createAppContainer } from 'react-navigation'
+import { Icon } from 'react-native-elements'
+import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
 import PropTypes from 'prop-types'
+import HomeScreen from './home/'
+import OtherScreen from './Authenticated'
 import userState from '../store/user'
+import regionState from '../store/region'
 import { getUserById, subscribeToUser, createUser } from '../services/firestore'
+import { getCurrentRegion } from '../services/geolocation'
 import { Loader } from '../components'
+
+const Navigator = createAppContainer(
+  createMaterialBottomTabNavigator(
+    {
+      Home: {
+        screen: HomeScreen,
+        navigationOptions: {
+          tabBarIcon: ({ tintColor }) => <Icon size={24} name="home" color={tintColor} />,
+        },
+      },
+      Other: {
+        screen: OtherScreen,
+        navigationOptions: {
+          tabBarIcon: ({ tintColor }) => <Icon size={24} name="event" color={tintColor} />,
+        },
+      },
+    },
+    {
+      initialRouteName: 'Home',
+      activeTintColor: '#FFF',
+      inactiveTintColor: 'rgba(255, 255, 255, 0.7)',
+    }
+  )
+)
 
 class Router extends Component {
   static propTypes = {
@@ -13,6 +44,7 @@ class Router extends Component {
       phoneNumber: PropTypes.string.isRequired,
     }).isRequired,
     onSetCurrentUser: PropTypes.func.isRequired,
+    onSetInitialRegion: PropTypes.func.isRequired,
   }
 
   state = {
@@ -31,10 +63,13 @@ class Router extends Component {
         avatar: '',
       })
     }
-
     this.unsubscribe = await subscribeToUser(user.uid, userSnapshot =>
       onSetCurrentUser(userSnapshot.data())
     )
+
+    await Permissions.request('location')
+    await this.setInitialRegion()
+
     return this.setState({ initialized: true })
   }
 
@@ -42,18 +77,24 @@ class Router extends Component {
     this.unsubscribe()
   }
 
+  setInitialRegion = async () => {
+    try {
+      const currentRegion = await getCurrentRegion()
+      this.props.onSetInitialRegion(currentRegion)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   render() {
-    return this.state.initialized ? (
-      <Card>
-        <Title>AUTHENTICATED</Title>
-      </Card>
-    ) : (
-      <Loader />
-    )
+    return this.state.initialized ? <Navigator /> : <Loader />
   }
 }
 
 export default connect(
   null,
-  { onSetCurrentUser: userState.actions.setCurrentUser }
+  {
+    onSetInitialRegion: regionState.actions.setInitialRegion,
+    onSetCurrentUser: userState.actions.setCurrentUser,
+  }
 )(Router)

@@ -1,7 +1,7 @@
 import { types } from './region.actions'
 
 const INITIAL_STATE = {
-  currentRegion: null,
+  region: null,
   initialRegion: null,
 }
 
