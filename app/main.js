@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import firebase from 'react-native-firebase'
 import WelcomeChatScreen from './screens/welcome-chat'
-import AuthenticatedScreen from './screens/Authenticated'
+import AppRouter from './screens/router'
 import { Loader } from './components'
 
 const AUTHENTICATION_STATUSES = {
@@ -13,6 +13,7 @@ const AUTHENTICATION_STATUSES = {
 export default class Main extends Component {
   state = {
     authenticationStatus: AUTHENTICATION_STATUSES.undetermined,
+    currentUser: null,
   }
 
   componentDidMount() {
@@ -21,6 +22,7 @@ export default class Main extends Component {
         authenticationStatus: !user
           ? AUTHENTICATION_STATUSES.unauthenticated
           : AUTHENTICATION_STATUSES.authenticated,
+        currentUser: user,
       })
     )
   }
@@ -30,10 +32,10 @@ export default class Main extends Component {
   }
 
   render() {
-    const { authenticationStatus } = this.state
+    const { authenticationStatus, currentUser } = this.state
     switch (authenticationStatus) {
       case AUTHENTICATION_STATUSES.authenticated:
-        return <AuthenticatedScreen />
+        return <AppRouter user={currentUser} />
       case AUTHENTICATION_STATUSES.unauthenticated:
         return <WelcomeChatScreen />
       default:

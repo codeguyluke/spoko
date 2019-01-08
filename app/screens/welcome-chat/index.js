@@ -17,38 +17,32 @@ class WelcomeChat extends Component {
   constructor(props) {
     super(props)
 
-    this.locationActionPanel = {
-      FABLabel: 'Sure!',
-      FABAction: this.handleLocationPermissionRequest,
-      negativeLabel: 'Nah... Ask me later!',
-      negativeAction: this.handleLocationPermissionPostponed,
-    }
-    this.phoneInputActionPanel = {
-      showPhoneInput: true,
-      onPhoneChange: phone => this.setState({ phoneNumber: phone }),
-      onCountryChange: country => this.setState({ selectedCountry: country }),
-      FABLabel: 'Verify',
-      FABAction: this.handleVerifyPhoneNumber,
-    }
-    this.verificationCodeActionPanel = {
-      showVerificationCodeInput: true,
-      onVerificationCodeChange: code => this.setState({ verificationCode: code }),
-      FABLabel: 'Sign in',
-      FABAction: this.handleSignIn,
-      negativeLabel: 'Change phone number',
-      negativeAction: () =>
-        this.setState(prevState => ({
-          messages: [...prevState.messages, ...chatMessages.changePhoneNumber],
-          currentStage: 'changePhoneNumber',
-        })),
-    }
-
     this.actions = {
-      locationPermissionRequest: { ...this.locationActionPanel },
-      phoneInput: { ...this.phoneInputActionPanel },
-      phoneVerificationError: { ...this.phoneInputActionPanel },
-      changePhoneNumber: { ...this.phoneInputActionPanel },
-      verificationCode: { ...this.verificationCodeActionPanel },
+      locationPermissionRequest: {
+        FABLabel: 'Sure!',
+        FABAction: this.handleLocationPermissionRequest,
+        negativeLabel: 'Nah... Ask me later!',
+        negativeAction: this.handleLocationPermissionPostponed,
+      },
+      phoneInput: {
+        showPhoneInput: true,
+        onPhoneChange: phone => this.setState({ phoneNumber: phone }),
+        onCountryChange: country => this.setState({ selectedCountry: country }),
+        FABLabel: 'Verify',
+        FABAction: this.handleVerifyPhoneNumber,
+      },
+      verificationCode: {
+        showVerificationCodeInput: true,
+        onVerificationCodeChange: code => this.setState({ verificationCode: code }),
+        FABLabel: 'Confirm code',
+        FABAction: this.handleConfirmCode,
+        negativeLabel: 'Change phone number',
+        negativeAction: () =>
+          this.setState(prevState => ({
+            messages: [...prevState.messages, ...chatMessages.changePhoneNumber],
+            currentStage: 'phoneInput',
+          })),
+      },
     }
 
     this.state = {
@@ -113,7 +107,7 @@ class WelcomeChat extends Component {
       currentStage: 'phoneInput',
     }))
 
-  handleSignIn = async () => {
+  handleConfirmCode = async () => {
     this.setState({ loading: true })
     try {
       const { verificationId, verificationCode } = this.state
@@ -161,7 +155,6 @@ class WelcomeChat extends Component {
           default:
             return this.setState(prevState => ({
               messages: [...prevState.messages, ...chatMessages.phoneVerificationError],
-              currentStage: 'phoneVerificationError',
               loading: false,
             }))
         }
