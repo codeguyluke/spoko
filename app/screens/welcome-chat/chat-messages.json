@@ -86,5 +86,11 @@
       "text": "Uh oh, looks like the code is not correct. Could you try again?",
       "type": "error"
     }
+  ],
+  "verificationConfirm": [
+    {
+      "author": "me",
+      "text": "Let me in!"
+    }
   ]
 }

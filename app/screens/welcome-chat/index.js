@@ -108,7 +108,10 @@ class WelcomeChat extends Component {
     }))
 
   handleConfirmCode = async () => {
-    this.setState({ loading: true })
+    this.setState(prevState => ({
+      loading: true,
+      messages: [...prevState.messages, ...chatMessages.verificationConfirm],
+    }))
     try {
       const { verificationId, verificationCode } = this.state
       const credential = firebase.auth.PhoneAuthProvider.credential(
@@ -156,6 +159,7 @@ class WelcomeChat extends Component {
             return this.setState(prevState => ({
               messages: [...prevState.messages, ...chatMessages.phoneVerificationError],
               loading: false,
+              currentStage: 'phoneInput',
             }))
         }
       })
