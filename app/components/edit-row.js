@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     padding: 16,
     elevation: 1,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   labelContainer: {
     marginBottom: 4,

@@ -6,6 +6,7 @@ import EditRow from './edit-row'
 import Loader from './loader'
 import ModalHeader from './modal-header'
 import JoChat from './jo-chat'
+import PlacePicker from './place-picker'
 import SportPicker from './sport-picker'
 
 export {
@@ -17,5 +18,6 @@ export {
   Loader,
   ModalHeader,
   JoChat,
+  PlacePicker,
   SportPicker,
 }

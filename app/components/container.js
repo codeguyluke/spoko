@@ -8,6 +8,7 @@ const CONTAINER_STYLE = {
   ...StyleSheet.absoluteFillObject,
   ...ifIphoneX({
     paddingTop: 32,
+    paddingBottom: 56,
   }),
   paddingHorizontal: 16,
 }
