@@ -1,8 +1,17 @@
 import React, { Component } from 'react'
-import { ScrollView } from 'react-native'
-import { withTheme } from 'react-native-paper'
+import { View, StyleSheet, ScrollView } from 'react-native'
+import { withTheme, FAB } from 'react-native-paper'
 import PropTypes from 'prop-types'
 import { SportPicker, PlacePicker } from '../components'
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  fab: {
+    margin: 16,
+  },
+})
 
 class EditGame extends Component {
   static propTypes = {
@@ -34,16 +43,19 @@ class EditGame extends Component {
     const { sport, place } = this.state
 
     return (
-      <ScrollView style={{ backgroundColor: theme.colors.background }}>
-        <SportPicker
-          sport={sport}
-          onSelectSport={selectedSport => this.setState({ sport: selectedSport })}
-        />
-        <PlacePicker
-          place={place}
-          onSelectPlace={selectedPlace => this.setState({ place: selectedPlace })}
-        />
-      </ScrollView>
+      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+        <ScrollView>
+          <SportPicker
+            sport={sport}
+            onSelectSport={selectedSport => this.setState({ sport: selectedSport })}
+          />
+          <PlacePicker
+            place={place}
+            onSelectPlace={selectedPlace => this.setState({ place: selectedPlace })}
+          />
+        </ScrollView>
+        <FAB label={this.game ? 'Save' : 'Create'} onPress={() => {}} style={styles.fab} />
+      </View>
     )
   }
 }

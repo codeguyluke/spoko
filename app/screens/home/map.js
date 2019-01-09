@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-import { IconButton, withTheme, Colors } from 'react-native-paper'
+import { IconButton, withTheme, Colors, Button } from 'react-native-paper'
 import MapView from 'react-native-maps'
 import PropTypes from 'prop-types'
 import regionState from '../../store/region'
@@ -14,20 +14,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 16,
     bottom: 16,
-    width: 56,
-    height: 56,
+    width: 64,
+    height: 64,
     borderRadius: 28,
   },
-  resetIcon: {
+  resetButton: {
     position: 'absolute',
     right: 16,
     top: 64,
-    width: 48,
-    height: 48,
-    borderColor: Colors.blueGrey900,
-    borderWidth: 1,
-    borderRadius: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
   },
 })
 
@@ -63,10 +57,18 @@ class Map extends Component {
     return (
       <View style={styles.fill}>
         <MapView region={region} onRegionChangeComplete={onUpdateRegion} style={styles.fill} />
-        <IconButton icon="replay" size={32} onPress={onResetRegion} style={styles.resetIcon} />
+        <Button
+          mode="contained"
+          icon="replay"
+          onPress={onResetRegion}
+          style={styles.resetButton}
+          color={Colors.orange50}
+        >
+          Reset
+        </Button>
         <IconButton
           icon="add-circle"
-          size={56}
+          size={64}
           color={theme.colors.accent}
           onPress={() => navigate('EditGame')}
           style={styles.addIcon}
