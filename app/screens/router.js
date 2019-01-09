@@ -1,15 +1,17 @@
 import React, { Component } from 'react'
+import { StatusBar } from 'react-native'
 import { connect } from 'react-redux'
 import Permissions from 'react-native-permissions'
 import { createAppContainer } from 'react-navigation'
 import { Icon } from 'react-native-elements'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
+import firebase from 'react-native-firebase'
 import PropTypes from 'prop-types'
 import HomeScreen from './home'
 import OtherScreen from './Authenticated'
-import userState from '../store/user'
+import gamesState from '../store/games'
 import regionState from '../store/region'
-import { getUserById, subscribeToUser, createUser } from '../services/firestore'
+import { subscribeToGames } from '../services/firestore'
 import { getCurrentRegion } from '../services/geolocation'
 import { Loader } from '../components'
 
@@ -41,12 +43,8 @@ const Navigator = createAppContainer(
 
 class Router extends Component {
   static propTypes = {
-    user: PropTypes.shape({
-      uid: PropTypes.string.isRequired,
-      phoneNumber: PropTypes.string.isRequired,
-    }).isRequired,
-    onSetCurrentUser: PropTypes.func.isRequired,
     onSetInitialRegion: PropTypes.func.isRequired,
+    onSetGames: PropTypes.func.isRequired,
   }
 
   state = {
@@ -54,20 +52,11 @@ class Router extends Component {
   }
 
   async componentDidMount() {
-    const { user, onSetCurrentUser } = this.props
-    const userDocument = await getUserById(user.uid)
-
-    if (!userDocument.exists) {
-      await createUser(user.uid, {
-        uid: user.uid,
-        phone: user.phoneNumber,
-        username: '',
-        avatar: '',
-      })
-    }
-    this.unsubscribe = await subscribeToUser(user.uid, userSnapshot =>
-      onSetCurrentUser(userSnapshot.data())
-    )
+    const { onSetGames } = this.props
+    this.unsubscribeFromGames = await subscribeToGames(gamesSnapshot => {
+      console.log(gamesSnapshot)
+      onSetGames(gamesSnapshot)
+    })
 
     await Permissions.request('location')
     await this.setInitialRegion()
@@ -76,7 +65,7 @@ class Router extends Component {
   }
 
   componentWillUnmount() {
-    this.unsubscribe()
+    this.unsubscribeFromGames()
   }
 
   setInitialRegion = async () => {
@@ -89,7 +78,12 @@ class Router extends Component {
   }
 
   render() {
-    return this.state.initialized ? <Navigator /> : <Loader />
+    return (
+      <React.Fragment>
+        <StatusBar barStyle="light-content" />
+        {this.state.initialized ? <Navigator /> : <Loader />}
+      </React.Fragment>
+    )
   }
 }
 
@@ -97,6 +91,6 @@ export default connect(
   null,
   {
     onSetInitialRegion: regionState.actions.setInitialRegion,
-    onSetCurrentUser: userState.actions.setCurrentUser,
+    onSetGames: gamesState.actions.setGames,
   }
 )(Router)

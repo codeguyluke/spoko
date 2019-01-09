@@ -1,15 +1,17 @@
 import firebase from 'react-native-firebase'
 
 const gamesRef = firebase.firestore().collection('games')
-const usersRef = firebase.firestore().collection('users')
-
-export const getUserById = async id => usersRef.doc(id).get()
-
-export const subscribeToUser = async (id, callback) => usersRef.doc(id).onSnapshot(callback)
-
-export const createUser = async (id, user) => usersRef.doc(id).set({ ...user })
 
 export const subscribeToGames = async callback => {
   const currentDate = new Date()
   return gamesRef.where('datetime', '>', currentDate).onSnapshot(callback)
 }
+
+export const createGame = async game => {
+  const currentUserId = firebase.auth().currentUser.uid
+  return gamesRef.add({ ...game, ownerId: currentUserId, players: [] })
+}
+
+export const deleteGame = async id => gamesRef.doc(id).delete()
+
+export const editGame = async (id, game) => gamesRef.doc(id).set({ ...game }, { merge: true })

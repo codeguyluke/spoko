@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   resetButton: {
     position: 'absolute',
     right: 16,
-    top: 64,
+    top: 32,
   },
 })
 

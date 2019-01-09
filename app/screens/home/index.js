@@ -1,14 +1,21 @@
+import React from 'react'
 import { createStackNavigator } from 'react-navigation'
 import MapScreen from './map'
 import EditGameScreen from '../edit-game'
+import { FilterButton } from '../../components'
 
 export default createStackNavigator(
   {
     Map: {
       screen: MapScreen,
       navigationOptions: () => ({
-        header: null,
+        headerLeft: <FilterButton filter="sport" />,
+        headerRight: <FilterButton filter="sport" />,
+        headerTitle: <FilterButton filter="sport" />,
         headerBackTitle: null,
+        headerStyle: {
+          backgroundColor: '#FF9800',
+        },
       }),
     },
     EditGame: {

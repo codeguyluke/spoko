@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { Headline, IconButton, withTheme } from 'react-native-paper'
+import { IconButton, withTheme, Title } from 'react-native-paper'
 import PropTypes from 'prop-types'
 
 const styles = StyleSheet.create({
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
 function ModalHeader({ onClose, title, theme: { colors } }) {
   return (
     <View style={styles.container}>
-      <Headline>{title}</Headline>
+      <Title>{title}</Title>
       <IconButton
         style={styles.closeButtonContainer}
         onPress={onClose}
