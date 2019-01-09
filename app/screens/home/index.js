@@ -1,6 +1,6 @@
-import React from 'react'
 import { createStackNavigator } from 'react-navigation'
 import MapScreen from './map'
+import EditGameScreen from '../edit-game'
 
 export default createStackNavigator(
   {
@@ -8,6 +8,17 @@ export default createStackNavigator(
       screen: MapScreen,
       navigationOptions: () => ({
         header: null,
+        headerBackTitle: null,
+      }),
+    },
+    EditGame: {
+      screen: EditGameScreen,
+      navigationOptions: () => ({
+        headerTitle: 'Create new game',
+        headerTintColor: '#FFF',
+        headerStyle: {
+          backgroundColor: '#FF9800',
+        },
       }),
     },
   },

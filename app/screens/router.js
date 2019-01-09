@@ -5,7 +5,7 @@ import { createAppContainer } from 'react-navigation'
 import { Icon } from 'react-native-elements'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
 import PropTypes from 'prop-types'
-import HomeScreen from './home/'
+import HomeScreen from './home'
 import OtherScreen from './Authenticated'
 import userState from '../store/user'
 import regionState from '../store/region'
@@ -19,12 +19,14 @@ const Navigator = createAppContainer(
       Home: {
         screen: HomeScreen,
         navigationOptions: {
+          // eslint-disable-next-line react/prop-types
           tabBarIcon: ({ tintColor }) => <Icon size={24} name="home" color={tintColor} />,
         },
       },
       Other: {
         screen: OtherScreen,
         navigationOptions: {
+          // eslint-disable-next-line react/prop-types
           tabBarIcon: ({ tintColor }) => <Icon size={24} name="event" color={tintColor} />,
         },
       },

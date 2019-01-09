@@ -46,10 +46,19 @@ class Map extends Component {
         accent: PropTypes.string.isRequired,
       }).isRequired,
     }).isRequired,
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func.isRequired,
+    }).isRequired,
   }
 
   render() {
-    const { region, onResetRegion, onUpdateRegion, theme } = this.props
+    const {
+      region,
+      onResetRegion,
+      onUpdateRegion,
+      theme,
+      navigation: { navigate },
+    } = this.props
 
     return (
       <View style={styles.fill}>
@@ -59,7 +68,7 @@ class Map extends Component {
           icon="add-circle"
           size={56}
           color={theme.colors.accent}
-          onPress={() => {}}
+          onPress={() => navigate('EditGame')}
           style={styles.addIcon}
         />
       </View>
