@@ -194,6 +194,7 @@ class PlacePicker extends Component {
                 onPress={(
                   { place_id, description } // eslint-disable-line
                 ) => this.setState({ place: { id: place_id, description } })}
+                debounce={200}
                 styles={googleAutocompleteStyles}
                 textInputProps={{
                   onChange: this.handleTextInputSearchChange,

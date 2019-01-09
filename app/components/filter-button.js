@@ -8,6 +8,9 @@ const FILTERS = {
   sport: {
     icon: 'directions-run',
   },
+  datetime: {
+    icon: 'schedule',
+  },
 }
 
 const styles = StyleSheet.create({
@@ -19,9 +22,8 @@ const styles = StyleSheet.create({
   text: {
     marginLeft: 4,
     fontWeight: '700',
+    textDecorationLine: 'underline',
     color: '#FFF',
-    borderBottomWidth: 2,
-    borderBottomColor: '#FFF',
   },
 })
 

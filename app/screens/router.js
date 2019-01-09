@@ -5,10 +5,10 @@ import Permissions from 'react-native-permissions'
 import { createAppContainer } from 'react-navigation'
 import { Icon } from 'react-native-elements'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
-import firebase from 'react-native-firebase'
 import PropTypes from 'prop-types'
 import HomeScreen from './home'
-import OtherScreen from './Authenticated'
+import ScheduledScreen from './scheduled'
+import ProfileScreen from './profile'
 import gamesState from '../store/games'
 import regionState from '../store/region'
 import { subscribeToGames } from '../services/firestore'
@@ -25,11 +25,18 @@ const Navigator = createAppContainer(
           tabBarIcon: ({ tintColor }) => <Icon size={24} name="home" color={tintColor} />,
         },
       },
-      Other: {
-        screen: OtherScreen,
+      Scheduled: {
+        screen: ScheduledScreen,
         navigationOptions: {
           // eslint-disable-next-line react/prop-types
           tabBarIcon: ({ tintColor }) => <Icon size={24} name="event" color={tintColor} />,
+        },
+      },
+      Profile: {
+        screen: ProfileScreen,
+        navigationOptions: {
+          // eslint-disable-next-line react/prop-types
+          tabBarIcon: ({ tintColor }) => <Icon size={24} name="person" color={tintColor} />,
         },
       },
     },
@@ -54,8 +61,9 @@ class Router extends Component {
   async componentDidMount() {
     const { onSetGames } = this.props
     this.unsubscribeFromGames = await subscribeToGames(gamesSnapshot => {
-      console.log(gamesSnapshot)
-      onSetGames(gamesSnapshot)
+      const games = gamesSnapshot.docs.map(doc => doc.data())
+      console.log(games)
+      onSetGames(games)
     })
 
     await Permissions.request('location')

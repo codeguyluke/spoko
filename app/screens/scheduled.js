@@ -1,10 +1,10 @@
 import React from 'react'
 import { Card, Title } from 'react-native-paper'
 
-export default function Authenticated() {
+export default function Scheduled() {
   return (
     <Card>
-      <Title>AUTHENTICATED</Title>
+      <Title>Scheduled</Title>
     </Card>
   )
 }

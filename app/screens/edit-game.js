@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, StyleSheet, ScrollView } from 'react-native'
 import { withTheme, FAB } from 'react-native-paper'
 import PropTypes from 'prop-types'
-import { SportPicker, PlacePicker } from '../components'
+import { SportPicker, PlacePicker, DatetimePicker } from '../components'
 
 const styles = StyleSheet.create({
   container: {
@@ -32,15 +32,13 @@ class EditGame extends Component {
     this.state = {
       sport: (this.game && this.game.sport) || '',
       place: (this.game && this.game.place) || null,
-      datetime: (this.game && this.game.time) || null,
-      spots: (this.game && this.game.spots) || 1,
-      edited: false,
+      datetime: (this.game && this.game.datetime) || null,
     }
   }
 
   render() {
     const { theme } = this.props
-    const { sport, place } = this.state
+    const { sport, place, datetime } = this.state
 
     return (
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -52,6 +50,10 @@ class EditGame extends Component {
           <PlacePicker
             place={place}
             onSelectPlace={selectedPlace => this.setState({ place: selectedPlace })}
+          />
+          <DatetimePicker
+            datetime={datetime}
+            onSelectDatetime={selectedDatetime => this.setState({ datetime: selectedDatetime })}
           />
         </ScrollView>
         <FAB label={this.game ? 'Save' : 'Create'} onPress={() => {}} style={styles.fab} />
