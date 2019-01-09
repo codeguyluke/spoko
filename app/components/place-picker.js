@@ -170,6 +170,7 @@ class PlacePicker extends Component {
       <React.Fragment>
         <EditRow
           labelIcon="place"
+          placeholder="Choose the place"
           image={propsPlace && globeIcon}
           value={propsPlace && propsPlace.description}
           onPress={() => this.setState({ showPlaceModal: true, place: null })}
@@ -182,7 +183,7 @@ class PlacePicker extends Component {
             animationType="slide"
           >
             <Container>
-              <ModalHeader title="Choose place" onClose={this.handleCloseModal} />
+              <ModalHeader title="Choose the place" onClose={this.handleCloseModal} />
               <GooglePlacesAutocomplete
                 enablePoweredByContainer={false}
                 placeholder="Search for place"

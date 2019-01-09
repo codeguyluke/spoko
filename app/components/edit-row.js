@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, StyleSheet, TouchableHighlight, Image } from 'react-native'
-import { Surface, Title, Colors, withTheme, Subheading, Caption } from 'react-native-paper'
+import { Surface, Colors, withTheme, Subheading, Caption } from 'react-native-paper'
 import { Icon } from 'react-native-elements'
 import PropTypes from 'prop-types'
 import capitalize from 'lodash/capitalize'
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   },
 })
 
-function EditRow({ label, labelIcon, image, value, onPress, theme, optional }) {
+function EditRow({ label, labelIcon, image, value, onPress, placeholder, theme, optional }) {
   return (
     <View style={styles.container}>
       <View style={styles.labelContainer}>
@@ -49,15 +49,14 @@ function EditRow({ label, labelIcon, image, value, onPress, theme, optional }) {
       <TouchableHighlight onPress={onPress} underlayColor={Colors.grey300}>
         <Surface style={styles.surface}>
           {!!image && <Image source={image} style={styles.image} />}
-          <View style={styles.value}>
-            {value ? (
-              <Title>{value}</Title>
-            ) : (
-              <Subheading style={{ color: theme.colors.placeholder }}>
-                {capitalize(label)}
-              </Subheading>
-            )}
-          </View>
+          <Subheading
+            style={[
+              styles.value,
+              value ? { fontWeight: '500' } : { color: theme.colors.placeholder },
+            ]}
+          >
+            {value || capitalize(placeholder)}
+          </Subheading>
           <Icon name="chevron-right" size={32} color={theme.colors.accent} />
         </Surface>
       </TouchableHighlight>
@@ -75,6 +74,7 @@ EditRow.propTypes = {
       accent: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
+  placeholder: PropTypes.string.isRequired,
   image: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   value: PropTypes.string,
   optional: PropTypes.bool,

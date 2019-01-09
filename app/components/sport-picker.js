@@ -40,6 +40,7 @@ export default class SportPicker extends Component {
       <React.Fragment>
         <EditRow
           labelIcon="directions-run"
+          placeholder="Pick the sport"
           image={sports[sport] && sports[sport].icon}
           value={sports[sport] && sports[sport].name}
           onPress={() => this.setState({ showSportsModal: true })}
@@ -52,7 +53,7 @@ export default class SportPicker extends Component {
             animationType="slide"
           >
             <Container>
-              <ModalHeader title="Select sport" onClose={this.handleCloseModal} />
+              <ModalHeader title="Pick the sport" onClose={this.handleCloseModal} />
               <FlatList
                 data={Object.keys(sports)}
                 keyExtractor={item => item}
