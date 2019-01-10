@@ -13,7 +13,7 @@ import gamesState from '../store/games'
 import regionState from '../store/region'
 import { subscribeToGames } from '../services/firestore'
 import { getCurrentRegion } from '../services/geolocation'
-import { Loader } from '../components'
+import { Loader, Toast } from '../components'
 
 const Navigator = createAppContainer(
   createMaterialBottomTabNavigator(
@@ -90,6 +90,7 @@ class Router extends Component {
       <React.Fragment>
         <StatusBar barStyle="light-content" />
         {this.state.initialized ? <Navigator /> : <Loader />}
+        <Toast />
       </React.Fragment>
     )
   }

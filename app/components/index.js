@@ -10,6 +10,7 @@ import ModalHeader from './modal-header'
 import JoChat from './jo-chat'
 import PlacePicker from './place-picker'
 import SportPicker from './sport-picker'
+import Toast from './toast'
 
 export {
   ActionPanel,
@@ -24,4 +25,5 @@ export {
   JoChat,
   PlacePicker,
   SportPicker,
+  Toast,
 }

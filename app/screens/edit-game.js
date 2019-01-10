@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, ScrollView } from 'react-native'
+import { connect } from 'react-redux'
+import { View, StyleSheet, ScrollView, Alert } from 'react-native'
 import { withTheme, FAB } from 'react-native-paper'
 import PropTypes from 'prop-types'
-import { SportPicker, PlacePicker, DatetimePicker } from '../components'
+import { createGame } from '../services/firestore'
+import toastState from '../store/toast'
+import { SportPicker, PlacePicker, DatetimePicker, Loader } from '../components'
 
 const styles = StyleSheet.create({
   container: {
@@ -17,12 +20,14 @@ class EditGame extends Component {
   static propTypes = {
     navigation: PropTypes.shape({
       getParam: PropTypes.func.isRequired,
+      goBack: PropTypes.func.isRequired,
     }).isRequired,
     theme: PropTypes.shape({
       colors: PropTypes.shape({
         background: PropTypes.string.isRequired,
       }).isRequired,
     }).isRequired,
+    onAddToast: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -33,12 +38,36 @@ class EditGame extends Component {
       sport: (this.game && this.game.sport) || '',
       place: (this.game && this.game.place) || null,
       datetime: (this.game && this.game.datetime) || null,
+      loading: false,
     }
+  }
+
+  handleCreateGame = async () => {
+    const { sport, place, datetime } = this.state
+    const { onAddToast, navigation } = this.props
+
+    if (!sport || !place || !datetime) {
+      Alert.alert(
+        'Set all required info',
+        'In order to create the game, you need to set sport, place and time first.',
+        [{ text: 'OK' }]
+      )
+      return
+    }
+
+    this.setState({ loading: true })
+    await createGame({ sport, place, datetime })
+    onAddToast('Game created!')
+    this.setState({ loading: false }, () => navigation.goBack())
+  }
+
+  handleSaveGame = async () => {
+    await console.log('Save game')
   }
 
   render() {
     const { theme } = this.props
-    const { sport, place, datetime } = this.state
+    const { sport, place, datetime, loading } = this.state
 
     return (
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -56,10 +85,18 @@ class EditGame extends Component {
             onSelectDatetime={selectedDatetime => this.setState({ datetime: selectedDatetime })}
           />
         </ScrollView>
-        <FAB label={this.game ? 'Save' : 'Create'} onPress={() => {}} style={styles.fab} />
+        {this.game ? (
+          <FAB label="Save" onPress={this.handleSaveGame} style={styles.fab} />
+        ) : (
+          <FAB label="Create" onPress={this.handleCreateGame} style={styles.fab} />
+        )}
+        {loading && <Loader />}
       </View>
     )
   }
 }
 
-export default withTheme(EditGame)
+export default connect(
+  null,
+  { onAddToast: toastState.actions.addToast }
+)(withTheme(EditGame))

@@ -3,6 +3,7 @@ import { createStore, combineReducers /* applyMiddleware */ } from 'redux'
 // import { all, fork } from 'redux-saga/effects'
 import regionState from './region'
 import gamesState from './games'
+import toastState from './toast'
 
 // const sagas = [authState.saga]
 // function* rootSaga() {
@@ -13,6 +14,7 @@ import gamesState from './games'
 const rootReducer = combineReducers({
   [regionState.STORE_NAME]: regionState.reducer,
   [gamesState.STORE_NAME]: gamesState.reducer,
+  [toastState.STORE_NAME]: toastState.reducer,
 })
 // const store = createStore(rootReducer, applyMiddleware(sagaMiddleware))
 // sagaMiddleware.run(rootSaga)

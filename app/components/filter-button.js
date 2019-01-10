@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   text: {
-    marginLeft: 4,
+    fontSize: 16,
+    marginHorizontal: 4,
     fontWeight: '700',
     textDecorationLine: 'underline',
     color: '#FFF',
@@ -32,6 +33,7 @@ export default function FilterButton({ filter }) {
     <View style={styles.container}>
       <Icon color="#FFF" size={24} name={FILTERS[filter].icon} />
       <Text style={styles.text}>All</Text>
+      <Icon color="#FFF" size={24} name="arrow-drop-down" />
     </View>
   )
 }
