@@ -61,8 +61,7 @@ class Router extends Component {
   async componentDidMount() {
     const { onSetGames } = this.props
     this.unsubscribeFromGames = await subscribeToGames(gamesSnapshot => {
-      const games = gamesSnapshot.docs.map(doc => doc.data())
-      console.log(games)
+      const games = gamesSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
       onSetGames(games)
     })
 

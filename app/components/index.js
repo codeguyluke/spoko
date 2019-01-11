@@ -5,6 +5,7 @@ import CountryPicker from './country-picker'
 import DatetimePicker from './datetime-picker'
 import EditRow from './edit-row'
 import FilterButton from './filter-button'
+import GameItem from './game-item'
 import Loader from './loader'
 import ModalHeader from './modal-header'
 import JoChat from './jo-chat'
@@ -20,6 +21,7 @@ export {
   DatetimePicker,
   EditRow,
   FilterButton,
+  GameItem,
   Loader,
   ModalHeader,
   JoChat,

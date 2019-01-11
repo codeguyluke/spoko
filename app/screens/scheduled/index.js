@@ -1,27 +1,23 @@
-import React from 'react'
 import { createStackNavigator } from 'react-navigation'
-import MapScreen from './map'
+import ScheduledScreen from './scheduled'
 import EditGameScreen from '../edit-game'
-import { FilterButton } from '../../components'
 
 export default createStackNavigator(
   {
-    Map: {
-      screen: MapScreen,
+    Scheduled: {
+      screen: ScheduledScreen,
       navigationOptions: () => ({
-        headerLeft: <FilterButton filter="sport" />,
-        headerTitle: <FilterButton filter="datetime" />,
-        headerRight: <FilterButton filter="price" />,
-        headerBackTitle: null,
+        headerTitle: 'Your scheduled games',
+        headerTintColor: '#FFF',
         headerStyle: {
           backgroundColor: '#FF9800',
         },
       }),
     },
-    CreateGame: {
+    EditGame: {
       screen: EditGameScreen,
       navigationOptions: () => ({
-        headerTitle: 'Create new game',
+        headerTitle: 'Edit game',
         headerTintColor: '#FFF',
         headerStyle: {
           backgroundColor: '#FF9800',
@@ -30,6 +26,6 @@ export default createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Map',
+    initialRouteName: 'Scheduled',
   }
 )

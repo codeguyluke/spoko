@@ -70,7 +70,7 @@ class Map extends Component {
           icon="add-circle"
           size={64}
           color={theme.colors.accent}
-          onPress={() => navigate('EditGame')}
+          onPress={() => navigate('CreateGame')}
           style={styles.addIcon}
         />
       </View>
