@@ -4,18 +4,6 @@ import { Text } from 'react-native-paper'
 import { Icon } from 'react-native-elements'
 import PropTypes from 'prop-types'
 
-const FILTERS = {
-  sport: {
-    icon: 'directions-run',
-  },
-  datetime: {
-    icon: 'schedule',
-  },
-  price: {
-    icon: 'attach-money',
-  },
-}
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -30,16 +18,18 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function FilterButton({ filter }) {
+export default function FilterButton({ icon, onPress, label }) {
   return (
-    <TouchableOpacity style={styles.container} activeOpacity={0.8}>
-      <Icon color="#FFF" size={24} name={FILTERS[filter].icon} />
-      <Text style={styles.text}>All</Text>
+    <TouchableOpacity onPress={onPress} style={styles.container} activeOpacity={0.8}>
+      <Icon color="#FFF" size={24} name={icon} />
+      <Text style={styles.text}>{label}</Text>
       <Icon color="#FFF" size={24} name="arrow-drop-down" />
     </TouchableOpacity>
   )
 }
 
 FilterButton.propTypes = {
-  filter: PropTypes.oneOf(Object.keys(FILTERS)).isRequired,
+  icon: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  onPress: PropTypes.func.isRequired,
 }

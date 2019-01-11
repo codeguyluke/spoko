@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Image, StyleSheet, TouchableOpacity } from 'react-native'
-import { Surface, Colors, withTheme, Subheading, Divider } from 'react-native-paper'
+import { Surface, Colors, withTheme, Paragraph } from 'react-native-paper'
 import { Icon } from 'react-native-elements'
 import PropTypes from 'prop-types'
 import sports from '../assets/sports'
@@ -35,13 +35,13 @@ const styles = StyleSheet.create({
     width: '100%',
     marginVertical: 16,
     paddingHorizontal: 16,
-    elevation: 2,
+    elevation: 4,
     flexDirection: 'row',
     alignItems: 'center',
   },
   image: {
-    width: 48,
-    height: 48,
+    width: 40,
+    height: 40,
     marginRight: 16,
   },
 })
@@ -53,17 +53,15 @@ function GameItem({ sport, place, datetime, theme, onPress }) {
         <View style={styles.column}>
           <View style={styles.row}>
             <Image source={sports[sport].icon} style={styles.image} />
-            <Subheading style={styles.text}>{sports[sport].name}</Subheading>
+            <Paragraph style={styles.text}>{sports[sport].name}</Paragraph>
           </View>
-          <Divider />
           <View style={styles.row}>
             <Image source={globeIcon} style={styles.image} />
-            <Subheading style={styles.text}>{place.description}</Subheading>
+            <Paragraph style={styles.text}>{place.description}</Paragraph>
           </View>
-          <Divider />
           <View style={styles.row}>
             <Image source={calendarIcon} style={styles.image} />
-            <Subheading style={styles.text}>{getDatetimeString(datetime)}</Subheading>
+            <Paragraph style={styles.text}>{getDatetimeString(datetime)}</Paragraph>
           </View>
         </View>
         <Icon name="chevron-right" size={32} color={theme.colors.accent} />

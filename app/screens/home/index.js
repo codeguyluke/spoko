@@ -2,16 +2,16 @@ import React from 'react'
 import { createStackNavigator } from 'react-navigation'
 import MapScreen from './map'
 import EditGameScreen from '../edit-game'
-import { FilterButton } from '../../components'
+import { DatetimeFilter, PriceFilter, SportFilter } from '../../components'
 
 export default createStackNavigator(
   {
     Map: {
       screen: MapScreen,
       navigationOptions: () => ({
-        headerLeft: <FilterButton filter="sport" />,
-        headerTitle: <FilterButton filter="datetime" />,
-        headerRight: <FilterButton filter="price" />,
+        headerLeft: <SportFilter />,
+        headerTitle: <DatetimeFilter />,
+        headerRight: <PriceFilter />,
         headerBackTitle: null,
         headerStyle: {
           backgroundColor: '#FF9800',

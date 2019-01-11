@@ -7,6 +7,7 @@ import { withTheme, Button, TextInput } from 'react-native-paper'
 import { Avatar } from 'react-native-elements'
 import PropTypes from 'prop-types'
 import toastState from '../store/toast'
+import avatarIcon from '../assets/images/avatar.png'
 
 const showSignoutConfirmation = ({ onSuccess }) => () =>
   InteractionManager.runAfterInteractions(() => {
@@ -21,11 +22,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  avatarOverlayContainer: {
-    backgroundColor: '#FFF',
-  },
   avatarContainer: {
     alignSelf: 'center',
+  },
+  avatar: {
+    borderWidth: 4,
   },
   button: {
     paddingVertical: 8,
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     marginTop: 32,
-    backgroundColor: '#FFF',
+    backgroundColor: 'transparent',
   },
 })
 
@@ -43,7 +44,6 @@ class Profile extends Component {
       colors: PropTypes.shape({
         background: PropTypes.string.isRequired,
         accent: PropTypes.string.isRequired,
-        placeholder: PropTypes.string.isRequired,
         error: PropTypes.string.isRequired,
       }).isRequired,
     }).isRequired,
@@ -99,9 +99,8 @@ class Profile extends Component {
           <Avatar
             rounded
             xlarge
-            source={photo}
-            icon={!photo && { name: 'person', color: theme.colors.placeholder }}
-            overlayContainerStyle={styles.avatarOverlayContainer}
+            avatarStyle={[styles.avatar, { borderColor: '#FFF' }]}
+            source={photo || avatarIcon}
             containerStyle={styles.avatarContainer}
             onPress={() => {}}
           />
