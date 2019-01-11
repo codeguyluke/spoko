@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { TouchableOpacity, StyleSheet } from 'react-native'
 import { Text } from 'react-native-paper'
 import { Icon } from 'react-native-elements'
 import PropTypes from 'prop-types'
@@ -10,6 +10,9 @@ const FILTERS = {
   },
   datetime: {
     icon: 'schedule',
+  },
+  price: {
+    icon: 'attach-money',
   },
 }
 
@@ -23,18 +26,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginHorizontal: 4,
     fontWeight: '700',
-    textDecorationLine: 'underline',
     color: '#FFF',
   },
 })
 
 export default function FilterButton({ filter }) {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} activeOpacity={0.8}>
       <Icon color="#FFF" size={24} name={FILTERS[filter].icon} />
       <Text style={styles.text}>All</Text>
       <Icon color="#FFF" size={24} name="arrow-drop-down" />
-    </View>
+    </TouchableOpacity>
   )
 }
 

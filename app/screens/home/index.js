@@ -10,8 +10,8 @@ export default createStackNavigator(
       screen: MapScreen,
       navigationOptions: () => ({
         headerLeft: <FilterButton filter="sport" />,
-        headerRight: <FilterButton filter="datetime" />,
         headerTitle: <FilterButton filter="datetime" />,
+        headerRight: <FilterButton filter="price" />,
         headerBackTitle: null,
         headerStyle: {
           backgroundColor: '#FF9800',

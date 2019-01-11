@@ -108,7 +108,7 @@ class DatetimePicker extends Component {
                 color={theme.colors.accent}
                 style={styles.button}
               >
-                Submit
+                Save
               </Button>
             </Container>
           </Modal>
