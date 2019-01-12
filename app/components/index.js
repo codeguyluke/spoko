@@ -7,6 +7,7 @@ import DatetimePicker from './datetime-picker'
 import EditRow from './edit-row'
 import FilterButton from './filter-button'
 import GameItem from './game-item'
+import InfoRow from './info-row'
 import Loader from './loader'
 import ModalHeader from './modal-header'
 import JoChat from './jo-chat'
@@ -26,6 +27,7 @@ export {
   EditRow,
   FilterButton,
   GameItem,
+  InfoRow,
   Loader,
   ModalHeader,
   JoChat,

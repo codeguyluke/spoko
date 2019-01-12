@@ -1,9 +1,11 @@
 import React from 'react'
-import { StyleSheet, View, ScrollView, Text } from 'react-native'
-import { withTheme } from 'react-native-paper'
+import { StyleSheet, View, ScrollView } from 'react-native'
+import { withTheme, FAB, Button, Colors } from 'react-native-paper'
 import MapView, { Marker } from 'react-native-maps'
 import { Avatar } from 'react-native-elements'
+import firebase from 'react-native-firebase'
 import PropTypes from 'prop-types'
+import { InfoRow } from '../components'
 import sports from '../assets/sports'
 
 const INITIAL_LATITUDE_DELTA = 0.01
@@ -25,18 +27,28 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     borderColor: '#FFF',
   },
+  buttonMargin: {
+    margin: 16,
+  },
+  button: {
+    paddingVertical: 8,
+  },
+  stack: {
+    marginTop: 16,
+  },
 })
 
 function ViewGame({ navigation, theme }) {
   const game = navigation.getParam('game')
+  const { ownerId, sport, place, datetime, players } = game
   const {
-    sport,
-    place: {
-      location: { latitude, longitude },
-    },
-  } = game
+    location: { latitude, longitude },
+  } = place
+  const owned = ownerId === firebase.auth().currentUser.uid
+  const played = players.some(player => player.id === firebase.auth().currentUser.uid)
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <MapView
         initialRegion={{
           latitude,
@@ -50,11 +62,37 @@ function ViewGame({ navigation, theme }) {
           <Avatar rounded medium source={sports[sport].icon} avatarStyle={styles.avatar} />
         </Marker>
       </MapView>
-      <ScrollView
-        contentContainerStyle={[styles.contentContainer, { backgroundColor: theme.colors.background }]}
-      >
-        <Text>{JSON.stringify(game)}</Text>
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <InfoRow large type="sport" value={sport} />
+        <InfoRow large type="place" value={place} />
+        <InfoRow large type="datetime" value={datetime} />
       </ScrollView>
+      {!(owned || played) && <FAB label="Join" onPress={() => {}} style={styles.buttonMargin} />}
+      {played && (
+        <Button
+          mode="outlined"
+          onPress={() => {}}
+          style={[styles.buttonMargin, styles.button]}
+          color={theme.colors.error}
+        >
+          Exit game
+        </Button>
+      )}
+      {owned && (
+        <View style={styles.buttonMargin}>
+          <Button mode="contained" style={styles.button} onPress={() => {}} color={Colors.blue500}>
+            Edit game
+          </Button>
+          <Button
+            mode="contained"
+            style={[styles.button, styles.stack]}
+            onPress={() => {}}
+            color={theme.colors.error}
+          >
+            Cancel game
+          </Button>
+        </View>
+      )}
     </View>
   )
 }
@@ -66,6 +104,7 @@ ViewGame.propTypes = {
   theme: PropTypes.shape({
     colors: PropTypes.shape({
       background: PropTypes.string.isRequired,
+      error: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
 }

@@ -1,35 +1,13 @@
 import React from 'react'
-import { View, Image, StyleSheet, TouchableOpacity } from 'react-native'
-import { Surface, Colors, withTheme, Paragraph } from 'react-native-paper'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { Surface, Colors, withTheme } from 'react-native-paper'
 import { Icon } from 'react-native-elements'
 import PropTypes from 'prop-types'
-import sports from '../assets/sports'
-import calendarIcon from '../assets/images/calendar.png'
-import globeIcon from '../assets/images/globe.png'
-
-function getDatetimeString(datetime) {
-  return datetime
-    ? `${datetime.toLocaleDateString(undefined, {
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric',
-      })}, ${datetime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
-    : ''
-}
+import { InfoRow } from '.'
 
 const styles = StyleSheet.create({
   column: {
     flex: 1,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
-  text: {
-    flex: 1,
-    justifyContent: 'center',
-    fontWeight: '500',
   },
   surface: {
     width: '100%',
@@ -39,11 +17,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  image: {
-    width: 40,
-    height: 40,
-    marginRight: 16,
-  },
 })
 
 function GameItem({ sport, place, datetime, theme, onPress }) {
@@ -51,18 +24,9 @@ function GameItem({ sport, place, datetime, theme, onPress }) {
     <TouchableOpacity onPress={onPress} underlayColor={Colors.grey200}>
       <Surface style={styles.surface}>
         <View style={styles.column}>
-          <View style={styles.row}>
-            <Image source={sports[sport].icon} style={styles.image} />
-            <Paragraph style={styles.text}>{sports[sport].name}</Paragraph>
-          </View>
-          <View style={styles.row}>
-            <Image source={globeIcon} style={styles.image} />
-            <Paragraph style={styles.text}>{place.description}</Paragraph>
-          </View>
-          <View style={styles.row}>
-            <Image source={calendarIcon} style={styles.image} />
-            <Paragraph style={styles.text}>{getDatetimeString(datetime)}</Paragraph>
-          </View>
+          <InfoRow type="sport" value={sport} />
+          <InfoRow type="place" value={place} />
+          <InfoRow type="datetime" value={datetime} />
         </View>
         <Icon name="chevron-right" size={32} color={theme.colors.accent} />
       </Surface>
