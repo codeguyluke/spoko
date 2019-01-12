@@ -2,9 +2,12 @@ import firebase from 'react-native-firebase'
 
 export const STORE_NAME = 'games'
 
-const currentUserId = firebase.auth().currentUser.uid
 const selectScheduledGames = state =>
-  state[STORE_NAME].games.filter(game => game.ownerId === currentUserId)
+  state[STORE_NAME].games.filter(
+    game =>
+      game.ownerId === firebase.auth().currentUser.uid ||
+      game.players.some(player => player.id === firebase.auth().currentUser.uid)
+  )
 
 const selectGameById = (state, id) => state[STORE_NAME].games.find(game => game.id === id)
 

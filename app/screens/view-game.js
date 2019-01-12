@@ -8,7 +8,7 @@ import firebase from 'react-native-firebase'
 import PropTypes from 'prop-types'
 import toastState from '../store/toast'
 import gamesState from '../store/games'
-import { cancelGame } from '../services/firestore'
+import { cancelGame, joinGame } from '../services/firestore'
 import { InfoRow, Loader } from '../components'
 import sports from '../assets/sports'
 
@@ -106,6 +106,21 @@ class ViewGame extends Component {
     navigation.navigate('EditGame', { game, onGoBack: this.handleRefresh })
   }
 
+  handleJoinGame = async () => {
+    const { game, onAddToast } = this.props
+
+    this.setState({ loading: true })
+    try {
+      await joinGame(game)
+      onAddToast("You've joined the game!")
+      this.setState({ loading: false })
+    } catch (error) {
+      console.error(error)
+      onAddToast("Couldn't join the game, please try again.")
+      this.setState({ loading: false })
+    }
+  }
+
   render() {
     const { theme, game } = this.props
     const { loading } = this.state
@@ -141,7 +156,7 @@ class ViewGame extends Component {
             <InfoRow large type="datetime" value={datetime} />
           </ScrollView>
           {!(owned || played) && (
-            <FAB label="Join" onPress={() => {}} style={styles.buttonMargin} />
+            <FAB label="Join" onPress={this.handleJoinGame} style={styles.buttonMargin} />
           )}
           {played && (
             <Button
