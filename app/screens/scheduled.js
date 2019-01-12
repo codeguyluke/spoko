@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { StyleSheet, FlatList } from 'react-native'
 import { withTheme } from 'react-native-paper'
 import PropTypes from 'prop-types'
-import gamesState from '../../store/games'
-import { GameItem } from '../../components'
+import gamesState from '../store/games'
+import { GameItem } from '../components'
 
 const styles = StyleSheet.create({
   container: {

@@ -3,11 +3,11 @@ import { connect } from 'react-redux'
 import Permissions from 'react-native-permissions'
 import firebase from 'react-native-firebase'
 import PropTypes from 'prop-types'
-import regionState from '../../store/region'
-import { getCurrentRegion, getCurrentCountry } from '../../services/geolocation'
-import { Loader, Container, JoChat, ActionPanel } from '../../components'
-import chatMessages from './chat-messages.json'
-import countries from '../../assets/countries.json'
+import regionState from '../store/region'
+import { getCurrentRegion, getCurrentCountry } from '../services/geolocation'
+import { Loader, Container, JoChat, ActionPanel } from '../components'
+import chatMessages from '../assets/chat-messages.json'
+import countries from '../assets/countries.json'
 
 class WelcomeChat extends Component {
   static propTypes = {

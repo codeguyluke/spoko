@@ -51,7 +51,7 @@ function ViewGame({ navigation, theme }) {
         </Marker>
       </MapView>
       <ScrollView
-        contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}
+        contentContainerStyle={[styles.contentContainer, { backgroundColor: theme.colors.background }]}
       >
         <Text>{JSON.stringify(game)}</Text>
       </ScrollView>

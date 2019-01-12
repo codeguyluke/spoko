@@ -2,31 +2,122 @@ import React, { Component } from 'react'
 import { StatusBar } from 'react-native'
 import { connect } from 'react-redux'
 import Permissions from 'react-native-permissions'
-import { createAppContainer } from 'react-navigation'
+import { createAppContainer, createStackNavigator } from 'react-navigation'
 import { Icon } from 'react-native-elements'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
 import PropTypes from 'prop-types'
-import HomeScreen from './home'
+import MapScreen from './map'
 import ScheduledScreen from './scheduled'
+import EditGameScreen from './edit-game'
+import ViewGameScreen from './view-game'
 import ProfileScreen from './profile'
 import gamesState from '../store/games'
 import regionState from '../store/region'
 import { subscribeToGames } from '../services/firestore'
 import { getCurrentRegion } from '../services/geolocation'
-import { Loader, Toast } from '../components'
+import { Loader, Toast, SportFilter, DatetimeFilter, PriceFilter } from '../components'
 
-const Navigator = createAppContainer(
+const HomeStackNavigator = createStackNavigator(
+  {
+    Map: {
+      screen: MapScreen,
+      navigationOptions: () => ({
+        headerLeft: <SportFilter />,
+        headerTitle: <DatetimeFilter />,
+        headerRight: <PriceFilter />,
+        headerBackTitle: null,
+        headerStyle: {
+          backgroundColor: '#FF9800',
+        },
+      }),
+    },
+    CreateGame: {
+      screen: EditGameScreen,
+      navigationOptions: () => ({
+        headerTitle: 'Create new game',
+        headerTintColor: '#FFF',
+        headerStyle: {
+          backgroundColor: '#FF9800',
+        },
+      }),
+    },
+    ViewGame: {
+      screen: ViewGameScreen,
+      navigationOptions: () => ({
+        headerTitle: 'Game details',
+        headerTintColor: '#FFF',
+        headerStyle: {
+          backgroundColor: '#FF9800',
+        },
+      }),
+    },
+    EditGame: {
+      screen: EditGameScreen,
+      navigationOptions: () => ({
+        headerTitle: 'Edit game',
+        headerTintColor: '#FFF',
+        headerStyle: {
+          backgroundColor: '#FF9800',
+        },
+      }),
+    },
+  },
+  {
+    initialRouteName: 'Map',
+  }
+)
+
+const ScheduledStackNavigator = createStackNavigator(
+  {
+    Scheduled: {
+      screen: ScheduledScreen,
+      navigationOptions: () => ({
+        headerBackTitle: null,
+        headerTitle: 'Your scheduled games',
+        headerTintColor: '#FFF',
+        headerStyle: {
+          backgroundColor: '#FF9800',
+        },
+      }),
+    },
+    ViewGame: {
+      screen: ViewGameScreen,
+      navigationOptions: () => ({
+        headerTitle: 'Game details',
+        headerTintColor: '#FFF',
+        headerStyle: {
+          backgroundColor: '#FF9800',
+        },
+      }),
+    },
+    EditGame: {
+      screen: EditGameScreen,
+      navigationOptions: () => ({
+        headerTitle: 'Edit game',
+        headerTintColor: '#FFF',
+        headerStyle: {
+          backgroundColor: '#FF9800',
+        },
+      }),
+    },
+  },
+  {
+    initialRouteName: 'Scheduled',
+  }
+)
+
+const AppNavigator = createAppContainer(
   createMaterialBottomTabNavigator(
     {
       Home: {
-        screen: HomeScreen,
+        screen: HomeStackNavigator,
         navigationOptions: {
           // eslint-disable-next-line react/prop-types
           tabBarIcon: ({ tintColor }) => <Icon size={24} name="home" color={tintColor} />,
         },
       },
       Scheduled: {
-        screen: ScheduledScreen,
+        screen: ScheduledStackNavigator,
         navigationOptions: {
           // eslint-disable-next-line react/prop-types
           tabBarIcon: ({ tintColor }) => <Icon size={24} name="event" color={tintColor} />,
@@ -88,7 +179,7 @@ class Router extends Component {
     return (
       <React.Fragment>
         <StatusBar barStyle="light-content" />
-        {this.state.initialized ? <Navigator /> : <Loader />}
+        {this.state.initialized ? <AppNavigator /> : <Loader />}
         <Toast />
       </React.Fragment>
     )

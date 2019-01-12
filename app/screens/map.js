@@ -4,9 +4,9 @@ import { connect } from 'react-redux'
 import { IconButton, withTheme, Colors, Button } from 'react-native-paper'
 import MapView, { Marker } from 'react-native-maps'
 import PropTypes from 'prop-types'
-import regionState from '../../store/region'
-import gamesState from '../../store/games'
-import sports from '../../assets/sports'
+import regionState from '../store/region'
+import gamesState from '../store/games'
+import sports from '../assets/sports'
 
 const styles = StyleSheet.create({
   fill: {
