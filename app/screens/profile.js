@@ -125,6 +125,7 @@ class Profile extends Component {
           disabled={!edited || loadingSave || loadingSignout}
           style={styles.button}
           color={theme.colors.accent}
+          icon="save"
         >
           Save
         </Button>

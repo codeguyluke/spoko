@@ -21,7 +21,7 @@ function Scheduled({ scheduledGames, theme, navigation }) {
       data={scheduledGames}
       style={[styles.container, { backgroundColor: theme.colors.background }]}
       renderItem={({ item }) => (
-        <GameItem {...item} onPress={() => navigation.navigate('ViewGame', { game: item })} />
+        <GameItem {...item} onPress={() => navigation.navigate('ViewGame', { gameId: item.id })} />
       )}
       keyExtractor={item => item.id}
     />

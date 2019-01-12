@@ -55,7 +55,7 @@ function Map({ games, region, onResetRegion, onUpdateRegion, theme, navigation: 
               key={id}
               coordinate={{ latitude, longitude }}
               onPress={navigateToViewGame(game, currentGame =>
-                navigate('ViewGame', { game: currentGame })
+                navigate('ViewGame', { gameId: currentGame.id })
               )}
             >
               <Image source={sports[sport].icon} style={styles.image} />

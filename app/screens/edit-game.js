@@ -56,9 +56,15 @@ class EditGame extends Component {
     }
 
     this.setState({ loading: true })
-    await createGame({ sport, place, datetime })
-    onAddToast('Game created!')
-    this.setState({ loading: false }, () => navigation.goBack())
+    try {
+      await createGame({ sport, place, datetime })
+      onAddToast('Game created!')
+      this.setState({ loading: false }, () => navigation.goBack())
+    } catch (error) {
+      console.error(error)
+      onAddToast("Couldn't create the game, please try again.")
+      this.setState({ loading: false })
+    }
   }
 
   handleSaveGame = async () => {
@@ -66,9 +72,15 @@ class EditGame extends Component {
     const { onAddToast, navigation } = this.props
 
     this.setState({ loading: true })
-    await editGame(this.game.id, { sport, place, datetime })
-    onAddToast('Game edited!')
-    this.setState({ loading: false }, () => navigation.goBack())
+    try {
+      await editGame(this.game.id, { sport, place, datetime })
+      onAddToast('Game edited!')
+      this.setState({ loading: false }, () => navigation.goBack())
+    } catch (error) {
+      console.error(error)
+      onAddToast("Couldn't edit the game, please try again.")
+      this.setState({ loading: false })
+    }
   }
 
   render() {

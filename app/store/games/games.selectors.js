@@ -6,4 +6,6 @@ const currentUserId = firebase.auth().currentUser.uid
 const selectScheduledGames = state =>
   state[STORE_NAME].games.filter(game => game.ownerId === currentUserId)
 
-export default { selectScheduledGames }
+const selectGameById = (state, id) => state[STORE_NAME].games.find(game => game.id === id)
+
+export default { selectScheduledGames, selectGameById }

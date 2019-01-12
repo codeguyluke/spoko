@@ -7,6 +7,7 @@ import { Avatar } from 'react-native-elements'
 import firebase from 'react-native-firebase'
 import PropTypes from 'prop-types'
 import toastState from '../store/toast'
+import gamesState from '../store/games'
 import { cancelGame } from '../services/firestore'
 import { InfoRow, Loader } from '../components'
 import sports from '../assets/sports'
@@ -51,6 +52,18 @@ const styles = StyleSheet.create({
 
 class ViewGame extends Component {
   static propTypes = {
+    game: PropTypes.shape({
+      ownerId: PropTypes.string.isRequired,
+      sport: PropTypes.string.isRequired,
+      place: PropTypes.shape({
+        location: PropTypes.shape({
+          latitude: PropTypes.number.isRequired,
+          longitude: PropTypes.number.isRequired,
+        }),
+      }),
+      datetime: PropTypes.instanceOf(Date).isRequired,
+      players: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string })).isRequired,
+    }),
     navigation: PropTypes.shape({
       getParam: PropTypes.func.isRequired,
       navigate: PropTypes.func.isRequired,
@@ -65,34 +78,41 @@ class ViewGame extends Component {
     onAddToast: PropTypes.func.isRequired,
   }
 
+  static defaultProps = {
+    game: null,
+  }
+
   state = {
     loading: false,
   }
 
-  constructor(props) {
-    super(props)
-
-    this.game = props.navigation.getParam('game')
-  }
-
   handleCancelGame = async () => {
-    const { onAddToast, navigation } = this.props
+    const { onAddToast, navigation, game } = this.props
 
     this.setState({ loading: true })
-    await cancelGame(this.game.id)
-    onAddToast('Game cancelled!')
-    this.setState({ loading: false }, () => navigation.goBack())
+    try {
+      await cancelGame(game.id)
+      onAddToast('Game cancelled!')
+      this.setState({ loading: false }, () => navigation.goBack())
+    } catch (error) {
+      console.error(error)
+      onAddToast("Couldn't cancel the game, please try again.")
+      this.setState({ loading: false })
+    }
   }
 
   handleEditGame = () => {
-    this.props.navigation.navigate('EditGame', { game: this.game })
+    const { navigation, game } = this.props
+    navigation.navigate('EditGame', { game, onGoBack: this.handleRefresh })
   }
 
   render() {
-    const { theme } = this.props
+    const { theme, game } = this.props
     const { loading } = this.state
 
-    const { ownerId, sport, place, datetime, players } = this.game
+    if (!game) return <Loader />
+
+    const { ownerId, sport, place, datetime, players } = game
     const {
       location: { latitude, longitude },
     } = place
@@ -140,6 +160,7 @@ class ViewGame extends Component {
                 style={styles.button}
                 onPress={this.handleEditGame}
                 color={Colors.blue500}
+                icon="edit"
               >
                 Edit game
               </Button>
@@ -152,6 +173,7 @@ class ViewGame extends Component {
                   onSuccess: this.handleCancelGame,
                 })}
                 color={theme.colors.error}
+                icon="delete"
               >
                 Cancel game
               </Button>
@@ -164,7 +186,14 @@ class ViewGame extends Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  const gameId = ownProps.navigation.getParam('gameId')
+  return {
+    game: gamesState.selectors.selectGameById(state, gameId),
+  }
+}
+
 export default connect(
-  null,
+  mapStateToProps,
   { onAddToast: toastState.actions.addToast }
 )(withTheme(ViewGame))
