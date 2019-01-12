@@ -8,7 +8,7 @@ import firebase from 'react-native-firebase'
 import PropTypes from 'prop-types'
 import toastState from '../store/toast'
 import gamesState from '../store/games'
-import { cancelGame, joinGame } from '../services/firestore'
+import { cancelGame, joinGame, leaveGame } from '../services/firestore'
 import { InfoRow, Loader } from '../components'
 import sports from '../assets/sports'
 
@@ -106,13 +106,28 @@ class ViewGame extends Component {
     navigation.navigate('EditGame', { game, onGoBack: this.handleRefresh })
   }
 
+  handleLeaveGame = async () => {
+    const { game, onAddToast } = this.props
+
+    this.setState({ loading: true })
+    try {
+      await leaveGame(game)
+      onAddToast('You left the game!')
+      this.setState({ loading: false })
+    } catch (error) {
+      console.error(error)
+      onAddToast("Couldn't leave the game, please try again.")
+      this.setState({ loading: false })
+    }
+  }
+
   handleJoinGame = async () => {
     const { game, onAddToast } = this.props
 
     this.setState({ loading: true })
     try {
       await joinGame(game)
-      onAddToast("You've joined the game!")
+      onAddToast('You joined the game!')
       this.setState({ loading: false })
     } catch (error) {
       console.error(error)
@@ -160,12 +175,16 @@ class ViewGame extends Component {
           )}
           {played && (
             <Button
-              mode="outlined"
-              onPress={() => {}}
+              mode="contained"
+              onPress={showConfirmation({
+                title: 'Leave game?',
+                message: 'Are you sure you want to leave this game?',
+                onSuccess: this.handleLeaveGame,
+              })}
               style={[styles.buttonMargin, styles.button]}
               color={theme.colors.error}
             >
-              Exit game
+              Leave game
             </Button>
           )}
           {owned && (

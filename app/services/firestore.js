@@ -21,3 +21,13 @@ export const joinGame = async game => {
   const newPlayers = [...game.players, { id: uid, phoneNumber, photoURL }]
   return gamesRef.doc(game.id).set({ players: newPlayers }, { merge: true })
 }
+
+export const leaveGame = async game => {
+  const currentUserId = firebase.auth().currentUser.uid
+  const newPlayers = [...game.players]
+  const playerIndex = newPlayers.findIndex(player => player.id === currentUserId)
+  if (playerIndex > -1) {
+    newPlayers.splice(playerIndex, 1)
+  }
+  return gamesRef.doc(game.id).set({ players: newPlayers }, { merge: true })
+}
