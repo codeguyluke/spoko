@@ -56,6 +56,7 @@ class Profile extends Component {
     loadingSignout: false,
     photo: firebase.auth().currentUser.photoURL,
     displayName: firebase.auth().currentUser.displayName,
+    textInputFocused: false,
   }
 
   textInputRef = React.createRef()
@@ -91,7 +92,7 @@ class Profile extends Component {
 
   render() {
     const { theme } = this.props
-    const { edited, loadingSave, loadingSignout, displayName, photo } = this.state
+    const { edited, loadingSave, loadingSignout, displayName, photo, textInputFocused } = this.state
 
     return (
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -107,13 +108,14 @@ class Profile extends Component {
           <TextInput
             ref={this.textInputRef}
             mode="flat"
-            label="Username"
             placeholder="Anonymous"
             value={displayName}
+            onFocus={() => this.setState({ textInputFocused: true })}
+            onBlur={() => this.setState({ textInputFocused: false })}
             onChangeText={newDisplayName =>
               this.setState({ displayName: newDisplayName, edited: true })
             }
-            style={styles.textInput}
+            style={[styles.textInput, textInputFocused && { backgroundColor: '#FFF' }]}
           />
         </ScrollView>
         <Button

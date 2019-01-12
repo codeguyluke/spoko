@@ -2,6 +2,7 @@ import React from 'react'
 import { createStackNavigator } from 'react-navigation'
 import MapScreen from './map'
 import EditGameScreen from '../edit-game'
+import ViewGameScreen from '../view-game'
 import { DatetimeFilter, PriceFilter, SportFilter } from '../../components'
 
 export default createStackNavigator(
@@ -22,6 +23,26 @@ export default createStackNavigator(
       screen: EditGameScreen,
       navigationOptions: () => ({
         headerTitle: 'Create new game',
+        headerTintColor: '#FFF',
+        headerStyle: {
+          backgroundColor: '#FF9800',
+        },
+      }),
+    },
+    ViewGame: {
+      screen: ViewGameScreen,
+      navigationOptions: () => ({
+        headerTitle: 'Game details',
+        headerTintColor: '#FFF',
+        headerStyle: {
+          backgroundColor: '#FF9800',
+        },
+      }),
+    },
+    EditGame: {
+      screen: EditGameScreen,
+      navigationOptions: () => ({
+        headerTitle: 'Edit game',
         headerTintColor: '#FFF',
         headerStyle: {
           backgroundColor: '#FF9800',

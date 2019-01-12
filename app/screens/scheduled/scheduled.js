@@ -12,12 +12,14 @@ const styles = StyleSheet.create({
   },
 })
 
-function Scheduled({ scheduledGames, theme }) {
+function Scheduled({ scheduledGames, theme, navigation }) {
   return (
     <FlatList
       data={scheduledGames}
       style={[styles.container, { backgroundColor: theme.colors.background }]}
-      renderItem={({ item }) => <GameItem {...item} onPress={() => {}} />}
+      renderItem={({ item }) => (
+        <GameItem {...item} onPress={() => navigation.navigate('ViewGame', { game: item })} />
+      )}
       keyExtractor={item => item.id}
     />
   )
@@ -36,6 +38,9 @@ Scheduled.propTypes = {
     colors: PropTypes.shape({
       background: PropTypes.string.isRequired,
     }).isRequired,
+  }).isRequired,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
   }).isRequired,
 }
 
