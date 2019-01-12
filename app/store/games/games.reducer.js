@@ -1,7 +1,7 @@
 import { types } from './games.actions'
 
 const INITIAL_STATE = {
-  games: null,
+  games: [],
 }
 
 export default function gamesReducer(state = INITIAL_STATE, action = { type: '' }) {

@@ -45,13 +45,13 @@ class DatetimePicker extends Component {
   constructor(props) {
     super(props)
 
-    this.initialDate = new Date()
-    this.maximumDate = new Date()
+    this.minimumDate = new Date()
+    this.maximumDate = new Date(this.minimumDate)
     this.maximumDate.setDate(this.maximumDate.getDate() + 7)
 
     this.state = {
       showDatetimeModal: false,
-      datetime: this.initialDate,
+      datetime: props.datetime || new Date(),
     }
   }
 
@@ -93,7 +93,7 @@ class DatetimePicker extends Component {
                     minuteInterval={5}
                     date={datetime}
                     onDateChange={selectedDatetime => this.setState({ datetime: selectedDatetime })}
-                    minimumDate={this.initialDate}
+                    minimumDate={this.minimumDate}
                     maximumDate={this.maximumDate}
                   />
                 </View>

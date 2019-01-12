@@ -44,6 +44,7 @@ const HomeStackNavigator = createStackNavigator(
     ViewGame: {
       screen: ViewGameScreen,
       navigationOptions: () => ({
+        headerBackTitle: null,
         headerTitle: 'Game details',
         headerTintColor: '#FFF',
         headerStyle: {
@@ -83,6 +84,7 @@ const ScheduledStackNavigator = createStackNavigator(
     ViewGame: {
       screen: ViewGameScreen,
       navigationOptions: () => ({
+        headerBackTitle: null,
         headerTitle: 'Game details',
         headerTintColor: '#FFF',
         headerStyle: {

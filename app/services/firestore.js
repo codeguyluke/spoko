@@ -12,6 +12,6 @@ export const createGame = async game => {
   return gamesRef.add({ ...game, ownerId: currentUserId, players: [] })
 }
 
-export const deleteGame = async id => gamesRef.doc(id).delete()
+export const cancelGame = async id => gamesRef.doc(id).delete()
 
 export const editGame = async (id, game) => gamesRef.doc(id).set({ ...game }, { merge: true })

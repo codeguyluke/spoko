@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { View, StyleSheet, ScrollView, Alert } from 'react-native'
 import { withTheme, FAB } from 'react-native-paper'
 import PropTypes from 'prop-types'
-import { createGame } from '../services/firestore'
+import { createGame, editGame } from '../services/firestore'
 import toastState from '../store/toast'
 import { SportPicker, PlacePicker, DatetimePicker, Loader } from '../components'
 
@@ -62,7 +62,13 @@ class EditGame extends Component {
   }
 
   handleSaveGame = async () => {
-    await console.log('Save game')
+    const { sport, place, datetime } = this.state
+    const { onAddToast, navigation } = this.props
+
+    this.setState({ loading: true })
+    await editGame(this.game.id, { sport, place, datetime })
+    onAddToast('Game edited!')
+    this.setState({ loading: false }, () => navigation.goBack())
   }
 
   render() {

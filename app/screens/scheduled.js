@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { StyleSheet, FlatList } from 'react-native'
-import { withTheme } from 'react-native-paper'
+import { View, StyleSheet, FlatList } from 'react-native'
+import { withTheme, Paragraph } from 'react-native-paper'
 import PropTypes from 'prop-types'
 import gamesState from '../store/games'
 import { GameItem } from '../components'
@@ -10,10 +10,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  text: {
+    padding: 16,
+  },
 })
 
 function Scheduled({ scheduledGames, theme, navigation }) {
-  return (
+  return scheduledGames.length > 0 ? (
     <FlatList
       data={scheduledGames}
       style={[styles.container, { backgroundColor: theme.colors.background }]}
@@ -22,6 +25,10 @@ function Scheduled({ scheduledGames, theme, navigation }) {
       )}
       keyExtractor={item => item.id}
     />
+  ) : (
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <Paragraph style={styles.text}>You have no scheduled games at the moment!</Paragraph>
+    </View>
   )
 }
 
