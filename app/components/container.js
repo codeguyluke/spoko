@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 
 const CONTAINER_STYLE = {
   ...StyleSheet.absoluteFillObject,
+  paddingVertical: 16,
   ...ifIphoneX({
     paddingTop: 32,
     paddingBottom: 56,

@@ -1,22 +1,14 @@
-import { createStore, combineReducers /* applyMiddleware */ } from 'redux'
-// import createSagaMiddleware from 'redux-saga'
-// import { all, fork } from 'redux-saga/effects'
+import { createStore, combineReducers } from 'redux'
 import regionState from './region'
 import gamesState from './games'
 import toastState from './toast'
+import filtersState from './filters'
 
-// const sagas = [authState.saga]
-// function* rootSaga() {
-//   yield all(sagas.map(fork))
-// }
-
-// const sagaMiddleware = createSagaMiddleware()
 const rootReducer = combineReducers({
   [regionState.STORE_NAME]: regionState.reducer,
   [gamesState.STORE_NAME]: gamesState.reducer,
   [toastState.STORE_NAME]: toastState.reducer,
+  [filtersState.STORE_NAME]: filtersState.reducer,
 })
-// const store = createStore(rootReducer, applyMiddleware(sagaMiddleware))
-// sagaMiddleware.run(rootSaga)
 
 export default createStore(rootReducer)

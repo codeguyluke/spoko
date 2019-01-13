@@ -1,6 +1,5 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
-import * as Animatable from 'react-native-animatable'
+import { View, StyleSheet } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import { Surface, Subheading, Colors, withTheme } from 'react-native-paper'
 import PropTypes from 'prop-types'
@@ -26,7 +25,7 @@ const styles = StyleSheet.create({
 
 function ChatMessage({ children, author, type, theme }) {
   return (
-    <Animatable.View style={styles.container} animation="fadeIn" duration={200}>
+    <View style={styles.container}>
       {author === 'jo' && <Avatar rounded source={joAvatar} />}
       <Surface
         style={[
@@ -40,7 +39,7 @@ function ChatMessage({ children, author, type, theme }) {
         </Subheading>
       </Surface>
       {author === 'me' && <Avatar rounded icon={{ name: 'person' }} />}
-    </Animatable.View>
+    </View>
   )
 }
 
