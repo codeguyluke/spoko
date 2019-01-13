@@ -2,7 +2,7 @@ import ActionPanel from './action-panel'
 import ChatMessage from './chat-message'
 import Container from './container'
 import CountryPicker from './country-picker'
-import DatetimeFilter from './datetime-filter'
+import DateFilter from './date-filter'
 import DatetimePicker from './datetime-picker'
 import EditRow from './edit-row'
 import FilterButton from './filter-button'
@@ -22,7 +22,7 @@ export {
   ChatMessage,
   Container,
   CountryPicker,
-  DatetimeFilter,
+  DateFilter,
   DatetimePicker,
   EditRow,
   FilterButton,

@@ -71,7 +71,10 @@ class SportFilter extends Component {
 
   handleAll = () => this.setState({ selectedSports: [...Object.keys(sports)] })
 
-  handleDismissDialog = () => this.setState({ showDialog: false })
+  handleDismissDialog = () => {
+    const { stateFilter } = this.props
+    this.setState({ showDialog: false, selectedSports: stateFilter })
+  }
 
   handleNone = () => this.setState({ selectedSports: [] })
 

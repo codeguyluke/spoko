@@ -15,7 +15,7 @@ import gamesState from '../store/games'
 import regionState from '../store/region'
 import { subscribeToGames } from '../services/firestore'
 import { getCurrentRegion } from '../services/geolocation'
-import { Loader, Toast, SportFilter, DatetimeFilter, PriceFilter } from '../components'
+import { Loader, Toast, SportFilter, DateFilter, PriceFilter } from '../components'
 
 const HomeStackNavigator = createStackNavigator(
   {
@@ -23,7 +23,7 @@ const HomeStackNavigator = createStackNavigator(
       screen: MapScreen,
       navigationOptions: () => ({
         headerLeft: <SportFilter />,
-        headerTitle: <DatetimeFilter />,
+        headerTitle: <DateFilter />,
         headerRight: <PriceFilter />,
         headerBackTitle: null,
         headerStyle: {
