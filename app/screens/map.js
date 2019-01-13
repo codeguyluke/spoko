@@ -85,7 +85,7 @@ function Map({ games, region, onResetRegion, onUpdateRegion, theme, navigation: 
 
 const mapStateToProps = state => ({
   region: state[regionState.STORE_NAME].region,
-  games: state[gamesState.STORE_NAME].games,
+  games: gamesState.selectors.selectFilteredGames(state),
 })
 const mapDispatchToProps = {
   onResetRegion: regionState.actions.resetRegion,

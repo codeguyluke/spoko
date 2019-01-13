@@ -1,4 +1,5 @@
 import firebase from 'react-native-firebase'
+import filtersState from '../filters'
 
 export const STORE_NAME = 'games'
 
@@ -11,4 +12,9 @@ const selectScheduledGames = state =>
 
 const selectGameById = (state, id) => state[STORE_NAME].games.find(game => game.id === id)
 
-export default { selectScheduledGames, selectGameById }
+const selectFilteredGames = state => {
+  const allowedSports = state[filtersState.STORE_NAME].sports
+  return state[STORE_NAME].games.filter(game => allowedSports.includes(game.sport))
+}
+
+export default { selectScheduledGames, selectGameById, selectFilteredGames }
