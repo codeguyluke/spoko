@@ -17,8 +17,8 @@ export const cancelGame = async id => gamesRef.doc(id).delete()
 export const editGame = async (id, game) => gamesRef.doc(id).set({ ...game }, { merge: true })
 
 export const joinGame = async game => {
-  const { uid, phoneNumber, photoURL } = firebase.auth().currentUser
-  const newPlayers = [...game.players, { id: uid, phoneNumber, photoURL }]
+  const { uid, email, photoURL } = firebase.auth().currentUser
+  const newPlayers = [...game.players, { id: uid, email, photoURL }]
   return gamesRef.doc(game.id).set({ players: newPlayers }, { merge: true })
 }
 

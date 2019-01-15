@@ -11,6 +11,7 @@ import ModalHeader from './modal-header'
 import JoChat from './jo-chat'
 import PlacePicker from './place-picker'
 import PriceFilter from './price-filter'
+import PricePicker from './price-picker'
 import SportFilter from './sport-filter'
 import SportPicker from './sport-picker'
 import Toast from './toast'
@@ -29,6 +30,7 @@ export {
   JoChat,
   PlacePicker,
   PriceFilter,
+  PricePicker,
   SportFilter,
   SportPicker,
   Toast,

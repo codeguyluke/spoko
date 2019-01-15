@@ -5,7 +5,7 @@ import { withTheme, FAB } from 'react-native-paper'
 import PropTypes from 'prop-types'
 import { createGame, editGame } from '../services/firestore'
 import toastState from '../store/toast'
-import { SportPicker, PlacePicker, DatetimePicker, Loader } from '../components'
+import { SportPicker, PlacePicker, DatetimePicker, PricePicker, Loader } from '../components'
 
 const styles = StyleSheet.create({
   container: {
@@ -38,6 +38,7 @@ class EditGame extends Component {
       sport: (this.game && this.game.sport) || '',
       place: (this.game && this.game.place) || null,
       datetime: (this.game && this.game.datetime) || null,
+      price: (this.game && this.game.price) || -1,
       loading: false,
     }
   }
@@ -85,7 +86,7 @@ class EditGame extends Component {
 
   render() {
     const { theme } = this.props
-    const { sport, place, datetime, loading } = this.state
+    const { sport, place, datetime, price, loading } = this.state
 
     return (
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -102,6 +103,7 @@ class EditGame extends Component {
             datetime={datetime}
             onSelectDatetime={selectedDatetime => this.setState({ datetime: selectedDatetime })}
           />
+          <PricePicker price={price} onSelectPrice={() => {}} />
         </ScrollView>
         {this.game ? (
           <FAB label="Save" onPress={this.handleSaveGame} style={styles.fab} />

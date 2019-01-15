@@ -31,6 +31,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
   },
+  scrollViewContainer: {
+    flex: 1,
+    padding: 16,
+  },
   contentContainer: {
     flex: 1,
     padding: 16,
@@ -165,10 +169,10 @@ class ViewGame extends Component {
               <Avatar rounded medium source={sports[sport].icon} avatarStyle={styles.avatar} />
             </Marker>
           </MapView>
-          <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+          <ScrollView style={styles.scrollViewContainer}>
             <InfoRow large type="sport" value={sport} />
-            <InfoRow large type="place" value={place} />
             <InfoRow large type="datetime" value={datetime} />
+            <InfoRow large type="place" value={place} />
           </ScrollView>
           <View style={styles.buttonsContainer}>
             {!(owned || played) && <FAB label="Join" onPress={this.handleJoinGame} />}
