@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     borderColor: '#FFF',
   },
-  buttonMargin: {
-    margin: 16,
+  buttonsContainer: {
+    padding: 16,
   },
   button: {
     paddingVertical: 8,
@@ -165,54 +165,54 @@ class ViewGame extends Component {
               <Avatar rounded medium source={sports[sport].icon} avatarStyle={styles.avatar} />
             </Marker>
           </MapView>
-          <ScrollView contentContainerStyle={styles.contentContainer}>
+          <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <InfoRow large type="sport" value={sport} />
             <InfoRow large type="place" value={place} />
             <InfoRow large type="datetime" value={datetime} />
           </ScrollView>
-          {!(owned || played) && (
-            <FAB label="Join" onPress={this.handleJoinGame} style={styles.buttonMargin} />
-          )}
-          {played && (
-            <Button
-              mode="contained"
-              onPress={showConfirmation({
-                title: 'Leave game?',
-                message: 'Are you sure you want to leave this game?',
-                onSuccess: this.handleLeaveGame,
-              })}
-              style={[styles.buttonMargin, styles.button]}
-              color={theme.colors.error}
-            >
-              Leave game
-            </Button>
-          )}
-          {owned && (
-            <View style={styles.buttonMargin}>
+          <View style={styles.buttonsContainer}>
+            {!(owned || played) && <FAB label="Join" onPress={this.handleJoinGame} />}
+            {played && (
               <Button
                 mode="contained"
-                style={styles.button}
-                onPress={this.handleEditGame}
-                color={Colors.blue500}
-                icon="edit"
-              >
-                Edit game
-              </Button>
-              <Button
-                mode="contained"
-                style={[styles.button, styles.stack]}
                 onPress={showConfirmation({
-                  title: 'Cancel game?',
-                  message: 'Are you sure you want to cancel this game?',
-                  onSuccess: this.handleCancelGame,
+                  title: 'Leave game?',
+                  message: 'Are you sure you want to leave this game?',
+                  onSuccess: this.handleLeaveGame,
                 })}
+                style={styles.button}
                 color={theme.colors.error}
-                icon="delete"
               >
-                Cancel game
+                Leave game
               </Button>
-            </View>
-          )}
+            )}
+            {owned && (
+              <View>
+                <Button
+                  mode="contained"
+                  style={styles.button}
+                  onPress={this.handleEditGame}
+                  color={Colors.blue500}
+                  icon="edit"
+                >
+                  Edit game
+                </Button>
+                <Button
+                  mode="contained"
+                  style={[styles.button, styles.stack]}
+                  onPress={showConfirmation({
+                    title: 'Cancel game?',
+                    message: 'Are you sure you want to cancel this game?',
+                    onSuccess: this.handleCancelGame,
+                  })}
+                  color={theme.colors.error}
+                  icon="delete"
+                >
+                  Cancel game
+                </Button>
+              </View>
+            )}
+          </View>
         </View>
         {loading && <Loader />}
       </React.Fragment>

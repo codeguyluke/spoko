@@ -81,6 +81,16 @@ const ScheduledStackNavigator = createStackNavigator(
         },
       }),
     },
+    CreateGame: {
+      screen: EditGameScreen,
+      navigationOptions: () => ({
+        headerTitle: 'Create new game',
+        headerTintColor: '#FFF',
+        headerStyle: {
+          backgroundColor: '#FF9800',
+        },
+      }),
+    },
     ViewGame: {
       screen: ViewGameScreen,
       navigationOptions: () => ({

@@ -48,7 +48,7 @@ export default class WelcomeChat extends Component {
       loading: true,
       messages: [
         ...prevState.messages,
-        { author: 'me', text: `Please send login link to ${email}` },
+        { author: 'me', text: `Please send login link to ${email}.` },
       ],
     }))
 
@@ -73,7 +73,10 @@ export default class WelcomeChat extends Component {
         messages: [
           ...prevState.messages,
           {
-            text: `Verification link sent to ${email}! Please open it in order to sign in to SpontApp!`,
+            text: `We sent login link to ${email}!`,
+          },
+          {
+            text: 'Please open the email on your phone and click the link in order to sign in.',
           },
         ],
       }))
@@ -99,18 +102,18 @@ export default class WelcomeChat extends Component {
       <Container>
         <JoChat messages={messages} />
         {loading ? (
-          <Loader />
+          <Loader contained />
         ) : (
           <KeyboardAvoidingView style={styles.actionContainer} behavior="padding">
             <TextInput
               label="Email"
               mode="outlined"
               value={email}
-              onChangeText={newEmail => this.setState({ email: newEmail })}
+              onChangeText={newEmail => this.setState({ email: newEmail.toLowerCase() })}
               keyboardType="email-address"
               style={styles.distance}
             />
-            <FAB label="Send me the link" onPress={this.handleSendLink} style={styles.distance} />
+            <FAB label="Send me login link" onPress={this.handleSendLink} style={styles.distance} />
           </KeyboardAvoidingView>
         )}
       </Container>

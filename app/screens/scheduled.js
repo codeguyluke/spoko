@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { View, StyleSheet, FlatList } from 'react-native'
-import { withTheme, Paragraph } from 'react-native-paper'
+import { withTheme, Paragraph, IconButton } from 'react-native-paper'
 import PropTypes from 'prop-types'
 import gamesState from '../store/games'
 import { GameItem } from '../components'
@@ -13,22 +13,51 @@ const styles = StyleSheet.create({
   text: {
     padding: 16,
   },
+  addIcon: {
+    position: 'absolute',
+    right: 16,
+    bottom: 16,
+    width: 64,
+    height: 64,
+    borderRadius: 28,
+  },
 })
 
 function Scheduled({ scheduledGames, theme, navigation }) {
   return scheduledGames.length > 0 ? (
-    <FlatList
-      data={scheduledGames}
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      renderItem={({ item }) => (
-        <GameItem {...item} onPress={() => navigation.navigate('ViewGame', { gameId: item.id })} />
-      )}
-      keyExtractor={item => item.id}
-    />
+    <React.Fragment>
+      <FlatList
+        data={scheduledGames}
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
+        renderItem={({ item }) => (
+          <GameItem
+            {...item}
+            onPress={() => navigation.navigate('ViewGame', { gameId: item.id })}
+          />
+        )}
+        keyExtractor={item => item.id}
+      />
+      <IconButton
+        icon="add-circle"
+        size={64}
+        color={theme.colors.accent}
+        onPress={() => navigation.navigate('CreateGame')}
+        style={styles.addIcon}
+      />
+    </React.Fragment>
   ) : (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <Paragraph style={styles.text}>You have no scheduled games at the moment!</Paragraph>
-    </View>
+    <React.Fragment>
+      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+        <Paragraph style={styles.text}>You have no scheduled games at the moment!</Paragraph>
+      </View>
+      <IconButton
+        icon="add-circle"
+        size={64}
+        color={theme.colors.accent}
+        onPress={() => navigation.navigate('CreateGame')}
+        style={styles.addIcon}
+      />
+    </React.Fragment>
   )
 }
 
