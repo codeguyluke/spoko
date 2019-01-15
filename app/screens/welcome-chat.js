@@ -1,197 +1,119 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import Permissions from 'react-native-permissions'
+import { KeyboardAvoidingView, AsyncStorage, StyleSheet } from 'react-native'
 import firebase from 'react-native-firebase'
-import PropTypes from 'prop-types'
-import regionState from '../store/region'
-import { getCurrentRegion, getCurrentCountry } from '../services/geolocation'
-import { Loader, Container, JoChat, ActionPanel } from '../components'
-import chatMessages from '../assets/chat-messages.json'
-import countries from '../assets/countries.json'
+import { FAB, TextInput } from 'react-native-paper'
+import { Loader, Container, JoChat } from '../components'
 
-class WelcomeChat extends Component {
-  static propTypes = {
-    onSetInitialRegion: PropTypes.func.isRequired,
-  }
+const styles = StyleSheet.create({
+  actionContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  distance: {
+    marginVertical: 16,
+  },
+})
 
-  constructor(props) {
-    super(props)
-
-    this.actions = {
-      locationPermissionRequest: {
-        FABLabel: 'Sure!',
-        FABAction: this.handleLocationPermissionRequest,
-        negativeLabel: 'Nah... Ask me later!',
-        negativeAction: this.handleLocationPermissionPostponed,
+export default class WelcomeChat extends Component {
+  state = {
+    messages: [
+      {
+        text: "Hi, welcome to SpontApp! I'm Jo, your SpontApp Assistant.",
       },
-      phoneInput: {
-        showPhoneInput: true,
-        onPhoneChange: phone => this.setState({ phoneNumber: phone }),
-        onCountryChange: country => this.setState({ selectedCountry: country }),
-        FABLabel: 'Verify',
-        FABAction: this.handleVerifyPhoneNumber,
+      {
+        text: 'Please sign in to the app with your email address.',
       },
-      verificationCode: {
-        showVerificationCodeInput: true,
-        onVerificationCodeChange: code => this.setState({ verificationCode: code }),
-        FABLabel: 'Confirm code',
-        FABAction: this.handleConfirmCode,
-        negativeLabel: 'Change phone number',
-        negativeAction: () =>
-          this.setState(prevState => ({
-            messages: [...prevState.messages, ...chatMessages.changePhoneNumber],
-            currentStage: 'phoneInput',
-          })),
-      },
-    }
-
-    this.state = {
-      currentStage: 'greeting',
-      messages: [...chatMessages.greeting],
-      selectedCountry: 'GB',
-      phoneNumber: '',
-      verificationCode: '',
-      verificationId: '',
-      loading: false,
-    }
+    ],
+    email: '',
+    loading: false,
   }
 
   async componentDidMount() {
-    const permission = await Permissions.check('location')
-    if (permission === 'undetermined') {
-      return this.setState(prevState => ({
-        messages: [...prevState.messages, ...chatMessages.locationPermissionRequest],
-        currentStage: 'locationPermissionRequest',
-      }))
-    }
-    await this.setRegionAndCountry()
-    return this.setState(prevState => ({
-      messages: [...prevState.messages, ...chatMessages.phoneInput],
-      currentStage: 'phoneInput',
-    }))
+    this.unsubscribe = firebase.links().onLink(async url => {
+      if (firebase.auth().isSignInWithEmailLink(url)) {
+        this.setState({ loading: true })
+        const email = await AsyncStorage.getItem('emailForSignIn')
+        await firebase.auth().signInWithEmailLink(email, url)
+      }
+    })
   }
 
-  setRegionAndCountry = async () => {
-    this.setState({ loading: true })
-    try {
-      const currentRegion = await getCurrentRegion()
-      const currentCountry = await getCurrentCountry(currentRegion)
-      this.props.onSetInitialRegion(currentRegion)
-      await this.setState({ selectedCountry: currentCountry, loading: false })
-    } catch (error) {
-      console.error(error)
-      this.setState({ loading: false })
-    }
+  componentWillUnmount() {
+    this.unsubscribe()
   }
 
-  handleLocationPermissionRequest = async () => {
-    await Permissions.request('location')
-    await this.setRegionAndCountry()
-    return this.setState(prevState => ({
-      messages: [
-        ...prevState.messages,
-        ...chatMessages.locationPermissionGranted,
-        ...chatMessages.phoneInput,
-      ],
-      currentStage: 'phoneInput',
-    }))
-  }
-
-  handleLocationPermissionPostponed = () =>
-    this.setState(prevState => ({
-      messages: [
-        ...prevState.messages,
-        ...chatMessages.locationPermissionPostponed,
-        ...chatMessages.phoneInput,
-      ],
-      currentStage: 'phoneInput',
-    }))
-
-  handleConfirmCode = async () => {
+  handleSendLink = async () => {
+    const { email } = this.state
     this.setState(prevState => ({
       loading: true,
-      messages: [...prevState.messages, ...chatMessages.verificationConfirm],
+      messages: [
+        ...prevState.messages,
+        { author: 'me', text: `Please send login link to ${email}` },
+      ],
     }))
+
     try {
-      const { verificationId, verificationCode } = this.state
-      const credential = firebase.auth.PhoneAuthProvider.credential(
-        verificationId,
-        verificationCode
-      )
-      await firebase.auth().signInWithCredential(credential)
+      const actionCodeSettings = {
+        url: 'https://spoko-dev.firebaseapp.com',
+        handleCodeInApp: true,
+        iOS: {
+          bundleId: 'com.codice.spoko',
+        },
+        android: {
+          packageName: 'com.codice.spoko',
+          installApp: true,
+          minimumVersion: '12',
+        },
+      }
+
+      await firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings)
+      await AsyncStorage.setItem('emailForSignIn', email)
+      this.setState(prevState => ({
+        loading: false,
+        messages: [
+          ...prevState.messages,
+          {
+            text: `Verification link sent to ${email}! Please open it in order to sign in to SpontApp!`,
+          },
+        ],
+      }))
     } catch (error) {
       console.error(error)
       this.setState(prevState => ({
         loading: false,
-        messages: [...prevState.messages, ...chatMessages.verificationCodeError],
+        messages: [
+          ...prevState.messages,
+          {
+            text: 'Whoops! Seems like there was a problem with the email. Please try again.',
+            type: 'error',
+          },
+        ],
       }))
     }
   }
 
-  handleVerifyPhoneNumber = () => {
-    const { selectedCountry, phoneNumber } = this.state
-    const phone = `${countries[selectedCountry].callingCode}${phoneNumber}`
-    this.setState(prevState => ({
-      messages: [...prevState.messages, ...chatMessages.phoneVerification],
-      currentStage: 'phoneVerification',
-      loading: true,
-    }))
-    firebase
-      .auth()
-      .verifyPhoneNumber(phone)
-      .on('state_changed', phoneAuthSnapshot => {
-        switch (phoneAuthSnapshot.state) {
-          case firebase.auth.PhoneAuthState.CODE_SENT:
-          case firebase.auth.PhoneAuthState.AUTO_VERIFY_TIMEOUT:
-            return this.setState(prevState => ({
-              messages: [...prevState.messages, ...chatMessages.verificationCode],
-              currentStage: 'verificationCode',
-              verificationId: phoneAuthSnapshot.verificationId,
-              loading: false,
-            }))
-          case firebase.auth.PhoneAuthState.AUTO_VERIFIED: {
-            const { verificationId, code } = phoneAuthSnapshot
-            const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, code)
-            return firebase.auth().signInWithCredential(credential)
-          }
-          case firebase.auth.PhoneAuthState.ERROR:
-          default:
-            return this.setState(prevState => ({
-              messages: [...prevState.messages, ...chatMessages.phoneVerificationError],
-              loading: false,
-              currentStage: 'phoneInput',
-            }))
-        }
-      })
-  }
-
   render() {
-    const {
-      currentStage,
-      messages,
-      phoneNumber,
-      verificationCode,
-      selectedCountry,
-      loading,
-    } = this.state
+    const { messages, loading, email } = this.state
 
-    if (currentStage === 'greeting') return <Loader />
     return (
       <Container>
         <JoChat messages={messages} />
-        <ActionPanel
-          loading={loading}
-          phoneNumber={phoneNumber}
-          verificationCode={verificationCode}
-          selectedCountry={selectedCountry}
-          {...this.actions[currentStage]}
-        />
+        {loading ? (
+          <Loader />
+        ) : (
+          <KeyboardAvoidingView style={styles.actionContainer} behavior="padding">
+            <TextInput
+              label="Email"
+              mode="outlined"
+              value={email}
+              onChangeText={newEmail => this.setState({ email: newEmail })}
+              keyboardType="email-address"
+              style={styles.distance}
+            />
+            <FAB label="Send me the link" onPress={this.handleSendLink} style={styles.distance} />
+          </KeyboardAvoidingView>
+        )}
       </Container>
     )
   }
 }
-
-export default connect(
-  null,
-  { onSetInitialRegion: regionState.actions.setInitialRegion }
-)(WelcomeChat)

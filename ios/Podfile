@@ -30,6 +30,7 @@ target 'spoko' do
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
   pod 'Firebase/Firestore'
+  pod 'Firebase/DynamicLinks'
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
 end

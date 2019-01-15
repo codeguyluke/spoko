@@ -44,17 +44,18 @@ function ChatMessage({ children, author, type, theme }) {
 }
 
 ChatMessage.propTypes = {
-  author: PropTypes.oneOf(['me', 'jo']).isRequired,
   theme: PropTypes.shape({
     colors: PropTypes.shape({
       error: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
   children: PropTypes.string.isRequired,
+  author: PropTypes.oneOf(['me', 'jo']),
   type: PropTypes.string,
 }
 
 ChatMessage.defaultProps = {
+  author: 'jo',
   type: 'info',
 }
 

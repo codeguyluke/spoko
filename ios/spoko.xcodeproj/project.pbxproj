@@ -41,7 +41,7 @@
 		31C60159E5E74716A88B1AF1 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 43D659DED62A4AF28ABF2FAC /* FontAwesome5_Regular.ttf */; };
 		33010C86D3F64FDEAC00EEFC /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0AECE45861B49DEA8F8F99E /* FontAwesome5_Solid.ttf */; };
 		36ABE5923BC44DA6BBD8EF62 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F89F151BB76646F58A0569DF /* SimpleLineIcons.ttf */; };
-		4C21328821C9C4B800C9B89C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C21328721C9C4B800C9B89C /* GoogleService-Info.plist */; };
+		4CA3300221ED725C00B32F30 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CA3300121ED725C00B32F30 /* GoogleService-Info.plist */; };
 		55AA17C2885E4439840DC95C /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E300E2FA39B0437E89A547D2 /* MaterialCommunityIcons.ttf */; };
 		5C3C735B69086ECB8DF22C73 /* libPods-spoko.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86DFC0BE09A84090D4B84176 /* libPods-spoko.a */; };
 		65548960646D4560B5D89AA4 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C53602C2E95481CBDFDE627 /* libRNFirebase.a */; };
@@ -393,7 +393,8 @@
 		35DA93677E404B9282535E64 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		3B7FAB94A84547C98D63496E /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		43D659DED62A4AF28ABF2FAC /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
-		4C21328721C9C4B800C9B89C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4CA3300121ED725C00B32F30 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "spoko/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4CA3300321ED754B00B32F30 /* spoko.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = spoko.entitlements; path = spoko/spoko.entitlements; sourceTree = "<group>"; };
 		4E7560FB25C7408AAE226824 /* libRNVectorIcons-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNVectorIcons-tvOS.a"; sourceTree = "<group>"; };
 		5BCB46B0102D40129F84D878 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		5D3F71D6FDCE4A1895B731A7 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
@@ -561,7 +562,8 @@
 		13B07FAE1A68108700A75B9A /* spoko */ = {
 			isa = PBXGroup;
 			children = (
-				4C21328721C9C4B800C9B89C /* GoogleService-Info.plist */,
+				4CA3300321ED754B00B32F30 /* spoko.entitlements */,
+				4CA3300121ED725C00B32F30 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -851,6 +853,11 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = C37HTG52BY;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.SafariKeychain = {
+								enabled = 1;
+							};
+						};
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1259,7 +1266,7 @@
 				31C60159E5E74716A88B1AF1 /* FontAwesome5_Regular.ttf in Resources */,
 				33010C86D3F64FDEAC00EEFC /* FontAwesome5_Solid.ttf in Resources */,
 				863B941134AD44B89805744F /* Foundation.ttf in Resources */,
-				4C21328821C9C4B800C9B89C /* GoogleService-Info.plist in Resources */,
+				4CA3300221ED725C00B32F30 /* GoogleService-Info.plist in Resources */,
 				E3FAC2ACCDBC40CBB95B6592 /* Ionicons.ttf in Resources */,
 				55AA17C2885E4439840DC95C /* MaterialCommunityIcons.ttf in Resources */,
 				2724D020B9FA44F9BFA7C5F9 /* MaterialIcons.ttf in Resources */,
@@ -1494,6 +1501,7 @@
 			baseConfigurationReference = 6D91FFC11BD0F3DD80C21292 /* Pods-spoko.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = spoko/spoko.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1524,6 +1532,7 @@
 			baseConfigurationReference = 8FB15765B9C7391B54F90131 /* Pods-spoko.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = spoko/spoko.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;

@@ -30,6 +30,16 @@
 				<string>com.googleusercontent.apps.217028001029-3t863cjted09h82u88mv94k8uj98v3p6</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>spokoapp</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.codice.spoko</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
