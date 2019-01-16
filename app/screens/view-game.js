@@ -1,16 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { StyleSheet, View, ScrollView, Alert, InteractionManager } from 'react-native'
-import { withTheme, FAB, Button, Colors, Chip, Text } from 'react-native-paper'
-import MapView, { Marker } from 'react-native-maps'
-import { Avatar } from 'react-native-elements'
+import { Alert, InteractionManager } from 'react-native'
 import firebase from 'react-native-firebase'
 import PropTypes from 'prop-types'
+import ViewGameOwner from './view-game-owner'
+import ViewGameUser from './view-game-user'
 import toastState from '../store/toast'
 import gamesState from '../store/games'
 import { cancelGame, joinGame, leaveGame } from '../services/firestore'
-import { InfoRow, Loader } from '../components'
-import sports from '../assets/sports'
+import { Loader } from '../components'
 
 const showConfirmation = ({ title, message, onSuccess }) => () =>
   InteractionManager.runAfterInteractions(() => {
@@ -19,49 +17,6 @@ const showConfirmation = ({ title, message, onSuccess }) => () =>
       { text: 'No', style: 'cancel' },
     ])
   })
-
-const INITIAL_LATITUDE_DELTA = 0.01
-const INITIAL_LONGITUDE_DELTA = 0.005
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    width: '100%',
-    height: 200,
-  },
-  scrollViewContainer: {
-    flex: 1,
-    padding: 16,
-  },
-  contentContainer: {
-    flex: 1,
-    padding: 16,
-  },
-  avatar: {
-    borderWidth: 4,
-    borderColor: '#FFF',
-  },
-  buttonsContainer: {
-    padding: 16,
-  },
-  button: {
-    paddingVertical: 8,
-  },
-  stack: {
-    marginTop: 16,
-  },
-  chip: {
-    borderRadius: 25,
-    backgroundColor: '#FFF',
-    elevation: 4,
-  },
-  chipLabel: {
-    fontWeight: '700',
-    fontSize: 14,
-  },
-})
 
 class ViewGame extends Component {
   static propTypes = {
@@ -81,13 +36,6 @@ class ViewGame extends Component {
       getParam: PropTypes.func.isRequired,
       navigate: PropTypes.func.isRequired,
       goBack: PropTypes.func.isRequired,
-    }).isRequired,
-    theme: PropTypes.shape({
-      colors: PropTypes.shape({
-        accent: PropTypes.string.isRequired,
-        background: PropTypes.string.isRequired,
-        error: PropTypes.string.isRequired,
-      }).isRequired,
     }).isRequired,
     onAddToast: PropTypes.func.isRequired,
   }
@@ -151,104 +99,38 @@ class ViewGame extends Component {
   }
 
   render() {
-    const { theme, game } = this.props
+    const { game } = this.props
     const { loading } = this.state
 
     if (!game) return <Loader />
 
-    const { ownerId, sport, place, datetime, players } = game
-    const {
-      location: { latitude, longitude },
-    } = place
+    const { ownerId, players } = game
     const owned = ownerId === firebase.auth().currentUser.uid
     const played = players.some(player => player.id === firebase.auth().currentUser.uid)
 
-    return (
-      <React.Fragment>
-        <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-          {!owned && (
-            <MapView
-              initialRegion={{
-                latitude,
-                longitude,
-                latitudeDelta: INITIAL_LATITUDE_DELTA,
-                longitudeDelta: INITIAL_LONGITUDE_DELTA,
-              }}
-              style={styles.map}
-            >
-              <Marker coordinate={{ latitude, longitude }}>
-                {played ? (
-                  <Chip
-                    avatar={
-                      <Avatar
-                        rounded
-                        small
-                        source={sports[sport].icon}
-                        avatarStyle={styles.avatar}
-                      />
-                    }
-                    onPress={() => {}}
-                    style={styles.chip}
-                  >
-                    <Text style={[styles.chipLabel, { color: theme.colors.accent }]}>Navigate</Text>
-                  </Chip>
-                ) : (
-                  <Avatar rounded medium source={sports[sport].icon} avatarStyle={styles.avatar} />
-                )}
-              </Marker>
-            </MapView>
-          )}
-          <ScrollView style={styles.scrollViewContainer}>
-            <InfoRow large type="sport" value={sport} />
-            <InfoRow large type="place" value={place} />
-            <InfoRow large type="datetime" value={datetime} />
-          </ScrollView>
-          <View style={styles.buttonsContainer}>
-            {!(owned || played) && <FAB label="Join" onPress={this.handleJoinGame} />}
-            {played && (
-              <Button
-                mode="contained"
-                onPress={showConfirmation({
-                  title: 'Leave game?',
-                  message: 'Are you sure you want to leave this game?',
-                  onSuccess: this.handleLeaveGame,
-                })}
-                style={styles.button}
-                color={theme.colors.error}
-              >
-                Leave game
-              </Button>
-            )}
-            {owned && (
-              <View>
-                <Button
-                  mode="contained"
-                  style={styles.button}
-                  onPress={this.handleEditGame}
-                  color={Colors.blue500}
-                  icon="edit"
-                >
-                  Edit game
-                </Button>
-                <Button
-                  mode="contained"
-                  style={[styles.button, styles.stack]}
-                  onPress={showConfirmation({
-                    title: 'Cancel game?',
-                    message: 'Are you sure you want to cancel this game?',
-                    onSuccess: this.handleCancelGame,
-                  })}
-                  color={theme.colors.error}
-                  icon="delete"
-                >
-                  Cancel game
-                </Button>
-              </View>
-            )}
-          </View>
-        </View>
-        {loading && <Loader />}
-      </React.Fragment>
+    return owned ? (
+      <ViewGameOwner
+        game={game}
+        onEditGame={this.handleEditGame}
+        onCancelGame={showConfirmation({
+          title: 'Cancel game?',
+          message: 'Are you sure you want to cancel this game?',
+          onSuccess: this.handleCancelGame,
+        })}
+        loading={loading}
+      />
+    ) : (
+      <ViewGameUser
+        game={game}
+        onJoinGame={this.handleJoinGame}
+        onLeaveGame={showConfirmation({
+          title: 'Leave game?',
+          message: 'Are you sure you want to leave this game?',
+          onSuccess: this.handleLeaveGame,
+        })}
+        loading={loading}
+        played={played}
+      />
     )
   }
 }
@@ -263,4 +145,4 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(
   mapStateToProps,
   { onAddToast: toastState.actions.addToast }
-)(withTheme(ViewGame))
+)(ViewGame)
