@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Permissions from 'react-native-permissions'
 import { createAppContainer, createStackNavigator } from 'react-navigation'
 import { Icon } from 'react-native-elements'
+import { Portal, Dialog, List, Button, Paragraph, withTheme } from 'react-native-paper'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
 import PropTypes from 'prop-types'
 import MapScreen from './map'
@@ -14,8 +15,42 @@ import ProfileScreen from './profile'
 import gamesState from '../store/games'
 import regionState from '../store/region'
 import { subscribeToGames } from '../services/firestore'
-import { getCurrentRegion } from '../services/geolocation'
+import { getCurrentRegion, DEFAULT_REGION } from '../services/geolocation'
 import { Loader, Toast, SportFilter, DateFilter, PriceFilter } from '../components'
+
+const CommonRoutes = {
+  CreateGame: {
+    screen: EditGameScreen,
+    navigationOptions: () => ({
+      headerTitle: 'Create new game',
+      headerTintColor: '#FFF',
+      headerStyle: {
+        backgroundColor: '#FF9800',
+      },
+    }),
+  },
+  ViewGame: {
+    screen: ViewGameScreen,
+    navigationOptions: () => ({
+      headerBackTitle: null,
+      headerTitle: 'Game details',
+      headerTintColor: '#FFF',
+      headerStyle: {
+        backgroundColor: '#FF9800',
+      },
+    }),
+  },
+  EditGame: {
+    screen: EditGameScreen,
+    navigationOptions: () => ({
+      headerTitle: 'Edit game',
+      headerTintColor: '#FFF',
+      headerStyle: {
+        backgroundColor: '#FF9800',
+      },
+    }),
+  },
+}
 
 const HomeStackNavigator = createStackNavigator(
   {
@@ -31,37 +66,7 @@ const HomeStackNavigator = createStackNavigator(
         },
       }),
     },
-    CreateGame: {
-      screen: EditGameScreen,
-      navigationOptions: () => ({
-        headerTitle: 'Create new game',
-        headerTintColor: '#FFF',
-        headerStyle: {
-          backgroundColor: '#FF9800',
-        },
-      }),
-    },
-    ViewGame: {
-      screen: ViewGameScreen,
-      navigationOptions: () => ({
-        headerBackTitle: null,
-        headerTitle: 'Game details',
-        headerTintColor: '#FFF',
-        headerStyle: {
-          backgroundColor: '#FF9800',
-        },
-      }),
-    },
-    EditGame: {
-      screen: EditGameScreen,
-      navigationOptions: () => ({
-        headerTitle: 'Edit game',
-        headerTintColor: '#FFF',
-        headerStyle: {
-          backgroundColor: '#FF9800',
-        },
-      }),
-    },
+    ...CommonRoutes,
   },
   {
     initialRouteName: 'Map',
@@ -81,37 +86,7 @@ const ScheduledStackNavigator = createStackNavigator(
         },
       }),
     },
-    CreateGame: {
-      screen: EditGameScreen,
-      navigationOptions: () => ({
-        headerTitle: 'Create new game',
-        headerTintColor: '#FFF',
-        headerStyle: {
-          backgroundColor: '#FF9800',
-        },
-      }),
-    },
-    ViewGame: {
-      screen: ViewGameScreen,
-      navigationOptions: () => ({
-        headerBackTitle: null,
-        headerTitle: 'Game details',
-        headerTintColor: '#FFF',
-        headerStyle: {
-          backgroundColor: '#FF9800',
-        },
-      }),
-    },
-    EditGame: {
-      screen: EditGameScreen,
-      navigationOptions: () => ({
-        headerTitle: 'Edit game',
-        headerTintColor: '#FFF',
-        headerStyle: {
-          backgroundColor: '#FF9800',
-        },
-      }),
-    },
+    ...CommonRoutes,
   },
   {
     initialRouteName: 'Scheduled',
@@ -155,10 +130,16 @@ class Router extends Component {
   static propTypes = {
     onSetInitialRegion: PropTypes.func.isRequired,
     onSetGames: PropTypes.func.isRequired,
+    theme: PropTypes.shape({
+      colors: PropTypes.shape({
+        accent: PropTypes.string.isRequired,
+      }).isRequired,
+    }).isRequired,
   }
 
   state = {
     initialized: false,
+    showDialog: false,
   }
 
   async componentDidMount() {
@@ -168,31 +149,68 @@ class Router extends Component {
       onSetGames(games)
     })
 
-    await Permissions.request('location')
-    await this.setInitialRegion()
-
-    return this.setState({ initialized: true })
+    const locationPermission = await Permissions.check('location')
+    if (locationPermission === 'undetermined') {
+      this.setState({ showDialog: true })
+    } else {
+      await this.setInitialRegion()
+      this.setState({ initialized: true })
+    }
   }
 
   componentWillUnmount() {
     this.unsubscribeFromGames()
   }
 
-  setInitialRegion = async () => {
-    try {
-      const currentRegion = await getCurrentRegion()
-      this.props.onSetInitialRegion(currentRegion)
-    } catch (error) {
-      console.error(error)
-    }
+  handleCancelPermissionRequest = () => {
+    this.props.onSetInitialRegion(DEFAULT_REGION)
+    this.setState({ showDialog: false, initialized: true })
+  }
+
+  handleAllowPermissionRequest = async () => {
+    this.setState({ showDialog: false })
+    await Permissions.request('location')
+    const currentRegion = await getCurrentRegion()
+    this.props.onSetInitialRegion(currentRegion)
+    this.setState({ initialized: true })
   }
 
   render() {
+    const { theme } = this.props
+    const { initialized, showDialog } = this.state
+
     return (
       <React.Fragment>
         <StatusBar barStyle="light-content" />
-        {this.state.initialized ? <AppNavigator /> : <Loader />}
+        {initialized ? <AppNavigator /> : <Loader />}
         <Toast />
+        <Portal>
+          <Dialog visible={showDialog} onDismiss={this.handleCancelPermissionRequest}>
+            <Dialog.Title>Allow location?</Dialog.Title>
+            <Dialog.Content>
+              <Paragraph>We only use your location to allow features like:</Paragraph>
+              <List.Section>
+                <List.Item
+                  title="Finding games around"
+                  left={() => <List.Icon icon="check-box" color={theme.colors.accent} />}
+                />
+                <List.Item
+                  title="Navigating to games"
+                  left={() => <List.Icon icon="check-box" color={theme.colors.accent} />}
+                />
+                <List.Item
+                  title="Finding venues around"
+                  left={() => <List.Icon icon="check-box" color={theme.colors.accent} />}
+                />
+              </List.Section>
+              <Paragraph>Do you want to allow SpontApp to use your location?</Paragraph>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={this.handleCancelPermissionRequest}>Not now</Button>
+              <Button onPress={this.handleAllowPermissionRequest}>Yes</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
       </React.Fragment>
     )
   }
@@ -204,4 +222,4 @@ export default connect(
     onSetInitialRegion: regionState.actions.setInitialRegion,
     onSetGames: gamesState.actions.setGames,
   }
-)(Router)
+)(withTheme(Router))

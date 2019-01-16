@@ -24,4 +24,4 @@ const getCurrentRegion = () =>
     )
   })
 
-export { getCurrentRegion }
+export { getCurrentRegion, DEFAULT_REGION }
