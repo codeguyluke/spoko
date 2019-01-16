@@ -153,7 +153,8 @@ class Router extends Component {
     if (locationPermission === 'undetermined') {
       this.setState({ showDialog: true })
     } else {
-      await this.setInitialRegion()
+      const currentRegion = await getCurrentRegion()
+      this.props.onSetInitialRegion(currentRegion)
       this.setState({ initialized: true })
     }
   }

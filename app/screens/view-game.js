@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { StyleSheet, View, ScrollView, Alert, InteractionManager } from 'react-native'
-import { withTheme, FAB, Button, Colors } from 'react-native-paper'
+import { withTheme, FAB, Button, Colors, Chip, Text } from 'react-native-paper'
 import MapView, { Marker } from 'react-native-maps'
 import { Avatar } from 'react-native-elements'
 import firebase from 'react-native-firebase'
@@ -52,6 +52,15 @@ const styles = StyleSheet.create({
   stack: {
     marginTop: 16,
   },
+  chip: {
+    borderRadius: 25,
+    backgroundColor: '#FFF',
+    elevation: 4,
+  },
+  chipLabel: {
+    fontWeight: '700',
+    fontSize: 14,
+  },
 })
 
 class ViewGame extends Component {
@@ -75,6 +84,7 @@ class ViewGame extends Component {
     }).isRequired,
     theme: PropTypes.shape({
       colors: PropTypes.shape({
+        accent: PropTypes.string.isRequired,
         background: PropTypes.string.isRequired,
         error: PropTypes.string.isRequired,
       }).isRequired,
@@ -156,23 +166,42 @@ class ViewGame extends Component {
     return (
       <React.Fragment>
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-          <MapView
-            initialRegion={{
-              latitude,
-              longitude,
-              latitudeDelta: INITIAL_LATITUDE_DELTA,
-              longitudeDelta: INITIAL_LONGITUDE_DELTA,
-            }}
-            style={styles.map}
-          >
-            <Marker coordinate={{ latitude, longitude }}>
-              <Avatar rounded medium source={sports[sport].icon} avatarStyle={styles.avatar} />
-            </Marker>
-          </MapView>
+          {!owned && (
+            <MapView
+              initialRegion={{
+                latitude,
+                longitude,
+                latitudeDelta: INITIAL_LATITUDE_DELTA,
+                longitudeDelta: INITIAL_LONGITUDE_DELTA,
+              }}
+              style={styles.map}
+            >
+              <Marker coordinate={{ latitude, longitude }}>
+                {played ? (
+                  <Chip
+                    avatar={
+                      <Avatar
+                        rounded
+                        small
+                        source={sports[sport].icon}
+                        avatarStyle={styles.avatar}
+                      />
+                    }
+                    onPress={() => {}}
+                    style={styles.chip}
+                  >
+                    <Text style={[styles.chipLabel, { color: theme.colors.accent }]}>Navigate</Text>
+                  </Chip>
+                ) : (
+                  <Avatar rounded medium source={sports[sport].icon} avatarStyle={styles.avatar} />
+                )}
+              </Marker>
+            </MapView>
+          )}
           <ScrollView style={styles.scrollViewContainer}>
             <InfoRow large type="sport" value={sport} />
-            <InfoRow large type="datetime" value={datetime} />
             <InfoRow large type="place" value={place} />
+            <InfoRow large type="datetime" value={datetime} />
           </ScrollView>
           <View style={styles.buttonsContainer}>
             {!(owned || played) && <FAB label="Join" onPress={this.handleJoinGame} />}
