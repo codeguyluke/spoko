@@ -28,18 +28,20 @@ const styles = StyleSheet.create({
   },
 })
 
-function GameItem({ sport, place, datetime, theme, onPress }) {
+function GameItem({ sport, place, datetime, owned, theme, onPress }) {
   return (
     <TouchableOpacity onPress={onPress} underlayColor={Colors.grey200}>
       <Surface style={styles.surface}>
         <View style={styles.column}>
-          <Chip
-            mode="outlined"
-            icon={() => <Icon name="star" color="#FFF" size={16} />}
-            style={[styles.chip, { backgroundColor: theme.colors.accent }]}
-          >
-            <Text style={styles.chipLabel}>Owner</Text>
-          </Chip>
+          {owned && (
+            <Chip
+              mode="outlined"
+              icon={() => <Icon name="star" color="#FFF" size={16} />}
+              style={[styles.chip, { backgroundColor: theme.colors.accent }]}
+            >
+              <Text style={styles.chipLabel}>Owner</Text>
+            </Chip>
+          )}
           <InfoRow type="sport" value={sport} />
           <InfoRow type="place" value={place} />
           <InfoRow type="datetime" value={datetime} />
@@ -56,6 +58,7 @@ GameItem.propTypes = {
     description: PropTypes.string.isRequired,
   }).isRequired,
   datetime: PropTypes.instanceOf(Date).isRequired,
+  owned: PropTypes.bool.isRequired,
   onPress: PropTypes.func.isRequired,
   theme: PropTypes.shape({
     colors: PropTypes.shape({

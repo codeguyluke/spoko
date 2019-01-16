@@ -4,11 +4,13 @@ import filtersState from '../filters'
 export const STORE_NAME = 'games'
 
 const selectScheduledGames = state =>
-  state[STORE_NAME].games.filter(
-    game =>
-      game.ownerId === firebase.auth().currentUser.uid ||
-      game.players.some(player => player.id === firebase.auth().currentUser.uid)
-  )
+  state[STORE_NAME].games
+    .filter(
+      game =>
+        game.ownerId === firebase.auth().currentUser.uid ||
+        game.players.some(player => player.id === firebase.auth().currentUser.uid)
+    )
+    .map(game => ({ ...game, owned: game.ownerId === firebase.auth().currentUser.uid }))
 
 const selectGameById = (state, id) => state[STORE_NAME].games.find(game => game.id === id)
 

@@ -68,6 +68,7 @@ Scheduled.propTypes = {
       sport: PropTypes.string,
       place: PropTypes.object,
       datetime: PropTypes.instanceOf(Date),
+      owned: PropTypes.bool,
     })
   ).isRequired,
   theme: PropTypes.shape({
