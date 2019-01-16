@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { View, Text, Modal, StyleSheet } from 'react-native'
 import { Portal, withTheme, Button } from 'react-native-paper'
+import { Slider } from 'react-native-elements'
 import PropTypes from 'prop-types'
-import { Container, EditRow, ModalHeader } from '.'
+import regionState from '../store/region'
+import { getCurrentCountry } from '../services/geolocation'
+import { Container, EditRow, ModalHeader, CountryPicker, Loader } from '.'
 import moneyIcon from '../assets/images/money.png'
 
 const styles = StyleSheet.create({
@@ -23,6 +27,10 @@ class PricePicker extends Component {
         accent: PropTypes.string.isRequired,
       }).isRequired,
     }).isRequired,
+    region: PropTypes.shape({
+      latitude: PropTypes.number.isRequired,
+      longitude: PropTypes.number.isRequired,
+    }).isRequired,
     price: PropTypes.number,
   }
 
@@ -32,6 +40,13 @@ class PricePicker extends Component {
 
   state = {
     showPriceModal: false,
+    currentCountry: '',
+  }
+
+  async componentDidMount() {
+    const { region } = this.props
+    const currentCountry = await getCurrentCountry(region)
+    this.setState({ currentCountry })
   }
 
   handleCloseModal = () => {
@@ -45,7 +60,9 @@ class PricePicker extends Component {
 
   render() {
     const { price, theme } = this.props
-    const { showPriceModal } = this.state
+    const { showPriceModal, currentCountry } = this.state
+
+    if (!currentCountry) return <Loader />
 
     return (
       <React.Fragment>
@@ -66,7 +83,13 @@ class PricePicker extends Component {
             <Container>
               <ModalHeader title="Set the price" onClose={this.handleCloseModal} />
               <View style={styles.pickerContainer}>
-                <Text>Price</Text>
+                <Slider />
+                <CountryPicker
+                  selectedCountry={currentCountry}
+                  onSelectCountry={selectedCountry =>
+                    this.setState({ currentCountry: selectedCountry })
+                  }
+                />
               </View>
               <Button
                 mode="contained"
@@ -84,4 +107,6 @@ class PricePicker extends Component {
   }
 }
 
-export default withTheme(PricePicker)
+export default connect(state => ({ region: state[regionState.STORE_NAME].region }))(
+  withTheme(PricePicker)
+)
