@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { Surface, Colors, withTheme } from 'react-native-paper'
+import { Surface, Colors, withTheme, Chip, Text } from 'react-native-paper'
 import { Icon } from 'react-native-elements'
 import PropTypes from 'prop-types'
 import { InfoRow } from '.'
@@ -8,6 +8,7 @@ import { InfoRow } from '.'
 const styles = StyleSheet.create({
   column: {
     flex: 1,
+    paddingRight: 8,
   },
   surface: {
     width: '100%',
@@ -17,6 +18,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  chip: {
+    marginTop: 16,
+    width: 104,
+  },
+  chipLabel: {
+    color: '#FFF',
+    fontWeight: '500',
+  },
 })
 
 function GameItem({ sport, place, datetime, theme, onPress }) {
@@ -24,6 +33,13 @@ function GameItem({ sport, place, datetime, theme, onPress }) {
     <TouchableOpacity onPress={onPress} underlayColor={Colors.grey200}>
       <Surface style={styles.surface}>
         <View style={styles.column}>
+          <Chip
+            mode="outlined"
+            icon={() => <Icon name="star" color="#FFF" size={16} />}
+            style={[styles.chip, { backgroundColor: theme.colors.accent }]}
+          >
+            <Text style={styles.chipLabel}>Owner</Text>
+          </Chip>
           <InfoRow type="sport" value={sport} />
           <InfoRow type="place" value={place} />
           <InfoRow type="datetime" value={datetime} />
