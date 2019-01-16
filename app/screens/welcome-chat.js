@@ -32,8 +32,21 @@ export default class WelcomeChat extends Component {
     this.unsubscribe = firebase.links().onLink(async url => {
       if (firebase.auth().isSignInWithEmailLink(url)) {
         this.setState({ loading: true })
-        const email = await AsyncStorage.getItem('emailForSignIn')
-        await firebase.auth().signInWithEmailLink(email, url)
+        try {
+          const email = await AsyncStorage.getItem('emailForSignIn')
+          await firebase.auth().signInWithEmailLink(email, url)
+        } catch (error) {
+          this.setState(prevState => ({
+            loading: false,
+            messages: [
+              ...prevState.messages,
+              {
+                type: 'error',
+                text: error.message,
+              },
+            ],
+          }))
+        }
       }
     })
   }
@@ -81,13 +94,12 @@ export default class WelcomeChat extends Component {
         ],
       }))
     } catch (error) {
-      console.error(error)
       this.setState(prevState => ({
         loading: false,
         messages: [
           ...prevState.messages,
           {
-            text: 'Whoops! Seems like there was a problem with the email. Please try again.',
+            text: error.message,
             type: 'error',
           },
         ],
