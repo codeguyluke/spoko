@@ -15,7 +15,7 @@ import ProfileScreen from './profile'
 import gamesState from '../store/games'
 import regionState from '../store/region'
 import { subscribeToGames } from '../services/firestore'
-import { getCurrentRegion, DEFAULT_REGION } from '../services/geolocation'
+import { getCurrentRegion, getCurrentCountry, DEFAULT_REGION } from '../services/geolocation'
 import { Loader, Toast, SportFilter, DateFilter, PriceFilter } from '../components'
 
 const CommonRoutes = {
@@ -130,6 +130,7 @@ class Router extends Component {
   static propTypes = {
     onSetInitialRegion: PropTypes.func.isRequired,
     onSetGames: PropTypes.func.isRequired,
+    onSetCountry: PropTypes.func.isRequired,
     theme: PropTypes.shape({
       colors: PropTypes.shape({
         accent: PropTypes.string.isRequired,
@@ -143,7 +144,7 @@ class Router extends Component {
   }
 
   async componentDidMount() {
-    const { onSetGames } = this.props
+    const { onSetGames, onSetInitialRegion, onSetCountry } = this.props
     this.unsubscribeFromGames = await subscribeToGames(gamesSnapshot => {
       const games = gamesSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
       onSetGames(games)
@@ -154,7 +155,9 @@ class Router extends Component {
       this.setState({ showDialog: true })
     } else {
       const currentRegion = await getCurrentRegion()
-      this.props.onSetInitialRegion(currentRegion)
+      onSetInitialRegion(currentRegion)
+      const currentCountry = await getCurrentCountry(currentRegion)
+      onSetCountry(currentCountry)
       this.setState({ initialized: true })
     }
   }
@@ -163,16 +166,22 @@ class Router extends Component {
     this.unsubscribeFromGames()
   }
 
-  handleCancelPermissionRequest = () => {
-    this.props.onSetInitialRegion(DEFAULT_REGION)
+  handleCancelPermissionRequest = async () => {
+    const { onSetInitialRegion, onSetCountry } = this.props
+    onSetInitialRegion(DEFAULT_REGION)
+    const currentCountry = await getCurrentCountry(DEFAULT_REGION)
+    onSetCountry(currentCountry)
     this.setState({ showDialog: false, initialized: true })
   }
 
   handleAllowPermissionRequest = async () => {
+    const { onSetInitialRegion, onSetCountry } = this.props
     this.setState({ showDialog: false })
     await Permissions.request('location')
     const currentRegion = await getCurrentRegion()
-    this.props.onSetInitialRegion(currentRegion)
+    onSetInitialRegion(currentRegion)
+    const currentCountry = await getCurrentCountry(currentRegion)
+    onSetCountry(currentCountry)
     this.setState({ initialized: true })
   }
 
@@ -221,6 +230,7 @@ export default connect(
   null,
   {
     onSetInitialRegion: regionState.actions.setInitialRegion,
+    onSetCountry: regionState.actions.setCountry,
     onSetGames: gamesState.actions.setGames,
   }
 )(withTheme(Router))

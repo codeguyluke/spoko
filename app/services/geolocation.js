@@ -45,4 +45,4 @@ const getCurrentCountry = async region => {
   }
 }
 
-export { getCurrentRegion, getCurrentCountry }
+export { getCurrentRegion, getCurrentCountry, DEFAULT_REGION }

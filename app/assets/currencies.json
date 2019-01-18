@@ -1,0 +1,194 @@
+{
+  "USD": {
+    "flag": "🇺🇸",
+    "name": "US Dollar",
+    "countries": [
+      "AS",
+      "EC",
+      "FM",
+      "GU",
+      "IO",
+      "MH",
+      "MP",
+      "PW",
+      "PR",
+      "TC",
+      "TL",
+      "UM",
+      "US",
+      "VG",
+      "VI"
+    ]
+  },
+  "GBP": {
+    "flag": "🇬🇧",
+    "name": "British Pound Sterling",
+    "countries": ["GB", "GG", "IM", "JE", "GS"]
+  },
+  "EUR": {
+    "flag": "🇪🇺",
+    "name": "Euro",
+    "countries": [
+      "AX",
+      "AD",
+      "TF",
+      "AT",
+      "BE",
+      "BL",
+      "CY",
+      "DE",
+      "ES",
+      "EE",
+      "FI",
+      "FR",
+      "GP",
+      "GR",
+      "GF",
+      "IE",
+      "IT",
+      "XK",
+      "LT",
+      "LU",
+      "LV",
+      "MF",
+      "MC",
+      "MT",
+      "ME",
+      "MQ",
+      "YT",
+      "NL",
+      "PT",
+      "RE",
+      "SM",
+      "PM",
+      "SK",
+      "SI",
+      "VA"
+    ]
+  },
+  "CAD": {
+    "flag": "🇨🇦",
+    "name": "Canadian Dollar",
+    "countries": ["CA"]
+  },
+  "AUD": {
+    "flag": "🇦🇺",
+    "name": "Australian Dollar",
+    "countries": ["AU", "CC", "CX", "HM", "KI", "NF", "NR", "TV"]
+  },
+  "NZD": {
+    "flag": "🇳🇿",
+    "name": "New Zealand Dollar",
+    "countries": ["CK", "NU", "NZ", "PN", "TK"]
+  },
+  "MXN": {
+    "flag": "🇲🇽",
+    "name": "Mexican Peso",
+    "countries": ["MX"]
+  },
+  "BRL": {
+    "flag": "🇧🇷",
+    "name": "Brazilian Real",
+    "countries": ["BR"]
+  },
+  "ARS": {
+    "flag": "🇦🇷",
+    "name": "Argentine Peso",
+    "countries": ["AR"]
+  },
+  "CLP": {
+    "flag": "🇨🇱",
+    "name": "Chilean Peso",
+    "countries": ["CL"]
+  },
+  "CNY": {
+    "flag": "🇨🇳",
+    "name": "Chinese Yuan",
+    "countries": ["CN"]
+  },
+  "KRW": {
+    "flag": "🇰🇷",
+    "name": "South Korean Won",
+    "countries": ["KR"]
+  },
+  "INR": {
+    "flag": "🇮🇳",
+    "name": "Indian Rupee",
+    "countries": ["IN"]
+  },
+  "JPY": {
+    "flag": "🇯🇵",
+    "name": "Japanese Yen",
+    "countries": ["JP"]
+  },
+  "IDR": {
+    "flag": "🇮🇩",
+    "name": "Indonesian Rupiah",
+    "countries": ["ID"]
+  },
+  "THB": {
+    "flag": "🇹🇭",
+    "name": "Thai Baht",
+    "countries": ["TH"]
+  },
+  "RUB": {
+    "flag": "🇷🇺",
+    "name": "Russian Ruble",
+    "countries": ["RU"]
+  },
+  "NOK": {
+    "flag": "🇳🇴",
+    "name": "Norwegian Krone",
+    "countries": ["BV", "NO", "SJ"]
+  },
+  "SEK": {
+    "flag": "🇸🇪",
+    "name": "Swedish Krona",
+    "countries": ["SE"]
+  },
+  "CHF": {
+    "flag": "🇨🇭",
+    "name": "Swiss Franc",
+    "countries": ["LI", "CH"]
+  },
+  "AED": {
+    "flag": "🇦🇪",
+    "name": "United Arab Emirates Dirham",
+    "countries": ["AE"]
+  },
+  "QAR": {
+    "flag": "🇶🇦",
+    "name": "Qatari Rial",
+    "countries": ["QA"]
+  },
+  "SAR": {
+    "flag": "🇸🇦",
+    "name": "Saudi Riyal",
+    "countries": ["SA"]
+  },
+  "ZAR": {
+    "flag": "🇿🇦",
+    "name": "South African Rand",
+    "countries": ["ZA"]
+  },
+  "PLN": {
+    "flag": "🇵🇱",
+    "name": "Polish Zloty",
+    "countries": ["PL"]
+  },
+  "CZK": {
+    "flag": "🇨🇿",
+    "name": "Czech Koruna",
+    "countries": ["CZ"]
+  },
+  "UAH": {
+    "flag": "🇺🇦",
+    "name": "Ukrainian Hryvnia",
+    "countries": ["UA"]
+  },
+  "BYR": {
+    "flag": "🇧🇾",
+    "name": "Belarusian Ruble",
+    "countries": ["BY"]
+  }
+}

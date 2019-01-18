@@ -2,6 +2,7 @@ import { types } from './region.actions'
 
 const INITIAL_STATE = {
   region: null,
+  country: '',
   initialRegion: null,
 }
 
@@ -24,6 +25,12 @@ export default function regionReducer(state = INITIAL_STATE, action = { type: ''
       return {
         ...state,
         region: state.initialRegion,
+      }
+    }
+    case types.SET_COUNTRY: {
+      return {
+        ...state,
+        country: action.payload,
       }
     }
     default:

@@ -2,6 +2,7 @@ export const types = {
   SET_INITIAL_REGION: 'SET_INITIAL_REGION',
   SET_REGION: 'SET_REGION',
   RESET_REGION: 'RESET_REGION',
+  SET_COUNTRY: 'SET_COUNTRY',
 }
 
 function setInitialRegion(region) {
@@ -24,8 +25,16 @@ function resetRegion() {
   }
 }
 
+function setCountry(country) {
+  return {
+    type: types.SET_COUNTRY,
+    payload: country,
+  }
+}
+
 export default {
   setInitialRegion,
   setRegion,
   resetRegion,
+  setCountry,
 }

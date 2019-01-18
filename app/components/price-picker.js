@@ -1,13 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Modal, StyleSheet } from 'react-native'
+import { View, Modal, StyleSheet } from 'react-native'
 import { Portal, withTheme, Button } from 'react-native-paper'
 import { Slider } from 'react-native-elements'
 import PropTypes from 'prop-types'
 import regionState from '../store/region'
-import { getCurrentCountry } from '../services/geolocation'
-import { Container, EditRow, ModalHeader, CountryPicker, Loader } from '.'
+import { Container, EditRow, ModalHeader, CurrencyPicker } from '.'
 import moneyIcon from '../assets/images/money.png'
+import currencies from '../assets/currencies.json'
+
+const getCurrencyFromCountrySymbol = country => {
+  const currency = Object.keys(currencies).find(key => currencies[key].countries.includes(country))
+  return currency || 'USD'
+}
 
 const styles = StyleSheet.create({
   button: {
@@ -27,10 +32,7 @@ class PricePicker extends Component {
         accent: PropTypes.string.isRequired,
       }).isRequired,
     }).isRequired,
-    region: PropTypes.shape({
-      latitude: PropTypes.number.isRequired,
-      longitude: PropTypes.number.isRequired,
-    }).isRequired,
+    country: PropTypes.string.isRequired,
     price: PropTypes.number,
   }
 
@@ -40,13 +42,7 @@ class PricePicker extends Component {
 
   state = {
     showPriceModal: false,
-    currentCountry: '',
-  }
-
-  async componentDidMount() {
-    const { region } = this.props
-    const currentCountry = await getCurrentCountry(region)
-    this.setState({ currentCountry })
+    currency: getCurrencyFromCountrySymbol(this.props.country),
   }
 
   handleCloseModal = () => {
@@ -60,9 +56,7 @@ class PricePicker extends Component {
 
   render() {
     const { price, theme } = this.props
-    const { showPriceModal, currentCountry } = this.state
-
-    if (!currentCountry) return <Loader />
+    const { showPriceModal, currency } = this.state
 
     return (
       <React.Fragment>
@@ -84,11 +78,9 @@ class PricePicker extends Component {
               <ModalHeader title="Set the price" onClose={this.handleCloseModal} />
               <View style={styles.pickerContainer}>
                 <Slider />
-                <CountryPicker
-                  selectedCountry={currentCountry}
-                  onSelectCountry={selectedCountry =>
-                    this.setState({ currentCountry: selectedCountry })
-                  }
+                <CurrencyPicker
+                  currency={currency}
+                  onSelectCurrency={newCurrency => this.setState({ currency: newCurrency })}
                 />
               </View>
               <Button
@@ -107,6 +99,6 @@ class PricePicker extends Component {
   }
 }
 
-export default connect(state => ({ region: state[regionState.STORE_NAME].region }))(
+export default connect(state => ({ country: state[regionState.STORE_NAME].country }))(
   withTheme(PricePicker)
 )
