@@ -38,19 +38,21 @@ class EditGame extends Component {
       sport: (this.game && this.game.sport) || '',
       place: (this.game && this.game.place) || null,
       datetime: (this.game && this.game.datetime) || null,
-      price: (this.game && this.game.price) || -1,
+      price: (this.game && this.game.price) || null,
+      players: (this.game && this.game.players) || [],
+      description: (this.game && this.game.description) || '',
       loading: false,
     }
   }
 
   handleCreateGame = async () => {
-    const { sport, place, datetime } = this.state
+    const { sport, place, datetime, price, players, description } = this.state
     const { onAddToast, navigation } = this.props
 
-    if (!sport || !place || !datetime) {
+    if (!sport || !place || !datetime || !price || !players) {
       Alert.alert(
         'Set all required info',
-        'In order to create the game, you need to set sport, place and time first.',
+        'In order to create the game, you need to set sport, place, time, price and number of players first.',
         [{ text: 'OK' }]
       )
       return
@@ -58,7 +60,7 @@ class EditGame extends Component {
 
     this.setState({ loading: true })
     try {
-      await createGame({ sport, place, datetime })
+      await createGame({ sport, place, datetime, price, players, description })
       onAddToast('Game created!')
       this.setState({ loading: false }, () => navigation.goBack())
     } catch (error) {
@@ -69,12 +71,12 @@ class EditGame extends Component {
   }
 
   handleSaveGame = async () => {
-    const { sport, place, datetime } = this.state
+    const { sport, place, datetime, price, players, description } = this.state
     const { onAddToast, navigation } = this.props
 
     this.setState({ loading: true })
     try {
-      await editGame(this.game.id, { sport, place, datetime })
+      await editGame(this.game.id, { sport, place, datetime, price, players, description })
       onAddToast('Game edited!')
       this.setState({ loading: false }, () => navigation.goBack())
     } catch (error) {
@@ -103,7 +105,10 @@ class EditGame extends Component {
             datetime={datetime}
             onSelectDatetime={selectedDatetime => this.setState({ datetime: selectedDatetime })}
           />
-          <PricePicker price={price} onSelectPrice={() => {}} />
+          <PricePicker
+            price={price}
+            onSelectPrice={selectedPrice => this.setState({ price: selectedPrice })}
+          />
         </ScrollView>
         {this.game ? (
           <FAB label="Save" onPress={this.handleSaveGame} style={styles.fab} />

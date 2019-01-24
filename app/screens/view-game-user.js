@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
 })
 
 function ViewGameUser({ game, theme, onJoinGame, onLeaveGame, played, loading }) {
-  const { sport, place, datetime } = game
+  const { sport, place, datetime, price } = game
   const {
     location: { latitude, longitude },
   } = place
@@ -81,6 +81,7 @@ function ViewGameUser({ game, theme, onJoinGame, onLeaveGame, played, loading })
           <InfoRow large type="sport" value={sport} />
           <InfoRow large type="place" value={place} />
           <InfoRow large type="datetime" value={datetime} />
+          <InfoRow large type="price" value={price} />
         </ScrollView>
         <View style={styles.buttonsContainer}>
           {played ? (
@@ -114,6 +115,10 @@ ViewGameUser.propTypes = {
     }),
     datetime: PropTypes.instanceOf(Date).isRequired,
     players: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string })).isRequired,
+    price: PropTypes.shape({
+      value: PropTypes.string.isRequired,
+      currency: PropTypes.string.isRequired,
+    }).isRequired,
   }).isRequired,
   theme: PropTypes.shape({
     colors: PropTypes.shape({

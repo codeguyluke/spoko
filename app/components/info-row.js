@@ -5,10 +5,11 @@ import PropTypes from 'prop-types'
 import sports from '../assets/sports'
 import calendarIcon from '../assets/images/calendar.png'
 import globeIcon from '../assets/images/globe.png'
+import moneyIcon from '../assets/images/money.png'
 
-const TYPES = { sport: 'sport', place: 'place', datetime: 'datetime' }
+const TYPES = { sport: 'sport', place: 'place', datetime: 'datetime', price: 'price' }
 
-const ICONS = { place: globeIcon, datetime: calendarIcon }
+const ICONS = { place: globeIcon, datetime: calendarIcon, price: moneyIcon }
 
 function getDatetimeString(datetime) {
   return datetime
@@ -20,12 +21,20 @@ function getDatetimeString(datetime) {
     : ''
 }
 
+function getPriceString(price) {
+  if (Number(price.value) === 0) return 'FREE'
+
+  return `${price.value} ${price.currency.toUpperCase()}`
+}
+
 function getText(type, value) {
   switch (type) {
     case TYPES.sport:
       return sports[value].name
     case TYPES.place:
       return value.description
+    case TYPES.price:
+      return getPriceString(value)
     case TYPES.datetime:
     default:
       return getDatetimeString(value)

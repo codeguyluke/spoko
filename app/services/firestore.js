@@ -9,7 +9,7 @@ export const subscribeToGames = async callback => {
 
 export const createGame = async game => {
   const currentUserId = firebase.auth().currentUser.uid
-  return gamesRef.add({ ...game, ownerId: currentUserId, players: [] })
+  return gamesRef.add({ ...game, ownerId: currentUserId })
 }
 
 export const cancelGame = async id => gamesRef.doc(id).delete()

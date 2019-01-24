@@ -31,7 +31,7 @@ function ChatMessage({ children, author, type, theme }) {
         style={[
           styles.surface,
           author === 'jo' && { marginLeft: 16 },
-          author === 'me' && { marginRight: 16, backgroundColor: Colors.lightGreen50 },
+          author === 'me' && { marginRight: 16, backgroundColor: Colors.orange50 },
         ]}
       >
         <Subheading style={[styles.text, type === 'error' && { color: theme.colors.error }]}>
