@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     marginRight: 16,
     paddingHorizontal: 16,
     fontSize: 22,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#FFF',
     borderRadius: 4,
     borderColor: Colors.grey300,
     borderWidth: 1,
@@ -78,12 +78,17 @@ class PricePicker extends Component {
       (this.props.price && this.props.price.currency) ||
       getCurrencyFromCountrySymbol(this.props.country),
     priceValue: (this.props.price && this.props.price.value) || null,
-    textInputFocused: false,
     invalidAmount: false,
   }
 
   handleCloseModal = () => {
     this.setState({ showPriceModal: false })
+  }
+
+  handleFreePress = () => {
+    const { priceCurrency } = this.state
+    this.props.onSelectPrice({ value: '0', currency: priceCurrency })
+    this.setState({ priceValue: '0', invalidAmount: false, showPriceModal: false })
   }
 
   handleSubmit = () => {
@@ -102,13 +107,7 @@ class PricePicker extends Component {
 
   render() {
     const { price, theme } = this.props
-    const {
-      showPriceModal,
-      priceCurrency,
-      priceValue,
-      textInputFocused,
-      invalidAmount,
-    } = this.state
+    const { showPriceModal, priceCurrency, priceValue, invalidAmount } = this.state
 
     return (
       <React.Fragment>
@@ -136,9 +135,7 @@ class PricePicker extends Component {
                       keyboardType="numeric"
                       value={priceValue}
                       onChangeText={this.handlePriceValueChange}
-                      style={[styles.textInput, textInputFocused && { backgroundColor: '#FFF' }]}
-                      onFocus={() => this.setState({ textInputFocused: true })}
-                      onBlur={() => this.setState({ textInputFocused: false })}
+                      style={styles.textInput}
                     />
                     <CurrencyPicker
                       currency={priceCurrency}
@@ -153,6 +150,14 @@ class PricePicker extends Component {
                     </HelperText>
                   )}
                 </View>
+                <Button
+                  mode="contained"
+                  style={styles.button}
+                  onPress={this.handleFreePress}
+                  icon="money-off"
+                >
+                  This is FREE game
+                </Button>
                 <Button
                   mode="contained"
                   onPress={this.handleSubmit}
