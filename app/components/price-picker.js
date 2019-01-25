@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Modal, StyleSheet, KeyboardAvoidingView } from 'react-native'
-import { Portal, withTheme, Button, TextInput } from 'react-native-paper'
+import { View, Modal, StyleSheet, KeyboardAvoidingView, TextInput } from 'react-native'
+import { Portal, withTheme, Button, Colors, HelperText } from 'react-native-paper'
 import PropTypes from 'prop-types'
 import regionState from '../store/region'
 import { Container, EditRow, ModalHeader, CurrencyPicker } from '.'
@@ -20,11 +20,17 @@ const getPriceString = price => {
   return `${price.value} ${price.currency.toUpperCase()}`
 }
 
+const AMOUNT_REGEX = /^\d+(.\d{1,2})?$/
+
 const styles = StyleSheet.create({
   button: {
     paddingVertical: 8,
+    marginBottom: 16,
   },
   pickerContainer: {
+    flex: 1,
+  },
+  inputContainer: {
     flex: 1,
     justifyContent: 'center',
   },
@@ -34,8 +40,15 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
+    alignItems: 'flex-end',
+    textAlign: 'right',
     marginRight: 16,
-    backgroundColor: 'transparent',
+    paddingHorizontal: 16,
+    fontSize: 22,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 4,
+    borderColor: Colors.grey300,
+    borderWidth: 1,
   },
 })
 
@@ -45,6 +58,7 @@ class PricePicker extends Component {
     theme: PropTypes.shape({
       colors: PropTypes.shape({
         accent: PropTypes.string.isRequired,
+        error: PropTypes.string.isRequired,
       }).isRequired,
     }).isRequired,
     country: PropTypes.string.isRequired,
@@ -65,6 +79,7 @@ class PricePicker extends Component {
       getCurrencyFromCountrySymbol(this.props.country),
     priceValue: (this.props.price && this.props.price.value) || null,
     textInputFocused: false,
+    invalidAmount: false,
   }
 
   handleCloseModal = () => {
@@ -73,14 +88,27 @@ class PricePicker extends Component {
 
   handleSubmit = () => {
     const { priceValue, priceCurrency } = this.state
+    const amountCorrect = priceValue.match(AMOUNT_REGEX)
+
+    if (!amountCorrect) return this.setState({ invalidAmount: true })
 
     this.props.onSelectPrice({ value: priceValue, currency: priceCurrency })
-    this.setState({ showPriceModal: false })
+    return this.setState({ showPriceModal: false })
+  }
+
+  handlePriceValueChange = newPriceValue => {
+    this.setState({ invalidAmount: false, priceValue: newPriceValue.replace(',', '.') })
   }
 
   render() {
     const { price, theme } = this.props
-    const { showPriceModal, priceCurrency, priceValue, textInputFocused } = this.state
+    const {
+      showPriceModal,
+      priceCurrency,
+      priceValue,
+      textInputFocused,
+      invalidAmount,
+    } = this.state
 
     return (
       <React.Fragment>
@@ -101,33 +129,40 @@ class PricePicker extends Component {
             <Container>
               <ModalHeader title="Set the price" onClose={this.handleCloseModal} />
               <KeyboardAvoidingView style={styles.pickerContainer} behavior="padding">
-                <View style={styles.row}>
-                  <TextInput
-                    label="Price"
-                    keyboardType="number-pad"
-                    value={priceValue}
-                    onChangeText={newPriceValue => this.setState({ priceValue: newPriceValue })}
-                    style={[styles.textInput, textInputFocused && { backgroundColor: '#FFF' }]}
-                    onFocus={() => this.setState({ textInputFocused: true })}
-                    onBlur={() => this.setState({ textInputFocused: false })}
-                  />
-                  <CurrencyPicker
-                    currency={priceCurrency}
-                    onSelectCurrency={newPriceCurrency =>
-                      this.setState({ priceCurrency: newPriceCurrency })
-                    }
-                  />
+                <View style={styles.inputContainer}>
+                  <View style={styles.row}>
+                    <TextInput
+                      placeholder="00.00"
+                      keyboardType="numeric"
+                      value={priceValue}
+                      onChangeText={this.handlePriceValueChange}
+                      style={[styles.textInput, textInputFocused && { backgroundColor: '#FFF' }]}
+                      onFocus={() => this.setState({ textInputFocused: true })}
+                      onBlur={() => this.setState({ textInputFocused: false })}
+                    />
+                    <CurrencyPicker
+                      currency={priceCurrency}
+                      onSelectCurrency={newPriceCurrency =>
+                        this.setState({ priceCurrency: newPriceCurrency })
+                      }
+                    />
+                  </View>
+                  {invalidAmount && (
+                    <HelperText style={{ color: theme.colors.error }}>
+                      This price is invalid!
+                    </HelperText>
+                  )}
                 </View>
+                <Button
+                  mode="contained"
+                  onPress={this.handleSubmit}
+                  color={theme.colors.accent}
+                  style={styles.button}
+                  disabled={!priceValue || !priceCurrency}
+                >
+                  Save
+                </Button>
               </KeyboardAvoidingView>
-              <Button
-                mode="contained"
-                onPress={this.handleSubmit}
-                color={theme.colors.accent}
-                style={styles.button}
-                disabled={!priceValue || !priceCurrency}
-              >
-                Save
-              </Button>
             </Container>
           </Modal>
         </Portal>
