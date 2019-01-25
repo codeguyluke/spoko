@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
 })
 
-function GameItem({ sport, place, datetime, owned, theme, onPress }) {
+function GameItem({ sport, place, datetime, price, owned, theme, onPress }) {
   return (
     <TouchableOpacity onPress={onPress} underlayColor={Colors.grey200}>
       <Surface style={styles.surface}>
@@ -45,6 +45,7 @@ function GameItem({ sport, place, datetime, owned, theme, onPress }) {
           <InfoRow type="sport" value={sport} />
           <InfoRow type="place" value={place} />
           <InfoRow type="datetime" value={datetime} />
+          <InfoRow type="price" value={price} />
         </View>
         <Icon name="chevron-right" size={32} color={theme.colors.accent} />
       </Surface>
@@ -58,6 +59,10 @@ GameItem.propTypes = {
     description: PropTypes.string.isRequired,
   }).isRequired,
   datetime: PropTypes.instanceOf(Date).isRequired,
+  price: PropTypes.shape({
+    value: PropTypes.string.isRequired,
+    currency: PropTypes.string.isRequired,
+  }).isRequired,
   owned: PropTypes.bool.isRequired,
   onPress: PropTypes.func.isRequired,
   theme: PropTypes.shape({

@@ -3,6 +3,7 @@ import { types } from './filters.actions'
 const INITIAL_STATE = {
   sports: [],
   dates: [],
+  price: 'Infinity',
 }
 
 export default function filtersReducer(state = INITIAL_STATE, action = { type: '' }) {
@@ -16,6 +17,11 @@ export default function filtersReducer(state = INITIAL_STATE, action = { type: '
       return {
         ...state,
         dates: action.payload,
+      }
+    case types.SET_PRICE_FILTER:
+      return {
+        ...state,
+        price: action.payload,
       }
     default:
       return state

@@ -15,9 +15,12 @@ const selectScheduledGames = state =>
 const selectGameById = (state, id) => state[STORE_NAME].games.find(game => game.id === id)
 
 const selectFilteredGames = state => {
-  const { sports, dates } = state[filtersState.STORE_NAME]
+  const { sports, dates, price } = state[filtersState.STORE_NAME]
   return state[STORE_NAME].games.filter(
-    game => sports.includes(game.sport) && dates.includes(game.datetime.toDateString())
+    game =>
+      sports.includes(game.sport) &&
+      dates.includes(game.datetime.toDateString()) &&
+      Number(game.price.value) <= Number(price)
   )
 }
 
