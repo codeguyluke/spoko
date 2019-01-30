@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Image, StyleSheet } from 'react-native'
-import { Subheading, Paragraph } from 'react-native-paper'
+import { Subheading } from 'react-native-paper'
 import PropTypes from 'prop-types'
 import sports from '../assets/sports'
 import calendarIcon from '../assets/images/calendar.png'
@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   image: {
-    width: 40,
-    height: 40,
+    width: 48,
+    height: 48,
     marginRight: 16,
   },
   text: {
@@ -59,18 +59,14 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function InfoRow({ type, value, large }) {
+export default function InfoRow({ type, value }) {
   const imageSource = type === 'sport' ? sports[value].icon : ICONS[type]
   const text = getText(type, value)
 
   return (
     <View style={styles.row}>
-      <Image source={imageSource} style={[styles.image, large && { width: 48, height: 48 }]} />
-      {large ? (
-        <Subheading style={styles.text}>{text}</Subheading>
-      ) : (
-        <Paragraph style={styles.text}>{text}</Paragraph>
-      )}
+      <Image source={imageSource} style={styles.image} />
+      <Subheading style={styles.text}>{text}</Subheading>
     </View>
   )
 }
@@ -82,9 +78,4 @@ InfoRow.propTypes = {
     PropTypes.shape({ description: PropTypes.string }),
     PropTypes.instanceOf(Date),
   ]).isRequired,
-  large: PropTypes.bool,
-}
-
-InfoRow.defaultProps = {
-  large: false,
 }

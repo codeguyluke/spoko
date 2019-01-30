@@ -29,10 +29,10 @@ function ViewGameOwner({ game, theme, onEditGame, onCancelGame, loading }) {
     <React.Fragment>
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
         <ScrollView style={styles.scrollViewContainer}>
-          <InfoRow large type="sport" value={sport} />
-          <InfoRow large type="place" value={place} />
-          <InfoRow large type="datetime" value={datetime} />
-          <InfoRow large type="price" value={price} />
+          <InfoRow type="sport" value={sport} />
+          <InfoRow type="place" value={place} />
+          <InfoRow type="datetime" value={datetime} />
+          <InfoRow type="price" value={price} />
         </ScrollView>
         <View style={styles.buttonsContainer}>
           <Button
