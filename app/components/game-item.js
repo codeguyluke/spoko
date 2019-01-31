@@ -17,8 +17,8 @@ function getDateString(dateString) {
 
   const datetime = new Date(dateString)
   return `${datetime.toLocaleDateString(undefined, {
-    weekday: 'long',
-    month: 'long',
+    weekday: 'short',
+    month: 'short',
     day: 'numeric',
   })}`
 }
@@ -57,10 +57,12 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   dateText: {
+    flex: 1,
     fontWeight: '500',
     color: '#FFF',
   },
   placeText: {
+    flex: 1,
     color: '#FFF',
   },
   image: {

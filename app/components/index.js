@@ -9,8 +9,10 @@ import GameItem from './game-item'
 import InfoRow from './info-row'
 import Loader from './loader'
 import ModalHeader from './modal-header'
+import NumberPicker from './number-picker'
 import JoChat from './jo-chat'
 import PlacePicker from './place-picker'
+import PlayersPicker from './players-picker'
 import PriceFilter from './price-filter'
 import PricePicker from './price-picker'
 import SportFilter from './sport-filter'
@@ -29,8 +31,10 @@ export {
   InfoRow,
   Loader,
   ModalHeader,
+  NumberPicker,
   JoChat,
   PlacePicker,
+  PlayersPicker,
   PriceFilter,
   PricePicker,
   SportFilter,

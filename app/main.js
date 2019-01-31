@@ -17,7 +17,6 @@ export default class Main extends Component {
 
   componentDidMount() {
     this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
-      if (!user) firebase.auth().signInAnonymously()
       this.setState({
         authenticationStatus: !user
           ? AUTHENTICATION_STATUSES.unauthenticated
