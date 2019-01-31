@@ -51,6 +51,17 @@ class PlayersPicker extends Component {
       return { players: newPlayers }
     })
 
+  handleRemovePlayer = () =>
+    this.setState(prevState => {
+      const emptyPlayerIndex = prevState.players.findIndex(player => player.id === 'player')
+      if (emptyPlayerIndex > -1) {
+        const newPlayers = [...prevState.players]
+        newPlayers.splice(emptyPlayerIndex, 1)
+        return { players: newPlayers }
+      }
+      return null
+    })
+
   handleSubmit = () => {
     const { players } = this.state
 
@@ -61,6 +72,8 @@ class PlayersPicker extends Component {
   render() {
     const { players: propsPlayers, theme } = this.props
     const { showPlayersModal, players } = this.state
+
+    const signedPlayers = propsPlayers.filter(player => player.id !== 'player')
 
     return (
       <React.Fragment>
@@ -83,10 +96,10 @@ class PlayersPicker extends Component {
               <View style={styles.pickerContainer}>
                 <NumberPicker
                   value={players.length}
-                  min={propsPlayers.length || 1}
+                  min={signedPlayers.length || 1}
                   max={MAX_PLAYERS}
                   onUp={this.handleAddPlayer}
-                  onDown={() => {}}
+                  onDown={this.handleRemovePlayer}
                 />
               </View>
               <Button
