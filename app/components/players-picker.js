@@ -1,121 +1,116 @@
-import React, { Component } from 'react'
-import { View, Modal, StyleSheet } from 'react-native'
-import { Portal, withTheme, Button } from 'react-native-paper'
+import React from 'react'
+import { View, StyleSheet, Image, FlatList } from 'react-native'
+import { withTheme, Caption, Surface } from 'react-native-paper'
+import { Icon } from 'react-native-elements'
 import PropTypes from 'prop-types'
-import { Container, EditRow, ModalHeader, NumberPicker } from '.'
+import { NumberPicker } from '.'
 import peopleIcon from '../assets/images/people.png'
-
-const getPlayersString = players => (players.length < 1 ? '' : `${players.length} open spots`)
+import userIcon from '../assets/images/user.png'
 
 const MAX_PLAYERS = 5
 
 const styles = StyleSheet.create({
-  button: {
-    paddingVertical: 8,
+  container: {
+    marginVertical: 16,
   },
-  pickerContainer: {
+  labelContainer: {
+    marginBottom: 4,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  label: {
+    marginLeft: 4,
+    fontWeight: '500',
+  },
+  surface: {
+    width: '100%',
+    padding: 16,
+    elevation: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  image: {
+    width: 48,
+    height: 48,
+    marginRight: 16,
+  },
+  list: {
     flex: 1,
-    justifyContent: 'center',
+    paddingRight: 8,
+  },
+  playerPhoto: {
+    width: 40,
+    height: 40,
+    marginRight: 8,
   },
 })
 
-class PlayersPicker extends Component {
-  static propTypes = {
-    onSelectPlayers: PropTypes.func.isRequired,
-    theme: PropTypes.shape({
-      colors: PropTypes.shape({
-        accent: PropTypes.string.isRequired,
-        error: PropTypes.string.isRequired,
-      }).isRequired,
-    }).isRequired,
-    players: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string,
-        photoURL: PropTypes.string,
-      })
-    ).isRequired,
+const addPlayer = (players, callback) => () => {
+  if (players.length >= MAX_PLAYERS) return
+
+  const newPlayers = [...players, { id: 'player', photoURL: '' }]
+  callback(newPlayers)
+}
+
+const removePlayer = (players, min, callback) => () => {
+  if (players.length <= min) return
+
+  const emptyPlayerIndex = players.findIndex(player => player.id === 'player')
+  if (emptyPlayerIndex > -1) {
+    const newPlayers = [...players]
+    newPlayers.splice(emptyPlayerIndex, 1)
+    callback(newPlayers)
   }
+}
 
-  state = {
-    showPlayersModal: false,
-    players: this.props.players.length > 0 ? this.props.players : [{ id: 'player', photoURL: '' }],
-  }
+function PlayersPicker({ players, theme, onSelectPlayers }) {
+  const signedPlayers = players.filter(player => player.id !== 'player')
+  const minPlayers = signedPlayers.length || 1
 
-  handleCloseModal = () => {
-    this.setState({ showPlayersModal: false })
-  }
-
-  handleAddPlayer = () =>
-    this.setState(prevState => {
-      const newPlayers = [...prevState.players, { id: 'player', photoURL: '' }]
-      return { players: newPlayers }
-    })
-
-  handleRemovePlayer = () =>
-    this.setState(prevState => {
-      const emptyPlayerIndex = prevState.players.findIndex(player => player.id === 'player')
-      if (emptyPlayerIndex > -1) {
-        const newPlayers = [...prevState.players]
-        newPlayers.splice(emptyPlayerIndex, 1)
-        return { players: newPlayers }
-      }
-      return null
-    })
-
-  handleSubmit = () => {
-    const { players } = this.state
-
-    this.props.onSelectPlayers(players)
-    return this.setState({ showPlayersModal: false })
-  }
-
-  render() {
-    const { players: propsPlayers, theme } = this.props
-    const { showPlayersModal, players } = this.state
-
-    const signedPlayers = propsPlayers.filter(player => player.id !== 'player')
-
-    return (
-      <React.Fragment>
-        <EditRow
-          labelIcon="group"
-          placeholder="Pick number of players"
-          image={propsPlayers.length > 0 ? peopleIcon : ''}
-          value={getPlayersString(propsPlayers)}
-          onPress={() => this.setState({ showPlayersModal: true })}
-          label="players"
+  return (
+    <View style={styles.container}>
+      <View style={styles.labelContainer}>
+        <Icon name="group" size={24} color={theme.colors.accent} />
+        <Caption style={styles.label}>PLAYERS</Caption>
+      </View>
+      <Surface style={styles.surface}>
+        <Image source={peopleIcon} style={styles.image} />
+        <FlatList
+          horizontal
+          style={styles.list}
+          data={players}
+          renderItem={({ item }) => (
+            <Image style={styles.playerPhoto} source={item.photoURL || userIcon} />
+          )}
+          keyExtractor={(item, index) => (item.id !== 'player' ? item.id : `${item.id}${index}`)}
         />
-        <Portal>
-          <Modal
-            visible={showPlayersModal}
-            onRequestClose={this.handleCloseModal}
-            animationType="slide"
-          >
-            <Container>
-              <ModalHeader title="Pick number of players" onClose={this.handleCloseModal} />
-              <View style={styles.pickerContainer}>
-                <NumberPicker
-                  value={players.length}
-                  min={signedPlayers.length || 1}
-                  max={MAX_PLAYERS}
-                  onUp={this.handleAddPlayer}
-                  onDown={this.handleRemovePlayer}
-                />
-              </View>
-              <Button
-                mode="contained"
-                onPress={this.handleSubmit}
-                color={theme.colors.accent}
-                style={styles.button}
-              >
-                Save
-              </Button>
-            </Container>
-          </Modal>
-        </Portal>
-      </React.Fragment>
-    )
-  }
+        <NumberPicker
+          value={players.length}
+          min={minPlayers}
+          max={MAX_PLAYERS}
+          onUp={addPlayer(players, onSelectPlayers)}
+          onDown={removePlayer(players, minPlayers, onSelectPlayers)}
+        />
+      </Surface>
+    </View>
+  )
+}
+
+PlayersPicker.propTypes = {
+  onSelectPlayers: PropTypes.func.isRequired,
+  theme: PropTypes.shape({
+    colors: PropTypes.shape({
+      accent: PropTypes.string.isRequired,
+      error: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  players: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      photoURL: PropTypes.string,
+    })
+  ).isRequired,
 }
 
 export default withTheme(PlayersPicker)

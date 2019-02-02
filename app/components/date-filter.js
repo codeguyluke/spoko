@@ -68,7 +68,7 @@ class DateFilter extends Component {
 
   buildDatesArray = () => {
     const currentDate = new Date()
-    return new Array(7).fill(0).map((_value, index) => {
+    return new Array(8).fill(0).map((_value, index) => {
       const newDate = new Date(currentDate)
       newDate.setDate(currentDate.getDate() + index)
       return newDate.toDateString()

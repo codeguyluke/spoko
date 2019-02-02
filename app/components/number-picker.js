@@ -10,8 +10,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   value: {
-    fontSize: 36,
-    marginHorizontal: 32,
+    fontSize: 28,
+    marginHorizontal: 16,
   },
 })
 
@@ -21,7 +21,7 @@ function NumberPicker({ value, onUp, onDown, theme, min, max }) {
       <IconButton
         onPress={onDown}
         icon="remove-circle-outline"
-        size={32}
+        size={24}
         color={theme.colors.error}
         disabled={value === min}
       />
@@ -29,7 +29,7 @@ function NumberPicker({ value, onUp, onDown, theme, min, max }) {
       <IconButton
         onPress={onUp}
         icon="add-circle-outline"
-        size={32}
+        size={24}
         color={theme.colors.accent}
         disabled={value === max}
       />

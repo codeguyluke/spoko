@@ -46,7 +46,7 @@ class EditGame extends Component {
       place: (this.game && this.game.place) || null,
       datetime: (this.game && this.game.datetime) || null,
       price: (this.game && this.game.price) || null,
-      players: (this.game && this.game.players) || [],
+      players: (this.game && this.game.players) || [{ id: 'player', photoURL: '' }],
       description: (this.game && this.game.description) || '',
       loading: false,
     }
