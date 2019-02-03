@@ -8,6 +8,7 @@ import { withTheme, Button, TextInput } from 'react-native-paper'
 import { Avatar } from 'react-native-elements'
 import PropTypes from 'prop-types'
 import throttle from 'lodash/throttle'
+import { uploadAvatar, downloadAvatar } from '../services/storage'
 import toastState from '../store/toast'
 import avatarIcon from '../assets/images/avatar.png'
 
@@ -53,11 +54,11 @@ class Profile extends Component {
   }
 
   state = {
-    edited: false,
+    nameEdited: false,
+    photoEdited: false,
     loadingSave: false,
     loadingSignout: false,
-    loading: false,
-    photo: firebase.auth().currentUser.photoURL,
+    photo: null,
     displayName: firebase.auth().currentUser.displayName,
     textInputFocused: false,
     photoDisabled: false,
@@ -65,21 +66,45 @@ class Profile extends Component {
 
   textInputRef = React.createRef()
 
+  async componentDidMount() {
+    const { onAddToast } = this.props
+    const url = firebase.auth().currentUser.photoURL
+    if (!url) return
+
+    this.setState({ photoDisabled: true })
+    try {
+      const response = await downloadAvatar(url)
+      const fileReaderInstance = new FileReader()
+      fileReaderInstance.readAsDataURL(response.data)
+      fileReaderInstance.onload = () => {
+        const base64data = fileReaderInstance.result
+        this.setState({ photo: { uri: base64data }, photoDisabled: false })
+      }
+    } catch (error) {
+      onAddToast("Couln't fetch your avatar.")
+      this.setState({ photoDisabled: false })
+    }
+  }
+
   handleSave = async () => {
     const { onAddToast } = this.props
-    const { displayName, photo } = this.state
+    const { displayName, photo, photoEdited } = this.state
 
     this.setState({ loadingSave: true })
     try {
-      await firebase.auth().currentUser.updateProfile({ displayName, photoURL: photo })
+      let newPhotoURL = firebase.auth().currentUser.photoURL
+      if (photoEdited) {
+        newPhotoURL = await uploadAvatar(photo.uri)
+      }
+      await firebase.auth().currentUser.updateProfile({ displayName, photoURL: newPhotoURL })
       onAddToast('Profile updated!')
-      this.setState({ loadingSave: false, edited: false })
+      this.setState({ loadingSave: false, photoEdited: false, nameEdited: false })
       if (this.textInputRef && this.textInputRef.current) {
         this.textInputRef.current.blur()
       }
     } catch (error) {
       onAddToast("Couln't update your profile")
-      this.setState({ loadingSave: false, edited: false })
+      this.setState({ loadingSave: false, photoEdited: false, nameEdited: false })
     }
   }
 
@@ -112,7 +137,7 @@ class Profile extends Component {
           return this.setState({ photoDisabled: false })
         }
         const source = { uri: response.uri }
-        return this.setState({ photo: source, edited: true, photoDisabled: false })
+        return this.setState({ photo: source, photoEdited: true, photoDisabled: false })
       }
     )
   }
@@ -120,7 +145,8 @@ class Profile extends Component {
   render() {
     const { theme } = this.props
     const {
-      edited,
+      nameEdited,
+      photoEdited,
       loadingSave,
       loadingSignout,
       displayName,
@@ -129,13 +155,15 @@ class Profile extends Component {
       photoDisabled,
     } = this.state
 
+    const edited = nameEdited || photoEdited
+    const buttonsLoading = loadingSave || loadingSignout
     return (
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
         <ScrollView>
           <Avatar
             rounded
             xlarge
-            disabled={photoDisabled}
+            disabled={photoDisabled || buttonsLoading}
             avatarStyle={[styles.avatar, { borderColor: '#FFF' }]}
             source={photo || avatarIcon}
             containerStyle={styles.avatarContainer}
@@ -149,16 +177,17 @@ class Profile extends Component {
             onFocus={() => this.setState({ textInputFocused: true })}
             onBlur={() => this.setState({ textInputFocused: false })}
             onChangeText={newDisplayName =>
-              this.setState({ displayName: newDisplayName, edited: true })
+              this.setState({ displayName: newDisplayName, nameEdited: true })
             }
             style={[styles.textInput, textInputFocused && { backgroundColor: '#FFF' }]}
+            editable={!loadingSave && !loadingSignout}
           />
         </ScrollView>
         <Button
           mode="contained"
           loading={loadingSave}
           onPress={this.handleSave}
-          disabled={!edited || loadingSave || loadingSignout}
+          disabled={!edited || buttonsLoading}
           style={styles.button}
           color={theme.colors.accent}
           icon="save"
@@ -168,7 +197,7 @@ class Profile extends Component {
         <Button
           mode="outlined"
           loading={loadingSignout}
-          disabled={loadingSave || loadingSignout}
+          disabled={buttonsLoading}
           icon="power-settings-new"
           onPress={showSignoutConfirmation({ onSuccess: this.handleSignOut })}
           style={styles.button}

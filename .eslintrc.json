@@ -3,8 +3,9 @@
   "extends": ["airbnb", "prettier"],
   "plugins": ["react-native", "prettier"],
   "globals": {
-    "windor": true,
-    "navigator": true
+    "window": true,
+    "navigator": true,
+    "FileReader": true
   },
   "settings": {
     "import/resolver": {
