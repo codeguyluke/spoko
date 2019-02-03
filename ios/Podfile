@@ -29,7 +29,7 @@ target 'spoko' do
 
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
-  pod 'Firebase/Firestore'
+  pod 'Firebase/Firestore', '~> 5.15.0'
   pod 'Firebase/Storage'
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 

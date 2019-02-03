@@ -76,25 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** Returns YES if the given error is a GRPC ABORTED error. **/
 + (BOOL)isAbortedError:(NSError *)error;
 
-/**
- * Determines whether an error code represents a permanent error when received in response to a
- * non-write operation.
- *
- * See +isPermanentWriteError for classifying write errors.
- */
-+ (BOOL)isPermanentError:(NSError *)error;
-
-/**
- * Determines whether an error code represents a permanent error when received in response to a
- * write operation.
- *
- * Write operations must be handled specially because as of b/119437764, ABORTED errors on the write
- * stream should be retried too (even though ABORTED errors are not generally retryable).
- *
- * Note that during the initial handshake on the write stream an ABORTED error signals that we
- * should discard our stream token (i.e. it is permanent). This means a handshake error should be
- * classified with isPermanentError, above.
- */
+/** Returns YES if the given error indicates the RPC associated with it may not be retried. */
 + (BOOL)isPermanentWriteError:(NSError *)error;
 
 /** Looks up a list of documents in datastore. */

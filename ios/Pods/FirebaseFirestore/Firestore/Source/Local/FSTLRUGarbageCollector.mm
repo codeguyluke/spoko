@@ -22,6 +22,7 @@
 
 #import "Firestore/Source/Local/FSTMutationQueue.h"
 #import "Firestore/Source/Local/FSTPersistence.h"
+#import "Firestore/Source/Local/FSTQueryCache.h"
 #include "Firestore/core/include/firebase/firestore/timestamp.h"
 #include "Firestore/core/src/firebase/firestore/model/document_key.h"
 #include "Firestore/core/src/firebase/firestore/util/log.h"
@@ -80,7 +81,7 @@ class RollingSequenceNumberBuffer {
 };
 
 @implementation FSTLRUGarbageCollector {
-  __weak id<FSTLRUDelegate> _delegate;
+  id<FSTLRUDelegate> _delegate;
   LruParams _params;
 }
 
@@ -123,8 +124,8 @@ class RollingSequenceNumberBuffer {
   ListenSequenceNumber upperBound = [self sequenceNumberForQueryCount:sequenceNumbers];
   Timestamp foundUpperBound = Timestamp::Now();
 
-  int numTargetsRemoved = [self removeQueriesUpThroughSequenceNumber:upperBound
-                                                         liveQueries:liveTargets];
+  int numTargetsRemoved =
+      [self removeQueriesUpThroughSequenceNumber:upperBound liveQueries:liveTargets];
   Timestamp removedTargets = Timestamp::Now();
 
   int numDocumentsRemoved = [self removeOrphanedDocumentsThroughSequenceNumber:upperBound];
@@ -147,7 +148,7 @@ class RollingSequenceNumberBuffer {
 }
 
 - (int)queryCountForPercentile:(NSUInteger)percentile {
-  size_t totalCount = [_delegate sequenceNumberCount];
+  int totalCount = [_delegate sequenceNumberCount];
   int setSize = (int)((percentile / 100.0f) * totalCount);
   return setSize;
 }
