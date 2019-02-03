@@ -9,6 +9,7 @@ import {
   SportPicker,
   PlacePicker,
   DatetimePicker,
+  NotesPicker,
   PricePicker,
   PlayersPicker,
   Loader,
@@ -47,19 +48,19 @@ class EditGame extends Component {
       datetime: (this.game && this.game.datetime) || null,
       price: (this.game && this.game.price) || null,
       players: (this.game && this.game.players) || [{ id: 'player', photoURL: '' }],
-      description: (this.game && this.game.description) || '',
+      notes: (this.game && this.game.notes) || '',
       loading: false,
     }
   }
 
   handleCreateGame = async () => {
-    const { sport, place, datetime, price, players, description } = this.state
+    const { sport, place, datetime, price, players, notes } = this.state
     const { onAddToast, navigation } = this.props
 
     if (!sport || !place || !datetime || !price || !players) {
       Alert.alert(
         'Set all required info',
-        'In order to create the game, you need to set sport, place, time, price and number of players first.',
+        'In order to create the game, you need to set sport, place, time and price first.',
         [{ text: 'OK' }]
       )
       return
@@ -67,7 +68,7 @@ class EditGame extends Component {
 
     this.setState({ loading: true })
     try {
-      await createGame({ sport, place, datetime, price, players, description })
+      await createGame({ sport, place, datetime, price, players, notes })
       onAddToast('Game created!')
       this.setState({ loading: false }, () => navigation.goBack())
     } catch (error) {
@@ -78,12 +79,12 @@ class EditGame extends Component {
   }
 
   handleSaveGame = async () => {
-    const { sport, place, datetime, price, players, description } = this.state
+    const { sport, place, datetime, price, players, notes } = this.state
     const { onAddToast, navigation } = this.props
 
     this.setState({ loading: true })
     try {
-      await editGame(this.game.id, { sport, place, datetime, price, players, description })
+      await editGame(this.game.id, { sport, place, datetime, price, players, notes })
       onAddToast('Game edited!')
       this.setState({ loading: false }, () => navigation.goBack())
     } catch (error) {
@@ -95,7 +96,7 @@ class EditGame extends Component {
 
   render() {
     const { theme } = this.props
-    const { sport, place, datetime, price, players, loading } = this.state
+    const { sport, place, datetime, price, players, notes, loading } = this.state
 
     return (
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -120,6 +121,7 @@ class EditGame extends Component {
             players={players}
             onSelectPlayers={selectedPlayers => this.setState({ players: selectedPlayers })}
           />
+          <NotesPicker notes={notes} onAddNotes={newNotes => this.setState({ notes: newNotes })} />
         </ScrollView>
         {this.game ? (
           <FAB label="Save" onPress={this.handleSaveGame} style={styles.fab} />

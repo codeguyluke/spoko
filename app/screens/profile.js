@@ -8,6 +8,7 @@ import { withTheme, Button, TextInput } from 'react-native-paper'
 import { Avatar } from 'react-native-elements'
 import PropTypes from 'prop-types'
 import throttle from 'lodash/throttle'
+import { Loader } from '../components'
 import { uploadAvatar, downloadAvatar } from '../services/storage'
 import toastState from '../store/toast'
 import avatarIcon from '../assets/images/avatar.png'
@@ -58,10 +59,10 @@ class Profile extends Component {
     photoEdited: false,
     loadingSave: false,
     loadingSignout: false,
+    loadingPhoto: false,
     photo: null,
     displayName: firebase.auth().currentUser.displayName,
     textInputFocused: false,
-    photoDisabled: false,
   }
 
   textInputRef = React.createRef()
@@ -69,20 +70,21 @@ class Profile extends Component {
   async componentDidMount() {
     const { onAddToast } = this.props
     const url = firebase.auth().currentUser.photoURL
-    if (!url) return
+    if (!url) return this.setState({ photo: avatarIcon })
 
-    this.setState({ photoDisabled: true })
+    this.setState({ loadingPhoto: true })
     try {
       const response = await downloadAvatar(url)
       const fileReaderInstance = new FileReader()
       fileReaderInstance.readAsDataURL(response.data)
       fileReaderInstance.onload = () => {
         const base64data = fileReaderInstance.result
-        this.setState({ photo: { uri: base64data }, photoDisabled: false })
+        this.setState({ photo: { uri: base64data }, loadingPhoto: false })
       }
+      return true
     } catch (error) {
       onAddToast("Couln't fetch your avatar.")
-      this.setState({ photoDisabled: false })
+      return this.setState({ loadingPhoto: false })
     }
   }
 
@@ -121,7 +123,7 @@ class Profile extends Component {
 
   handleAvatarPress = () => {
     const { onAddToast } = this.props
-    this.setState({ photoDisabled: true })
+    this.setState({ loadingPhoto: true })
     ImagePicker.showImagePicker(
       {
         title: 'Select Avatar',
@@ -131,13 +133,13 @@ class Profile extends Component {
         },
       },
       response => {
-        if (response.didCancel) return this.setState({ photoDisabled: false })
+        if (response.didCancel) return this.setState({ loadingPhoto: false })
         if (response.error) {
           onAddToast(response.error)
-          return this.setState({ photoDisabled: false })
+          return this.setState({ loadingPhoto: false })
         }
         const source = { uri: response.uri }
-        return this.setState({ photo: source, photoEdited: true, photoDisabled: false })
+        return this.setState({ photo: source, photoEdited: true, loadingPhoto: false })
       }
     )
   }
@@ -152,60 +154,63 @@ class Profile extends Component {
       displayName,
       photo,
       textInputFocused,
-      photoDisabled,
+      loadingPhoto,
     } = this.state
 
     const edited = nameEdited || photoEdited
     const buttonsLoading = loadingSave || loadingSignout
     return (
-      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-        <ScrollView>
-          <Avatar
-            rounded
-            xlarge
-            disabled={photoDisabled || buttonsLoading}
-            avatarStyle={[styles.avatar, { borderColor: '#FFF' }]}
-            source={photo || avatarIcon}
-            containerStyle={styles.avatarContainer}
-            onPress={throttle(this.handleAvatarPress)}
-          />
-          <TextInput
-            ref={this.textInputRef}
-            mode="flat"
-            placeholder="Anonymous"
-            value={displayName}
-            onFocus={() => this.setState({ textInputFocused: true })}
-            onBlur={() => this.setState({ textInputFocused: false })}
-            onChangeText={newDisplayName =>
-              this.setState({ displayName: newDisplayName, nameEdited: true })
-            }
-            style={[styles.textInput, textInputFocused && { backgroundColor: '#FFF' }]}
-            editable={!loadingSave && !loadingSignout}
-          />
-        </ScrollView>
-        <Button
-          mode="contained"
-          loading={loadingSave}
-          onPress={this.handleSave}
-          disabled={!edited || buttonsLoading}
-          style={styles.button}
-          color={theme.colors.accent}
-          icon="save"
-        >
-          Save
-        </Button>
-        <Button
-          mode="outlined"
-          loading={loadingSignout}
-          disabled={buttonsLoading}
-          icon="power-settings-new"
-          onPress={showSignoutConfirmation({ onSuccess: this.handleSignOut })}
-          style={styles.button}
-          color={theme.colors.error}
-        >
-          Sign out
-        </Button>
-      </View>
+      <React.Fragment>
+        <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+          <ScrollView>
+            <Avatar
+              rounded
+              xlarge
+              disabled={loadingPhoto || buttonsLoading}
+              avatarStyle={[styles.avatar, { borderColor: '#FFF' }]}
+              source={photo}
+              containerStyle={styles.avatarContainer}
+              onPress={throttle(this.handleAvatarPress)}
+            />
+            <TextInput
+              ref={this.textInputRef}
+              mode="flat"
+              placeholder="Anonymous"
+              value={displayName}
+              onFocus={() => this.setState({ textInputFocused: true })}
+              onBlur={() => this.setState({ textInputFocused: false })}
+              onChangeText={newDisplayName =>
+                this.setState({ displayName: newDisplayName, nameEdited: true })
+              }
+              style={[styles.textInput, textInputFocused && { backgroundColor: '#FFF' }]}
+              editable={!loadingSave && !loadingSignout}
+            />
+          </ScrollView>
+          <Button
+            mode="contained"
+            loading={loadingSave}
+            onPress={this.handleSave}
+            disabled={!edited || buttonsLoading}
+            style={styles.button}
+            color={theme.colors.accent}
+            icon="save"
+          >
+            Save
+          </Button>
+          <Button
+            mode="outlined"
+            loading={loadingSignout}
+            disabled={buttonsLoading}
+            icon="power-settings-new"
+            onPress={showSignoutConfirmation({ onSuccess: this.handleSignOut })}
+            style={styles.button}
+            color={theme.colors.error}
+          >
+            Sign out
+          </Button>
+        </View>
+        {loadingPhoto && <Loader />}
+      </React.Fragment>
     )
   }
 }

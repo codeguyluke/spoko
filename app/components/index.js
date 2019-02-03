@@ -9,6 +9,7 @@ import GameItem from './game-item'
 import InfoRow from './info-row'
 import Loader from './loader'
 import ModalHeader from './modal-header'
+import NotesPicker from './notes-picker'
 import NumberPicker from './number-picker'
 import JoChat from './jo-chat'
 import PlacePicker from './place-picker'
@@ -31,6 +32,7 @@ export {
   InfoRow,
   Loader,
   ModalHeader,
+  NotesPicker,
   NumberPicker,
   JoChat,
   PlacePicker,
