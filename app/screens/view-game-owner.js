@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 })
 
 function ViewGameOwner({ game, theme, onEditGame, onCancelGame, loading }) {
-  const { sport, place, datetime, price, players } = game
+  const { sport, place, datetime, price, players, notes } = game
   return (
     <React.Fragment>
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -34,6 +34,7 @@ function ViewGameOwner({ game, theme, onEditGame, onCancelGame, loading }) {
           <InfoRow type="datetime" value={datetime} />
           <InfoRow type="price" value={price} />
           <InfoRow type="players" value={players} />
+          {notes && <InfoRow type="notes" value={notes} />}
         </ScrollView>
         <View style={styles.buttonsContainer}>
           <Button
@@ -77,6 +78,7 @@ ViewGameOwner.propTypes = {
       currency: PropTypes.string.isRequired,
     }).isRequired,
     players: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string })).isRequired,
+    notes: PropTypes.string,
   }).isRequired,
   theme: PropTypes.shape({
     colors: PropTypes.shape({

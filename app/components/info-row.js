@@ -7,6 +7,7 @@ import calendarIcon from '../assets/images/calendar.png'
 import globeIcon from '../assets/images/globe.png'
 import moneyIcon from '../assets/images/money.png'
 import peopleIcon from '../assets/images/people.png'
+import noteIcon from '../assets/images/note.png'
 
 const TYPES = {
   sport: 'sport',
@@ -14,9 +15,16 @@ const TYPES = {
   datetime: 'datetime',
   price: 'price',
   players: 'players',
+  notes: 'notes',
 }
 
-const ICONS = { place: globeIcon, datetime: calendarIcon, price: moneyIcon, players: peopleIcon }
+const ICONS = {
+  place: globeIcon,
+  datetime: calendarIcon,
+  price: moneyIcon,
+  players: peopleIcon,
+  notes: noteIcon,
+}
 
 function getDatetimeString(datetime) {
   return datetime
@@ -49,6 +57,8 @@ function getText(type, value) {
       return getPriceString(value)
     case TYPES.players:
       return getPlayersString(value)
+    case TYPES.notes:
+      return value
     case TYPES.datetime:
     default:
       return getDatetimeString(value)
