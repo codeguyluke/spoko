@@ -1,5 +1,6 @@
 import ChatMessage from './chat-message'
 import Container from './container'
+import CountryPicker from './country-picker'
 import CurrencyPicker from './currency-picker'
 import DateFilter from './date-filter'
 import DatetimePicker from './datetime-picker'
@@ -24,6 +25,7 @@ import Toast from './toast'
 export {
   ChatMessage,
   Container,
+  CountryPicker,
   CurrencyPicker,
   DateFilter,
   DatetimePicker,
