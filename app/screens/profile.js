@@ -3,9 +3,11 @@ import { connect } from 'react-redux'
 import firebase from 'react-native-firebase'
 import { View, ScrollView, StyleSheet, InteractionManager, Alert } from 'react-native'
 import { createStackNavigator } from 'react-navigation'
+import ImagePicker from 'react-native-image-picker'
 import { withTheme, Button, TextInput } from 'react-native-paper'
 import { Avatar } from 'react-native-elements'
 import PropTypes from 'prop-types'
+import { Loader } from '../components'
 import toastState from '../store/toast'
 import avatarIcon from '../assets/images/avatar.png'
 
@@ -54,6 +56,7 @@ class Profile extends Component {
     edited: false,
     loadingSave: false,
     loadingSignout: false,
+    loading: false,
     photo: firebase.auth().currentUser.photoURL,
     displayName: firebase.auth().currentUser.displayName,
     textInputFocused: false,
@@ -90,57 +93,92 @@ class Profile extends Component {
     }
   }
 
+  handleAvatarPress = async () => {
+    const { onAddToast } = this.props
+    this.setState({ loading: true })
+    await ImagePicker.showImagePicker(
+      {
+        title: 'Select Avatar',
+        storageOptions: {
+          skipBackup: true,
+          path: 'images',
+        },
+      },
+      response => {
+        if (response.didCancel) return null
+        if (response.error) return onAddToast(response.error)
+        console.log(response)
+        const source = { uri: response.uri }
+        return this.setState({ photo: source, edited: true })
+      }
+    )
+    this.setState({ loading: false })
+  }
+
   render() {
     const { theme } = this.props
-    const { edited, loadingSave, loadingSignout, displayName, photo, textInputFocused } = this.state
+    const {
+      edited,
+      loadingSave,
+      loadingSignout,
+      displayName,
+      photo,
+      textInputFocused,
+      loading,
+    } = this.state
 
+    console.log('this.state', this.state)
+    console.log('user', firebase.auth().currentUser)
     return (
-      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-        <ScrollView>
-          <Avatar
-            rounded
-            xlarge
-            avatarStyle={[styles.avatar, { borderColor: '#FFF' }]}
-            source={photo || avatarIcon}
-            containerStyle={styles.avatarContainer}
-            onPress={() => {}}
-          />
-          <TextInput
-            ref={this.textInputRef}
-            mode="flat"
-            placeholder="Anonymous"
-            value={displayName}
-            onFocus={() => this.setState({ textInputFocused: true })}
-            onBlur={() => this.setState({ textInputFocused: false })}
-            onChangeText={newDisplayName =>
-              this.setState({ displayName: newDisplayName, edited: true })
-            }
-            style={[styles.textInput, textInputFocused && { backgroundColor: '#FFF' }]}
-          />
-        </ScrollView>
-        <Button
-          mode="contained"
-          loading={loadingSave}
-          onPress={this.handleSave}
-          disabled={!edited || loadingSave || loadingSignout}
-          style={styles.button}
-          color={theme.colors.accent}
-          icon="save"
-        >
-          Save
-        </Button>
-        <Button
-          mode="outlined"
-          loading={loadingSignout}
-          disabled={loadingSave || loadingSignout}
-          icon="power-settings-new"
-          onPress={showSignoutConfirmation({ onSuccess: this.handleSignOut })}
-          style={styles.button}
-          color={theme.colors.error}
-        >
-          Sign out
-        </Button>
-      </View>
+      <React.Fragment>
+        <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+          <ScrollView>
+            <Avatar
+              rounded
+              xlarge
+              avatarStyle={[styles.avatar, { borderColor: '#FFF' }]}
+              source={photo || avatarIcon}
+              containerStyle={styles.avatarContainer}
+              onPress={this.handleAvatarPress}
+            />
+            <TextInput
+              ref={this.textInputRef}
+              mode="flat"
+              placeholder="Anonymous"
+              value={displayName}
+              onFocus={() => this.setState({ textInputFocused: true })}
+              onBlur={() => this.setState({ textInputFocused: false })}
+              onChangeText={newDisplayName =>
+                this.setState({ displayName: newDisplayName, edited: true })
+              }
+              style={[styles.textInput, textInputFocused && { backgroundColor: '#FFF' }]}
+            />
+          </ScrollView>
+          <Button
+            mode="contained"
+            loading={loadingSave}
+            onPress={this.handleSave}
+            disabled={!edited || loadingSave || loadingSignout}
+            style={styles.button}
+            color={theme.colors.accent}
+            icon="save"
+          >
+            Save
+          </Button>
+          <Button
+            mode="outlined"
+            loading={loadingSignout}
+            disabled={loadingSave || loadingSignout}
+            icon="power-settings-new"
+            onPress={showSignoutConfirmation({ onSuccess: this.handleSignOut })}
+            style={styles.button}
+            color={theme.colors.error}
+          >
+            Sign out
+          </Button>
+        </View>
+        {loading && <Loader />}
+      </React.Fragment>
     )
   }
 }
