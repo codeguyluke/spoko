@@ -31,6 +31,7 @@ target 'spoko' do
   pod 'Firebase/Auth'
   pod 'Firebase/Firestore'
   pod 'Firebase/DynamicLinks'
+  pod 'Firebase/Storage'
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
