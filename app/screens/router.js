@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import Permissions from 'react-native-permissions'
 import { createAppContainer, createStackNavigator } from 'react-navigation'
 import { Icon } from 'react-native-elements'
-import { Portal, Dialog, List, Button, Paragraph, withTheme } from 'react-native-paper'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
 import PropTypes from 'prop-types'
 import MapScreen from './map'
@@ -16,7 +15,7 @@ import gamesState from '../store/games'
 import regionState from '../store/region'
 import { subscribeToGames } from '../services/firestore'
 import { getCurrentRegion, getCurrentCountry, DEFAULT_REGION } from '../services/geolocation'
-import { Loader, Toast, SportFilter, DateFilter, PriceFilter } from '../components'
+import { Loader, Toast, SportFilter, DateFilter, PriceFilter, LocationDialog } from '../components'
 
 const CommonRoutes = {
   CreateGame: {
@@ -131,11 +130,6 @@ class Router extends Component {
     onSetInitialRegion: PropTypes.func.isRequired,
     onSetGames: PropTypes.func.isRequired,
     onSetCountry: PropTypes.func.isRequired,
-    theme: PropTypes.shape({
-      colors: PropTypes.shape({
-        accent: PropTypes.string.isRequired,
-      }).isRequired,
-    }).isRequired,
   }
 
   state = {
@@ -186,7 +180,6 @@ class Router extends Component {
   }
 
   render() {
-    const { theme } = this.props
     const { initialized, showDialog } = this.state
 
     return (
@@ -194,33 +187,11 @@ class Router extends Component {
         <StatusBar barStyle="light-content" />
         {initialized ? <AppNavigator /> : <Loader />}
         <Toast />
-        <Portal>
-          <Dialog visible={showDialog} onDismiss={this.handleCancelPermissionRequest}>
-            <Dialog.Title>Allow location?</Dialog.Title>
-            <Dialog.Content>
-              <Paragraph>We only use your location to allow features like:</Paragraph>
-              <List.Section>
-                <List.Item
-                  title="Finding games around"
-                  left={() => <List.Icon icon="check-box" color={theme.colors.accent} />}
-                />
-                <List.Item
-                  title="Navigating to games"
-                  left={() => <List.Icon icon="check-box" color={theme.colors.accent} />}
-                />
-                <List.Item
-                  title="Finding venues around"
-                  left={() => <List.Icon icon="check-box" color={theme.colors.accent} />}
-                />
-              </List.Section>
-              <Paragraph>Do you want to allow SpontApp to use your location?</Paragraph>
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Button onPress={this.handleCancelPermissionRequest}>Not now</Button>
-              <Button onPress={this.handleAllowPermissionRequest}>Yes</Button>
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
+        <LocationDialog
+          show={showDialog}
+          onCancel={this.handleCancelPermissionRequest}
+          onYes={this.handleAllowPermissionRequest}
+        />
       </React.Fragment>
     )
   }
@@ -233,4 +204,4 @@ export default connect(
     onSetCountry: regionState.actions.setCountry,
     onSetGames: gamesState.actions.setGames,
   }
-)(withTheme(Router))
+)(Router)

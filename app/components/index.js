@@ -8,6 +8,7 @@ import FilterButton from './filter-button'
 import GameItem from './game-item'
 import InfoRow from './info-row'
 import Loader from './loader'
+import LocationDialog from './location-dialog'
 import ModalHeader from './modal-header'
 import NotesPicker from './notes-picker'
 import NumberPicker from './number-picker'
@@ -31,6 +32,7 @@ export {
   GameItem,
   InfoRow,
   Loader,
+  LocationDialog,
   ModalHeader,
   NotesPicker,
   NumberPicker,
