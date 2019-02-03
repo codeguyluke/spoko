@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { FAB, TextInput } from 'react-native-paper'
+import { MESSAGES, getMessage } from '../assets/messages'
 import { Loader, Container, JoChat } from '../components'
 
 const styles = StyleSheet.create({
@@ -15,15 +16,7 @@ const styles = StyleSheet.create({
 
 export default class WelcomeChat extends Component {
   state = {
-    messages: [
-      {
-        text: "Hi, welcome to SpontApp! I'm Jo, your SpontApp Assistant.",
-      },
-      {
-        text: 'Please sign in to the app with your email address.',
-      },
-    ],
-    email: '',
+    messages: [getMessage(MESSAGES.greeting)],
     loading: false,
   }
 

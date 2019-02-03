@@ -21,7 +21,9 @@ const showConfirmation = ({ title, message, onSuccess }) => () =>
 class ViewGame extends Component {
   static propTypes = {
     game: PropTypes.shape({
-      ownerId: PropTypes.string.isRequired,
+      owner: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+      }).isRequired,
       sport: PropTypes.string.isRequired,
       place: PropTypes.shape({
         location: PropTypes.shape({
@@ -104,7 +106,7 @@ class ViewGame extends Component {
 
     if (!game) return <Loader />
 
-    const { ownerId, players } = game
+    const { owner: { id: ownerId }, players } = game
     const owned = ownerId === firebase.auth().currentUser.uid
     const played = players.some(player => player.id === firebase.auth().currentUser.uid)
 

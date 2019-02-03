@@ -23,7 +23,7 @@ function LocationDialog({ show, onCancel, onYes, theme }) {
               left={() => <List.Icon icon="check-box" color={theme.colors.accent} />}
             />
           </List.Section>
-          <Paragraph>Do you want to allow SpontApp to use your location?</Paragraph>
+          <Paragraph>Do you agree to allow SpontApp to use your location?</Paragraph>
         </Dialog.Content>
         <Dialog.Actions>
           <Button onPress={onCancel}>Not now</Button>

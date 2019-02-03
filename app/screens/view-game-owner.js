@@ -64,7 +64,9 @@ function ViewGameOwner({ game, theme, onEditGame, onCancelGame, loading }) {
 
 ViewGameOwner.propTypes = {
   game: PropTypes.shape({
-    ownerId: PropTypes.string.isRequired,
+    owner: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }).isRequired,
     sport: PropTypes.string.isRequired,
     place: PropTypes.shape({
       location: PropTypes.shape({

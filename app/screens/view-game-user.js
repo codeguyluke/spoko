@@ -106,7 +106,9 @@ function ViewGameUser({ game, theme, onJoinGame, onLeaveGame, played, loading })
 
 ViewGameUser.propTypes = {
   game: PropTypes.shape({
-    ownerId: PropTypes.string.isRequired,
+    owner: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }).isRequired,
     sport: PropTypes.string.isRequired,
     place: PropTypes.shape({
       location: PropTypes.shape({

@@ -34,7 +34,14 @@ function ChatMessage({ children, author, type, theme }) {
           author === 'me' && { marginRight: 16, backgroundColor: Colors.orange50 },
         ]}
       >
-        <Subheading style={[styles.text, type === 'error' && { color: theme.colors.error }]}>
+        <Subheading
+          style={[
+            styles.text,
+            type !== 'info' && {
+              color: type === 'error' ? theme.colors.error : theme.colors.accent,
+            },
+          ]}
+        >
           {children}
         </Subheading>
       </Surface>
@@ -47,6 +54,7 @@ ChatMessage.propTypes = {
   theme: PropTypes.shape({
     colors: PropTypes.shape({
       error: PropTypes.string.isRequired,
+      accent: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
   children: PropTypes.string.isRequired,

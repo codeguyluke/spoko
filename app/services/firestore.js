@@ -8,8 +8,8 @@ export const subscribeToGames = async callback => {
 }
 
 export const createGame = async game => {
-  const currentUserId = firebase.auth().currentUser.uid
-  return gamesRef.add({ ...game, ownerId: currentUserId })
+  const { uid, phoneNumber, photoURL } = firebase.auth().currentUser
+  return gamesRef.add({ ...game, owner: { id: uid, phoneNumber, photoURL } })
 }
 
 export const cancelGame = async id => gamesRef.doc(id).delete()
@@ -17,8 +17,8 @@ export const cancelGame = async id => gamesRef.doc(id).delete()
 export const editGame = async (id, game) => gamesRef.doc(id).set({ ...game }, { merge: true })
 
 export const joinGame = async game => {
-  const { uid, email, photoURL } = firebase.auth().currentUser
-  const newPlayers = [...game.players, { id: uid, email, photoURL }]
+  const { uid, phoneNumber, photoURL } = firebase.auth().currentUser
+  const newPlayers = [...game.players, { id: uid, phoneNumber, photoURL }]
   return gamesRef.doc(game.id).set({ players: newPlayers }, { merge: true })
 }
 
