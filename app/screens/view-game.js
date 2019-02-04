@@ -106,7 +106,10 @@ class ViewGame extends Component {
 
     if (!game) return <Loader />
 
-    const { owner: { id: ownerId }, players } = game
+    const {
+      owner: { id: ownerId },
+      players,
+    } = game
     const owned = ownerId === firebase.auth().currentUser.uid
     const played = players.some(player => player.id === firebase.auth().currentUser.uid)
 

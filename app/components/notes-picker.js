@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { Modal, StyleSheet, KeyboardAvoidingView } from 'react-native'
+import {
+  View,
+  Modal,
+  StyleSheet,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native'
 import { Portal, withTheme, Button, TextInput } from 'react-native-paper'
 import PropTypes from 'prop-types'
 import truncate from 'lodash/truncate'
@@ -18,6 +25,9 @@ const styles = StyleSheet.create({
     minHeight: 160,
     backgroundColor: '#FFF',
     borderRadius: 4,
+  },
+  dismissArea: {
+    flex: 1,
   },
 })
 
@@ -83,7 +93,11 @@ class NotesPicker extends Component {
                   value={notes}
                   onChangeText={newNotes => this.setState({ notes: newNotes })}
                   style={styles.textInput}
+                  onSubmitEditing={Keyboard.dismiss}
                 />
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                  <View style={styles.dismissArea} />
+                </TouchableWithoutFeedback>
               </KeyboardAvoidingView>
               <Button
                 mode="contained"
