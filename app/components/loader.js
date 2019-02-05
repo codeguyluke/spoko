@@ -10,7 +10,7 @@ const LOADER_CONTAINER_STYLE = {
   backgroundColor: 'rgba(255, 255, 255, 0.9)',
 }
 
-function Loader({ theme, contained }) {
+function Loader({ theme, contained, size }) {
   return (
     <View
       style={[
@@ -18,7 +18,7 @@ function Loader({ theme, contained }) {
         contained ? { backgroundColor: 'transparent' } : { ...StyleSheet.absoluteFillObject },
       ]}
     >
-      <ActivityIndicator size="large" color={theme.colors.primary} />
+      <ActivityIndicator size={size} color={theme.colors.primary} />
     </View>
   )
 }
@@ -30,10 +30,12 @@ Loader.propTypes = {
     }).isRequired,
   }).isRequired,
   contained: PropTypes.bool,
+  size: PropTypes.string,
 }
 
 Loader.defaultProps = {
   contained: false,
+  size: 'large',
 }
 
 export default withTheme(Loader)

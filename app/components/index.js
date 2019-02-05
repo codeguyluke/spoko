@@ -16,6 +16,7 @@ import NotesPicker from './notes-picker'
 import NumberPicker from './number-picker'
 import JoChat from './jo-chat'
 import PlacePicker from './place-picker'
+import PlayersList from './players-list'
 import PlayersPicker from './players-picker'
 import PriceFilter from './price-filter'
 import PricePicker from './price-picker'
@@ -42,6 +43,7 @@ export {
   NumberPicker,
   JoChat,
   PlacePicker,
+  PlayersList,
   PlayersPicker,
   PriceFilter,
   PricePicker,

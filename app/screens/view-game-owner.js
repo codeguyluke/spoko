@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, View, ScrollView } from 'react-native'
 import { withTheme, Button, Colors } from 'react-native-paper'
 import PropTypes from 'prop-types'
-import { InfoRow, Loader } from '../components'
+import { InfoRow, Loader, PlayersList } from '../components'
 
 const styles = StyleSheet.create({
   container: {
@@ -33,7 +33,7 @@ function ViewGameOwner({ game, theme, onEditGame, onCancelGame, loading }) {
           <InfoRow type="place" value={place} />
           <InfoRow type="datetime" value={datetime} />
           <InfoRow type="price" value={price} />
-          <InfoRow type="players" value={players} />
+          <PlayersList players={players} />
           {notes && <InfoRow type="notes" value={notes} />}
         </ScrollView>
         <View style={styles.buttonsContainer}>
