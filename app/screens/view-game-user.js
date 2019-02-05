@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, ScrollView } from 'react-native'
-import { withTheme, FAB, Button, Chip, Text } from 'react-native-paper'
+import { withTheme, FAB, Button, Chip, Text, HelperText } from 'react-native-paper'
 import MapView, { Marker } from 'react-native-maps'
 import { Avatar } from 'react-native-elements'
 import PropTypes from 'prop-types'
@@ -41,13 +41,19 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 14,
   },
+  gameFullText: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 4,
+  },
 })
 
 function ViewGameUser({ game, theme, onJoinGame, onLeaveGame, played, loading }) {
-  const { sport, place, datetime, price, notes } = game
+  const { sport, place, datetime, price, players, notes } = game
   const {
     location: { latitude, longitude },
   } = place
+  const areFreeSpots = players.some(player => player.id === 'player')
 
   return (
     <React.Fragment>
@@ -85,7 +91,7 @@ function ViewGameUser({ game, theme, onJoinGame, onLeaveGame, played, loading })
           {notes && <InfoRow type="notes" value={notes} />}
         </ScrollView>
         <View style={styles.buttonsContainer}>
-          {played ? (
+          {played && (
             <Button
               mode="contained"
               onPress={onLeaveGame}
@@ -94,8 +100,17 @@ function ViewGameUser({ game, theme, onJoinGame, onLeaveGame, played, loading })
             >
               Leave game
             </Button>
-          ) : (
-            <FAB label="Join" onPress={onJoinGame} />
+          )}
+          {!played && (
+            <React.Fragment>
+              {areFreeSpots ? (
+                <FAB label="Join" onPress={onJoinGame} />
+              ) : (
+                <HelperText style={[styles.gameFullText, { color: theme.colors.error }]}>
+                  This game is full.
+                </HelperText>
+              )}
+            </React.Fragment>
           )}
         </View>
       </View>

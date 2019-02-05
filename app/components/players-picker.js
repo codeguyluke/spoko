@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 const addPlayer = (players, callback) => () => {
   if (players.length >= MAX_PLAYERS) return
 
-  const newPlayers = [...players, { id: 'player', photoURL: '' }]
+  const newPlayers = [...players, { id: 'player', phoneNumber: '', photoURL: '' }]
   callback(newPlayers)
 }
 
