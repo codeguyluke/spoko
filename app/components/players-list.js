@@ -3,6 +3,7 @@ import { StyleSheet, Image } from 'react-native'
 import { List, Subheading, IconButton } from 'react-native-paper'
 import PropTypes from 'prop-types'
 import { downloadAvatar } from '../services/storage'
+import { callPhone } from '../services/communications'
 import { Loader } from '.'
 import peopleIcon from '../assets/images/people.png'
 import avatarIcon from '../assets/images/avatar.png'
@@ -99,7 +100,9 @@ export default class PlayersList extends Component {
               key={player.id}
               style={styles.itemContainer}
               left={() => <Image style={styles.itemIcon} source={player.photo} />}
-              right={() => <IconButton icon="phone" onPress={() => {}} />}
+              right={() => (
+                <IconButton icon="phone" onPress={() => callPhone(player.phoneNumber)} />
+              )}
               title={player.displayName}
             />
           ))
