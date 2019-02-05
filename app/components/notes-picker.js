@@ -93,7 +93,6 @@ class NotesPicker extends Component {
                   value={notes}
                   onChangeText={newNotes => this.setState({ notes: newNotes })}
                   style={styles.textInput}
-                  onSubmitEditing={Keyboard.dismiss}
                 />
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                   <View style={styles.dismissArea} />

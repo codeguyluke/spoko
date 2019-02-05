@@ -1,3 +1,4 @@
+import ChatActions from './chat-actions'
 import ChatMessage from './chat-message'
 import Container from './container'
 import CountryPicker from './country-picker'
@@ -23,6 +24,7 @@ import SportPicker from './sport-picker'
 import Toast from './toast'
 
 export {
+  ChatActions,
   ChatMessage,
   Container,
   CountryPicker,

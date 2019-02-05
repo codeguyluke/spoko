@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import { View, KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-import { FAB, Button, TextInput } from 'react-native-paper'
 import Permissions from 'react-native-permissions'
 import firebase from 'react-native-firebase'
 import PropTypes from 'prop-types'
@@ -9,31 +7,7 @@ import regionState from '../store/region'
 import { MESSAGES, getMessage } from '../assets/messages'
 import countries from '../assets/countries.json'
 import { getCurrentRegion, getCurrentCountry, DEFAULT_REGION } from '../services/geolocation'
-import { Loader, Container, JoChat, CountryPicker } from '../components'
-
-const SCREENS = {
-  locationRequest: 'locationRequest',
-  phoneInput: 'phoneInput',
-  codeInput: 'codeInput',
-}
-
-const styles = StyleSheet.create({
-  actionContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  distance: {
-    marginVertical: 16,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  phoneInput: {
-    flex: 1,
-    marginBottom: 6,
-  },
-})
+import { Loader, Container, JoChat, ChatActions } from '../components'
 
 class WelcomeChat extends Component {
   static propTypes = {
@@ -61,7 +35,7 @@ class WelcomeChat extends Component {
           getMessage(MESSAGES.locationExplanation),
           getMessage(MESSAGES.locationRequest),
         ],
-        screen: SCREENS.locationRequest,
+        screen: ChatActions.SCREENS.locationRequest,
         loading: false,
       }))
     }
@@ -72,7 +46,7 @@ class WelcomeChat extends Component {
     onSetCountry(currentCountry)
     return this.setState(prevState => ({
       messages: [...prevState.messages, getMessage(MESSAGES.phoneInput)],
-      screen: SCREENS.phoneInput,
+      screen: ChatActions.SCREENS.phoneInput,
       loading: false,
     }))
   }
@@ -93,7 +67,7 @@ class WelcomeChat extends Component {
     onSetCountry(currentCountry)
     this.setState(prevState => ({
       messages: [...prevState.messages, getMessage(MESSAGES.phoneInput)],
-      screen: SCREENS.phoneInput,
+      screen: ChatActions.SCREENS.phoneInput,
       loading: false,
     }))
   }
@@ -113,7 +87,7 @@ class WelcomeChat extends Component {
         getMessage(MESSAGES.locationPermissionGranted),
         getMessage(MESSAGES.phoneInput),
       ],
-      screen: SCREENS.phoneInput,
+      screen: ChatActions.SCREENS.phoneInput,
       loading: false,
     }))
   }
@@ -139,7 +113,7 @@ class WelcomeChat extends Component {
                 getMessage(MESSAGES.verificationCodeSent, phone),
                 getMessage(MESSAGES.codeInput),
               ],
-              screen: SCREENS.codeInput,
+              screen: ChatActions.SCREENS.codeInput,
               verificationId: phoneAuthSnapshot.verificationId,
               loading: false,
             }))
@@ -185,82 +159,35 @@ class WelcomeChat extends Component {
         getMessage(MESSAGES.changePhoneNumber),
         getMessage(MESSAGES.phoneInputChange),
       ],
-      screen: SCREENS.phoneInput,
+      screen: ChatActions.SCREENS.phoneInput,
     }))
   }
 
-  renderScreen = () => {
-    const { country, onSetCountry } = this.props
-    const { screen, phoneNumber, verificationCode } = this.state
-
-    switch (screen) {
-      case SCREENS.locationRequest:
-        return (
-          <View style={styles.actionContainer} behavior="padding">
-            <FAB
-              label="Sure"
-              onPress={this.handleAllowLocationPermission}
-              style={styles.distance}
-            />
-            <Button
-              onPress={this.handleCancelLocationPermission}
-              mode="outlined"
-              style={styles.distance}
-            >
-              {`I don't want to do it yet`}
-            </Button>
-          </View>
-        )
-      case SCREENS.phoneInput:
-        return (
-          <KeyboardAvoidingView style={styles.actionContainer} behavior="padding">
-            <View style={[styles.row, styles.distance]}>
-              <CountryPicker onSelectCountry={onSetCountry} selectedCountry={country} />
-              <TextInput
-                label="Mobile"
-                mode="outlined"
-                value={phoneNumber}
-                onChangeText={newPhoneNumber => this.setState({ phoneNumber: newPhoneNumber })}
-                keyboardType="phone-pad"
-                style={styles.phoneInput}
-              />
-            </View>
-            <FAB
-              label="Verify this number"
-              onPress={this.handleVerifyPhoneNumber}
-              style={styles.distance}
-            />
-          </KeyboardAvoidingView>
-        )
-      case SCREENS.codeInput:
-        return (
-          <KeyboardAvoidingView style={styles.actionContainer} behavior="padding">
-            <TextInput
-              label="Verification code"
-              mode="outlined"
-              value={verificationCode}
-              onChangeText={newCode => this.setState({ verificationCode: newCode })}
-              keyboardType="number-pad"
-              style={styles.distance}
-            />
-            <FAB label="Let me in" onPress={this.handleConfirmCode} style={styles.distance} />
-            <Button onPress={this.handleChangeNumber} mode="outlined" style={styles.distance}>
-              Change phone number
-            </Button>
-          </KeyboardAvoidingView>
-        )
-      default:
-        return <Loader contained />
-    }
-  }
-
   render() {
-    const { messages, loading } = this.state
+    const { country, onSetCountry } = this.props
+    const { messages, loading, screen, phoneNumber, verificationCode } = this.state
 
     return (
       <Container>
         <JoChat messages={messages} />
-        {loading ? <Loader contained /> : this.renderScreen()}
+        {loading ? (
+          <Loader contained />
+        ) : (
+          <ChatActions
+            screen={screen}
+            onAllowLocationPermission={this.handleAllowLocationPermission}
+            onCancelLocationPermission={this.handleCancelLocationPermission}
+            onSelectCountry={onSetCountry}
+            country={country}
+            phoneNumber={phoneNumber}
+            onChangePhoneNumber={newPhoneNumber => this.setState({ phoneNumber: newPhoneNumber })}
+            onVerifyPhoneNumber={this.handleVerifyPhoneNumber}
+            verificationCode={verificationCode}
+            onChangeVerificationCode={newCode => this.setState({ verificationCode: newCode })}
+            onConfirmCode={this.handleConfirmCode}
+            onChangePhone={this.handleChangeNumber}
+          />
+        )}
       </Container>
     )
   }
