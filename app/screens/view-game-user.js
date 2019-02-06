@@ -1,11 +1,11 @@
 import React from 'react'
 import { StyleSheet, View, ScrollView } from 'react-native'
-import { withTheme, FAB, Button, Chip, Text, HelperText } from 'react-native-paper'
+import { withTheme, FAB, Button, Surface, Text, HelperText, Colors } from 'react-native-paper'
 import MapView, { Marker } from 'react-native-maps'
-import { Avatar } from 'react-native-elements'
+import { Icon } from 'react-native-elements'
 import PropTypes from 'prop-types'
+import { showInMap } from '../services/communications'
 import { InfoRow, Loader } from '../components'
-import sports from '../assets/sports'
 
 const INITIAL_LATITUDE_DELTA = 0.01
 const INITIAL_LONGITUDE_DELTA = 0.005
@@ -22,10 +22,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  avatar: {
-    borderWidth: 4,
-    borderColor: '#FFF',
-  },
   buttonsContainer: {
     padding: 16,
   },
@@ -33,18 +29,37 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   chip: {
-    borderRadius: 25,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 24,
     backgroundColor: '#FFF',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     elevation: 4,
   },
   chipLabel: {
     fontWeight: '700',
     fontSize: 14,
+    marginLeft: 8,
   },
   gameFullText: {
     fontSize: 14,
     textAlign: 'center',
     marginBottom: 4,
+  },
+  pinContainer: {
+    alignItems: 'center',
+    marginTop: -24,
+  },
+  triangle: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 8,
+    borderRightWidth: 8,
+    borderTopWidth: 10,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: '#FFF',
   },
 })
 
@@ -67,20 +82,17 @@ function ViewGameUser({ game, theme, onJoinGame, onLeaveGame, played, loading })
           }}
           style={styles.map}
         >
-          <Marker coordinate={{ latitude, longitude }}>
-            {played ? (
-              <Chip
-                avatar={
-                  <Avatar rounded small source={sports[sport].icon} avatarStyle={styles.avatar} />
-                }
-                onPress={() => {}}
-                style={styles.chip}
-              >
-                <Text style={[styles.chipLabel, { color: theme.colors.accent }]}>Navigate</Text>
-              </Chip>
-            ) : (
-              <Avatar rounded medium source={sports[sport].icon} avatarStyle={styles.avatar} />
-            )}
+          <Marker
+            coordinate={{ latitude, longitude }}
+            onPress={() => showInMap(latitude, longitude)}
+          >
+            <View style={styles.pinContainer}>
+              <Surface style={styles.chip}>
+                <Icon size={20} name="place" color={Colors.blueGrey700} />
+                <Text style={[styles.chipLabel, { color: theme.colors.accent }]}>Show in map</Text>
+              </Surface>
+              <View style={styles.triangle} />
+            </View>
           </Marker>
         </MapView>
         <ScrollView style={styles.scrollViewContainer}>
