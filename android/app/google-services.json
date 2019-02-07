@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "217028001029",
+    "firebase_url": "https://spoko-dev.firebaseio.com",
+    "project_id": "spoko-dev",
+    "storage_bucket": "spoko-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217028001029:android:11b6b4ec8379931e",
+        "android_client_info": {
+          "package_name": "com.spoko"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "217028001029-jm9mvjb45jpq4kj4ljt8g6p9ecovo8n5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6IAAYPEOahc6RnliOC3YcZ5r8OFFZJbI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
