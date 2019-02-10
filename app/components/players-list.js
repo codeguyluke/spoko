@@ -95,7 +95,7 @@ export default class PlayersList extends Component {
           <Loader contained size="small" />
         ) : (
           <FlatList
-            data={players}
+            data={players.filter(player => player.id !== 'player')}
             renderItem={({ item }) => (
               <List.Item
                 key={item.id}
@@ -104,7 +104,7 @@ export default class PlayersList extends Component {
                 right={() => (
                   <IconButton icon="phone" onPress={() => callPhone(item.phoneNumber)} />
                 )}
-                title={item.displayName}
+                title={item.displayName || 'Anonymous'}
               />
             )}
             keyExtractor={item => item.id}

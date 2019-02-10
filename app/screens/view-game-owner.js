@@ -32,8 +32,8 @@ function ViewGameOwner({ game, theme, onEditGame, onCancelGame, loading }) {
           <InfoRow type="sport" value={sport} />
           <InfoRow type="place" value={place} />
           <InfoRow type="datetime" value={datetime} />
-          <InfoRow type="price" value={price} />
           <PlayersList players={players} />
+          <InfoRow type="price" value={price} />
           {notes ? <InfoRow type="notes" value={notes} /> : null}
         </ScrollView>
         <View style={styles.buttonsContainer}>
