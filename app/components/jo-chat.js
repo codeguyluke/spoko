@@ -25,14 +25,27 @@ export default class WelcomeChat extends Component {
     ).isRequired,
   }
 
-  listRef = React.createRef()
+  constructor(props) {
+    super(props)
+
+    this.listRef = React.createRef()
+  }
+
+  componentDidMount() {
+    this.handleScrollToLastMessage()
+  }
 
   componentDidUpdate({ messages }) {
-    if (!(this.listRef && this.listRef.current)) return
-
-    if (messages.length < this.props.messages.length) {
-      this.listRef.current.scrollToEnd()
+    if (messages.length !== this.props.messages) {
+      this.handleScrollToLastMessage()
     }
+  }
+
+  handleScrollToLastMessage = () => {
+    if (!(this.listRef && this.listRef.current)) return
+    setTimeout(() => {
+      this.listRef.current.scrollToEnd()
+    }, 50)
   }
 
   render() {
@@ -47,6 +60,7 @@ export default class WelcomeChat extends Component {
             </ChatMessage>
           )}
           keyExtractor={(item, index) => `${item.text}${index}`}
+          onScrollToIndexFailed={this.handleScrollToLastMessage}
         />
       </View>
     )
