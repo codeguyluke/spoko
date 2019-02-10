@@ -50,7 +50,7 @@ export default class ChatActions extends Component {
     switch (screen) {
       case SCREENS.locationRequest:
         return (
-          <View style={styles.actionContainer} behavior="padding">
+          <View style={styles.actionContainer}>
             <FAB label="Sure" onPress={onAllowLocationPermission} style={styles.distance} />
             <Button onPress={onCancelLocationPermission} mode="outlined" style={styles.distance}>
               {`I don't want to do it yet`}
@@ -85,7 +85,12 @@ export default class ChatActions extends Component {
               keyboardType="number-pad"
               style={styles.distance}
             />
-            <FAB label="Let me in" onPress={onConfirmCode} style={styles.distance} />
+            <FAB
+              label="Let me in"
+              disabled={!verificationCode}
+              onPress={onConfirmCode}
+              style={styles.distance}
+            />
             <Button onPress={onChangePhone} mode="outlined" style={styles.distance}>
               Change phone number
             </Button>

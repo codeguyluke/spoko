@@ -29,7 +29,7 @@ class WelcomeChat extends Component {
     const { onSetCountry, onSetInitialRegion } = this.props
     const locationPermission = await Permissions.check('location')
     if (locationPermission === 'undetermined') {
-      return this.setState(prevState => ({
+      this.setState(prevState => ({
         messages: [
           ...prevState.messages,
           getMessage(MESSAGES.locationExplanation),
@@ -38,13 +38,14 @@ class WelcomeChat extends Component {
         screen: ChatActions.SCREENS.locationRequest,
         loading: false,
       }))
+      return
     }
 
     const currentRegion = await getCurrentRegion()
     onSetInitialRegion(currentRegion)
     const currentCountry = await getCurrentCountry(currentRegion)
     onSetCountry(currentCountry)
-    return this.setState(prevState => ({
+    this.setState(prevState => ({
       messages: [...prevState.messages, getMessage(MESSAGES.phoneInput)],
       screen: ChatActions.SCREENS.phoneInput,
       loading: false,

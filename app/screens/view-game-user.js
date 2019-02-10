@@ -100,7 +100,7 @@ function ViewGameUser({ game, theme, onJoinGame, onLeaveGame, played, loading })
           <InfoRow type="place" value={place} />
           <InfoRow type="datetime" value={datetime} />
           <InfoRow type="price" value={price} />
-          {notes && <InfoRow type="notes" value={notes} />}
+          {notes ? <InfoRow type="notes" value={notes} /> : null}
         </ScrollView>
         <View style={styles.buttonsContainer}>
           {played && (
