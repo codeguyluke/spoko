@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
   },
   pinContainer: {
     alignItems: 'center',
-    marginTop: -24,
   },
   triangle: {
     width: 0,
@@ -83,6 +82,7 @@ function ViewGameUser({ game, theme, onJoinGame, onLeaveGame, played, loading })
           style={styles.map}
         >
           <Marker
+            key="show-button"
             coordinate={{ latitude, longitude }}
             onPress={() => showInMap(latitude, longitude)}
           >
