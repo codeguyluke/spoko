@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Image } from 'react-native'
+import { StyleSheet, Image, FlatList } from 'react-native'
 import { List, Subheading, IconButton } from 'react-native-paper'
 import PropTypes from 'prop-types'
 import { downloadAvatar } from '../services/storage'
@@ -48,7 +48,6 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     padding: 0,
-    paddingLeft: 64,
   },
   itemIcon: {
     width: 32,
@@ -95,17 +94,21 @@ export default class PlayersList extends Component {
         {loading ? (
           <Loader contained size="small" />
         ) : (
-          players.map(player => (
-            <List.Item
-              key={player.id}
-              style={styles.itemContainer}
-              left={() => <Image style={styles.itemIcon} source={player.photo} />}
-              right={() => (
-                <IconButton icon="phone" onPress={() => callPhone(player.phoneNumber)} />
-              )}
-              title={player.displayName}
-            />
-          ))
+          <FlatList
+            data={players}
+            renderItem={({ item }) => (
+              <List.Item
+                key={item.id}
+                style={styles.itemContainer}
+                left={() => <Image style={styles.itemIcon} source={item.photo} />}
+                right={() => (
+                  <IconButton icon="phone" onPress={() => callPhone(item.phoneNumber)} />
+                )}
+                title={item.displayName}
+              />
+            )}
+            keyExtractor={item => item.id}
+          />
         )}
       </List.Accordion>
     )
