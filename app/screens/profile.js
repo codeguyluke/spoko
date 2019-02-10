@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import firebase from 'react-native-firebase'
 import { View, ScrollView, StyleSheet, InteractionManager, Alert } from 'react-native'
+import ImageResizer from 'react-native-image-resizer'
 import { createStackNavigator } from 'react-navigation'
 import ImagePicker from 'react-native-image-picker'
 import { withTheme, Button, TextInput } from 'react-native-paper'
@@ -12,6 +13,8 @@ import { Loader } from '../components'
 import { uploadAvatar, downloadAvatar } from '../services/storage'
 import toastState from '../store/toast'
 import avatarIcon from '../assets/images/avatar.png'
+
+const RESIZED_IMAGE_SIZE = 240
 
 const showSignoutConfirmation = ({ onSuccess }) => () =>
   InteractionManager.runAfterInteractions(() => {
@@ -96,7 +99,14 @@ class Profile extends Component {
     try {
       let newPhotoURL = firebase.auth().currentUser.photoURL
       if (photoEdited) {
-        newPhotoURL = await uploadAvatar(photo.uri)
+        const resizedPhoto = await ImageResizer.createResizedImage(
+          photo.uri,
+          RESIZED_IMAGE_SIZE,
+          RESIZED_IMAGE_SIZE,
+          'JPEG',
+          100
+        )
+        newPhotoURL = await uploadAvatar(resizedPhoto.uri)
       }
       await firebase.auth().currentUser.updateProfile({ displayName, photoURL: newPhotoURL })
       onAddToast('Profile updated!')

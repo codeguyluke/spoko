@@ -118,6 +118,8 @@ PODS:
     - React/Core (= 0.57.8)
   - react-native-image-picker (0.28.0):
     - React
+  - react-native-image-resizer (1.0.0):
+    - React
   - react-native-maps (0.22.1):
     - React
   - React/Core (0.57.8):
@@ -178,6 +180,7 @@ DEPENDENCIES:
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
@@ -227,6 +230,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-image-resizer:
+    :path: "../node_modules/react-native-image-resizer"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   RNGestureHandler:
@@ -258,10 +263,11 @@ SPEC CHECKSUMS:
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
   React: 1fe0eb13d90b625d94c3b117c274dcfd2e760e11
   react-native-image-picker: f42de90075c5b1af53417af927631d909a1a746e
+  react-native-image-resizer: 04a3409e7d4ad646c4468671c69dec490def139c
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
   RNGestureHandler: 282af6ea58ed8483612365159c58a3ca5f55e7da
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
-PODFILE CHECKSUM: a13ad8dfbae4678d515d7eeea7447a295115e5f0
+PODFILE CHECKSUM: 97f0ce67611f1a84c37e5039f6cc97077a928e62
 
 COCOAPODS: 1.5.3
