@@ -5,7 +5,7 @@ import MapView, { Marker } from 'react-native-maps'
 import { Icon } from 'react-native-elements'
 import PropTypes from 'prop-types'
 import { showInMap } from '../services/communications'
-import { InfoRow, Loader } from '../components'
+import { InfoRow, Loader, PlayersList } from '../components'
 
 const INITIAL_LATITUDE_DELTA = 0.01
 const INITIAL_LONGITUDE_DELTA = 0.005
@@ -99,6 +99,7 @@ function ViewGameUser({ game, theme, onJoinGame, onLeaveGame, played, loading })
           <InfoRow type="sport" value={sport} />
           <InfoRow type="place" value={place} />
           <InfoRow type="datetime" value={datetime} />
+          {played ? <PlayersList players={players} /> : null}
           <InfoRow type="price" value={price} />
           {notes ? <InfoRow type="notes" value={notes} /> : null}
         </ScrollView>
