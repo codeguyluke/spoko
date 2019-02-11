@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StatusBar } from 'react-native'
+import { StatusBar, View, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import Permissions from 'react-native-permissions'
 import { createAppContainer, createStackNavigator } from 'react-navigation'
@@ -51,13 +51,24 @@ const CommonRoutes = {
   },
 }
 
+const styles = StyleSheet.create({
+  dateFilterContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+})
+
 const HomeStackNavigator = createStackNavigator(
   {
     Map: {
       screen: MapScreen,
       navigationOptions: () => ({
         headerLeft: <SportFilter />,
-        headerTitle: <DateFilter />,
+        headerTitle: (
+          <View style={styles.dateFilterContainer}>
+            <DateFilter />
+          </View>
+        ),
         headerRight: <PriceFilter />,
         headerBackTitle: null,
         headerStyle: {
