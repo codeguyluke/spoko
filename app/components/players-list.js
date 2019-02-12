@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, Image, FlatList } from 'react-native'
 import { List, Subheading, IconButton } from 'react-native-paper'
+import firebase from 'react-native-firebase'
 import PropTypes from 'prop-types'
 import { downloadAvatar } from '../services/storage'
 import { callPhone } from '../services/communications'
@@ -56,6 +57,9 @@ const styles = StyleSheet.create({
     marginRight: 8,
     alignSelf: 'center',
   },
+  itemTitle: {
+    fontWeight: '500',
+  },
 })
 
 export default class PlayersList extends Component {
@@ -81,9 +85,34 @@ export default class PlayersList extends Component {
     this.setState({ loading: false, players: playersWithPhotos })
   }
 
+  renderPlayer = ({ item }) => {
+    const isCurrent = firebase.auth().currentUser.uid === item.id
+    const titlePlaceholder = isCurrent ? 'Me' : 'Anonymous'
+    const titleText = item.displayName || titlePlaceholder
+    const Right = isCurrent
+      ? undefined
+      : () => <IconButton icon="phone" onPress={() => callPhone(item.phoneNumber)} />
+    const Title = isCurrent ? (
+      <Subheading style={styles.itemTitle}>{titleText}</Subheading>
+    ) : (
+      titleText
+    )
+    return (
+      <List.Item
+        key={item.id}
+        style={styles.itemContainer}
+        left={() => <Image style={styles.itemIcon} source={item.photo} />}
+        right={Right}
+        title={Title}
+      />
+    )
+  }
+
   render() {
     const { players: propsPlayers } = this.props
     const { players, loading } = this.state
+
+    const signedPlayers = players.filter(player => player.id !== 'player')
 
     return (
       <List.Accordion
@@ -95,18 +124,8 @@ export default class PlayersList extends Component {
           <Loader contained size="small" />
         ) : (
           <FlatList
-            data={players.filter(player => player.id !== 'player')}
-            renderItem={({ item }) => (
-              <List.Item
-                key={item.id}
-                style={styles.itemContainer}
-                left={() => <Image style={styles.itemIcon} source={item.photo} />}
-                right={() => (
-                  <IconButton icon="phone" onPress={() => callPhone(item.phoneNumber)} />
-                )}
-                title={item.displayName || 'Anonymous'}
-              />
-            )}
+            data={signedPlayers}
+            renderItem={this.renderPlayer}
             keyExtractor={item => item.id}
           />
         )}
